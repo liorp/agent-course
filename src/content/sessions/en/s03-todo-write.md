@@ -51,7 +51,7 @@ walkthroughs:
       - lines: [15, 21]
         annotation: "The nag reminder injects a `<reminder>` text block at the front of the last user message if 3+ rounds have passed without a todo update. It nudges the model without requiring user intervention."
 challenge:
-  text: "Run the s03 agent and give it a multi-step task. Watch how it creates a todo list before acting."
+  text: "Run `python agents/s03_todo_write.py` and give it a multi-step task. Watch how it creates a todo list before acting."
   hint: "Try: \"Create a Python project with tests, README, and a CLI\""
 ---
 

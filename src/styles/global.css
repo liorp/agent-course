@@ -218,6 +218,9 @@ th { background: var(--bg-card); color: var(--text-primary); font-weight: 600; }
   display: flex;
   padding: 0 1rem;
   transition: background 0.2s;
+  min-width: fit-content;
+  font-size: 0.875rem;
+  line-height: 1.6;
 }
 
 .cw-line-active {
@@ -234,10 +237,12 @@ th { background: var(--bg-card); color: var(--text-primary); font-weight: 600; }
   opacity: 0.4;
   user-select: none;
   flex-shrink: 0;
+  font-size: inherit;
 }
 
 .cw-line-text {
   white-space: pre;
+  font-size: inherit;
 }
 
 .cw-annotation {
