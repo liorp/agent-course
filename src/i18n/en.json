@@ -33,5 +33,6 @@
   "email.title": "Stay updated",
   "email.subtitle": "Get notified when we add new content",
   "email.placeholder": "your@email.com",
-  "email.button": "Subscribe"
+  "email.button": "Subscribe",
+  "session.toc": "On this page"
 }

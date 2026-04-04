@@ -8,6 +8,7 @@ import AdSlot from '@/components/AdSlot.astro';
 import ProgressTracker from '@/components/ProgressTracker.astro';
 import CodeWalkthrough from '@/components/CodeWalkthrough';
 import ReadingProgress from '@/components/ReadingProgress.astro';
+import TableOfContents from '@/components/TableOfContents.astro';
 import { getLangFromUrl, getUI } from '@/i18n/ui';
 import type { SessionMeta } from '@/lib/sessions';
 import { getAdjacentSessions } from '@/lib/sessions';
@@ -98,6 +99,7 @@ const reportArrow = isRtl ? '←' : '→';
       </article>
 
       <aside class="session-sidebar">
+        <TableOfContents />
         <AdSlot format="sidebar" slot="4632823302" />
       </aside>
     </div>
