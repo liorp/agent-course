@@ -32,9 +32,12 @@ export default function CodeWalkthrough({
 
   useEffect(() => {
     if (codeRef.current && step) {
-      const firstHighlighted = codeRef.current.querySelector(`[data-line="${step.lines[0]}"]`);
-      if (firstHighlighted) {
-        firstHighlighted.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const line = codeRef.current.querySelector(`[data-line="${step.lines[0]}"]`) as HTMLElement;
+      if (line) {
+        const container = codeRef.current;
+        const lineTop = line.offsetTop;
+        const containerHeight = container.clientHeight;
+        container.scrollTo({ top: lineTop - containerHeight / 3, behavior: 'smooth' });
       }
     }
   }, [currentStep, step]);
