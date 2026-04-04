@@ -27,6 +27,11 @@ const sessions = defineCollection({
       text: z.string(),
       hint: z.string().optional(),
     }).optional(),
+    challenges: z.array(z.object({
+      tier: z.enum(['warmup', 'build', 'stretch']),
+      text: z.string(),
+      hint: z.string().optional(),
+    })).optional(),
   }),
 });
 

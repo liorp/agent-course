@@ -219,6 +219,8 @@ th { background: var(--bg-card); color: var(--text-primary); font-weight: 600; }
 .cw-code code {
   font-size: inherit !important;
   line-height: inherit !important;
+  display: inline-block;
+  min-width: 100%;
 }
 
 .cw-code * {
@@ -229,9 +231,10 @@ th { background: var(--bg-card); color: var(--text-primary); font-weight: 600; }
   display: flex;
   align-items: center;
   padding: 0 1rem;
+  padding-inline-start: calc(1rem + 3px);
   height: 1.4rem;
   transition: background 0.2s;
-  min-width: fit-content;
+  min-width: 100%;
   font-size: 0.875rem;
   line-height: 1.4rem;
 }
@@ -239,6 +242,7 @@ th { background: var(--bg-card); color: var(--text-primary); font-weight: 600; }
 .cw-line-active {
   background: rgba(255, 204, 0, 0.08);
   border-inline-start: 3px solid var(--accent);
+  padding-inline-start: 1rem;
 }
 
 .cw-line-num {
@@ -448,6 +452,7 @@ html[data-theme="light"] .hero-title {
 }
 .glossary-term .glossary-session {
   font-size: 0.7rem;
+  font-family: var(--font-body);
   color: var(--text-muted);
   margin-inline-start: 0.5rem;
 }
