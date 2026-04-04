@@ -1,0 +1,60 @@
+---
+import { getLangFromUrl, getUI } from '@/i18n/ui';
+const locale = getLangFromUrl(Astro.url);
+const ui = getUI(locale);
+---
+
+<div class="progress-bar-container" data-progress-bar>
+  <div class="progress-info">
+    <span class="progress-count" data-progress-count>0</span>/12 {ui['landing.progress']}
+  </div>
+  <div class="progress-track">
+    <div class="progress-fill" data-progress-fill></div>
+  </div>
+</div>
+
+<style>
+  .progress-bar-container {
+    margin-block-end: 2rem;
+    padding: 1rem 1.25rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .progress-info {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-block-end: 0.5rem;
+  }
+  .progress-count {
+    color: var(--accent);
+    font-weight: 700;
+    font-family: var(--font-code);
+  }
+  .progress-track {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 3px;
+    width: 0%;
+    transition: width 0.5s ease;
+  }
+</style>
+
+<script>
+  const STORAGE_KEY = 'agent-course-progress';
+  function getProgress() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch { return {}; }
+  }
+  const progress = getProgress();
+  const completed = Object.values(progress).filter((p: any) => p.completed).length;
+  const countEl = document.querySelector('[data-progress-count]');
+  const fillEl = document.querySelector('[data-progress-fill]') as HTMLElement;
+  if (countEl) countEl.textContent = String(completed);
+  if (fillEl) fillEl.style.width = `${(completed / 12) * 100}%`;
+</script>

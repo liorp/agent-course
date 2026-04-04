@@ -28,5 +28,6 @@
   "footer.by": "by shareAI-lab. MIT License.",
   "footer.motto": "The model is the agent. The code is the harness.",
   "footer.reportIssue": "Report an issue",
-  "session.reportIssue": "Found a mistake? Report it"
+  "session.reportIssue": "Found a mistake? Report it",
+  "landing.progress": "completed"
 }
