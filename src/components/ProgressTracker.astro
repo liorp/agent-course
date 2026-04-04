@@ -1,0 +1,103 @@
+---
+import { getLangFromUrl, getUI } from '@/i18n/ui';
+
+interface Props {
+  sessionId: string;
+}
+
+const { sessionId } = Astro.props;
+const locale = getLangFromUrl(Astro.url);
+const ui = getUI(locale);
+---
+
+<div class="progress-tracker" data-session-id={sessionId}>
+  <button
+    class="progress-btn"
+    data-progress-btn={sessionId}
+    aria-label={ui['session.markComplete']}
+  >
+    <span class="btn-check">✓</span>
+    <span class="btn-label" data-label-incomplete={ui['session.markComplete']} data-label-complete={ui['session.completed']}>{ui['session.markComplete']}</span>
+  </button>
+</div>
+
+<style>
+  .progress-tracker { margin-block: 2rem; text-align: center; }
+  .progress-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.5rem;
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-body);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .progress-btn:hover { border-color: var(--accent); }
+  .progress-btn.completed {
+    border-color: #4ade80;
+    background: rgba(74, 222, 128, 0.1);
+    color: #4ade80;
+  }
+  .btn-check { opacity: 0.3; transition: opacity 0.2s; }
+  .progress-btn.completed .btn-check { opacity: 1; }
+</style>
+
+<script>
+  const STORAGE_KEY = 'agent-course-progress';
+
+  function getProgress(): Record<string, { completed: boolean; completedAt?: string }> {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    } catch {
+      return {};
+    }
+  }
+
+  function saveProgress(progress: Record<string, { completed: boolean; completedAt?: string }>) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+  }
+
+  document.querySelectorAll<HTMLButtonElement>('[data-progress-btn]').forEach(btn => {
+    const sessionId = btn.dataset.progressBtn!;
+    const labelEl = btn.querySelector('.btn-label') as HTMLElement;
+    const progress = getProgress();
+    const isCompleted = progress[sessionId]?.completed;
+
+    if (isCompleted) {
+      btn.classList.add('completed');
+      labelEl.textContent = labelEl.dataset.labelComplete!;
+    }
+
+    btn.addEventListener('click', () => {
+      const current = getProgress();
+      const wasCompleted = current[sessionId]?.completed;
+      current[sessionId] = {
+        completed: !wasCompleted,
+        completedAt: !wasCompleted ? new Date().toISOString() : undefined,
+      };
+      saveProgress(current);
+
+      btn.classList.toggle('completed');
+      labelEl.textContent = !wasCompleted
+        ? labelEl.dataset.labelComplete!
+        : labelEl.dataset.labelIncomplete!;
+
+      if (typeof (window as any).gtag === 'function' && !wasCompleted) {
+        (window as any).gtag('event', 'session_complete', { session: sessionId });
+      }
+    });
+  });
+
+  document.querySelectorAll<HTMLElement>('[data-progress-check]').forEach(el => {
+    const sessionId = el.dataset.progressCheck!;
+    const progress = getProgress();
+    if (progress[sessionId]?.completed) {
+      el.textContent = '✓';
+      el.style.color = '#4ade80';
+    }
+  });
+</script>

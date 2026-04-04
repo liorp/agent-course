@@ -1,0 +1,107 @@
+---
+import Base from './Base.astro';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import SessionNav from '@/components/SessionNav.astro';
+import BeginnerExplainer from '@/components/BeginnerExplainer.astro';
+import AdSlot from '@/components/AdSlot.astro';
+import ProgressTracker from '@/components/ProgressTracker.astro';
+import { getLangFromUrl, getUI } from '@/i18n/ui';
+import type { SessionMeta } from '@/lib/sessions';
+import { getAdjacentSessions } from '@/lib/sessions';
+
+interface Props {
+  session: SessionMeta;
+  frontmatter: {
+    beginnerConcepts?: { question: string; answer: string }[];
+  };
+}
+
+const { session, frontmatter } = Astro.props;
+const locale = getLangFromUrl(Astro.url);
+const ui = getUI(locale);
+const title = locale === 'he' ? session.titleHe : session.title;
+const motto = locale === 'he' ? session.mottoHe : session.motto;
+const { prev, next } = getAdjacentSessions(session.slug);
+const phaseKey = `phase.${session.phase}` as const;
+const phaseLabel = ui[phaseKey];
+---
+
+<Base title={`${session.id}: ${title}`}>
+  <Header />
+  <main class="session-page">
+    <div class="session-layout container">
+      <article class="session-content">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href={`/${locale}/`}>{ui['nav.sessions']}</a>
+          <span class="breadcrumb-sep">&rsaquo;</span>
+          <span>{phaseLabel}</span>
+          <span class="breadcrumb-sep">&rsaquo;</span>
+          <span>{session.id}</span>
+        </nav>
+
+        <header class="session-header">
+          <h1>{title}</h1>
+          <p class="session-motto">"{motto}"</p>
+          <div class="session-meta">
+            <span class="meta-time">{session.readingTime} {ui['session.readingTime']}</span>
+          </div>
+        </header>
+
+        {frontmatter.beginnerConcepts && (
+          <BeginnerExplainer concepts={frontmatter.beginnerConcepts} />
+        )}
+
+        <div class="prose">
+          <slot />
+        </div>
+
+        <ProgressTracker sessionId={session.id} />
+        <SessionNav prev={prev} next={next} />
+      </article>
+
+      <aside class="session-sidebar">
+        <AdSlot format="sidebar" />
+      </aside>
+    </div>
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  .session-page { padding-block-start: 1.5rem; }
+  .session-layout {
+    display: flex;
+    gap: 2rem;
+    max-width: calc(var(--max-width) + var(--sidebar-width) + 2rem);
+  }
+  .session-content { flex: 1; min-width: 0; max-width: var(--max-width); }
+  .session-sidebar { flex-shrink: 0; width: var(--sidebar-width); }
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-block-end: 1.5rem;
+  }
+  .breadcrumb a { color: var(--accent); }
+  .breadcrumb-sep { opacity: 0.5; }
+  .session-header { margin-block-end: 2rem; }
+  .session-motto {
+    color: var(--accent);
+    font-style: italic;
+    font-size: 1.1rem;
+    margin-block-start: 0.25rem;
+  }
+  .session-meta { margin-block-start: 0.75rem; }
+  .meta-time { color: var(--text-muted); font-size: 0.8rem; }
+  .prose { line-height: 1.75; }
+  .prose h2 { margin-block-start: 2.5rem; }
+  .prose h3 { margin-block-start: 2rem; }
+
+  @media (max-width: 1024px) {
+    .session-sidebar { display: none; }
+    .session-layout { max-width: var(--max-width); }
+  }
+</style>

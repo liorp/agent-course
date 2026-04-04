@@ -1,0 +1,57 @@
+---
+import type { SessionMeta } from '@/lib/sessions';
+import { getLangFromUrl, getUI } from '@/i18n/ui';
+
+interface Props {
+  prev?: SessionMeta;
+  next?: SessionMeta;
+}
+
+const { prev, next } = Astro.props;
+const locale = getLangFromUrl(Astro.url);
+const ui = getUI(locale);
+---
+
+<nav class="session-nav" aria-label="Session navigation">
+  {prev ? (
+    <a href={`/${locale}/${prev.slug}`} class="nav-link nav-prev">
+      <span class="nav-arrow">&larr;</span>
+      <span class="nav-label">{ui['session.prev']}</span>
+      <span class="nav-title">{locale === 'he' ? prev.titleHe : prev.title}</span>
+    </a>
+  ) : <div />}
+  {next ? (
+    <a href={`/${locale}/${next.slug}`} class="nav-link nav-next">
+      <span class="nav-arrow">&rarr;</span>
+      <span class="nav-label">{ui['session.next']}</span>
+      <span class="nav-title">{locale === 'he' ? next.titleHe : next.title}</span>
+    </a>
+  ) : <div />}
+</nav>
+
+<style>
+  .session-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-block: 3rem;
+    padding-block-start: 2rem;
+    border-block-start: 1px solid var(--border);
+  }
+  .nav-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: border-color 0.2s;
+    max-width: 45%;
+  }
+  .nav-link:hover { border-color: var(--accent); }
+  .nav-next { text-align: end; margin-inline-start: auto; }
+  .nav-arrow { color: var(--accent); font-size: 1.2rem; }
+  .nav-label { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .nav-title { color: var(--text-primary); font-size: 0.9rem; font-weight: 600; }
+</style>

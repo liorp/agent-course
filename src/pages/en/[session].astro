@@ -1,0 +1,29 @@
+---
+import { getCollection, render } from 'astro:content';
+import Session from '@/layouts/Session.astro';
+import { getSession } from '@/lib/sessions';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('sessions', (entry) =>
+    entry.id.startsWith('en/')
+  );
+  return entries.map(entry => {
+    const slug = entry.id.replace(/^en\//, '').replace(/\.md$/, '');
+    return {
+      params: { session: slug },
+      props: { entry },
+    };
+  });
+}
+
+const { entry } = Astro.props;
+const slug = entry.id.replace(/^en\//, '').replace(/\.md$/, '');
+const sessionMeta = getSession(slug);
+if (!sessionMeta) throw new Error(`No session metadata for slug: ${slug}`);
+
+const { Content } = await render(entry);
+---
+
+<Session session={sessionMeta} frontmatter={entry.data}>
+  <Content />
+</Session>

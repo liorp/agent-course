@@ -1,0 +1,82 @@
+---
+import { getLangFromUrl, getUI } from '@/i18n/ui';
+
+interface Concept {
+  question: string;
+  answer: string;
+}
+
+interface Props {
+  concepts: Concept[];
+}
+
+const { concepts } = Astro.props;
+const locale = getLangFromUrl(Astro.url);
+const ui = getUI(locale);
+---
+
+{concepts && concepts.length > 0 && (
+  <details class="beginner-explainer">
+    <summary class="explainer-summary">
+      <span class="explainer-icon">💡</span>
+      <span>{ui['session.beginnerExplainer']}</span>
+    </summary>
+    <div class="explainer-content">
+      {concepts.map(concept => (
+        <div class="concept">
+          <h4 class="concept-q">{concept.question}</h4>
+          <p class="concept-a">{concept.answer}</p>
+        </div>
+      ))}
+    </div>
+  </details>
+)}
+
+<style>
+  .beginner-explainer {
+    background: var(--explainer-bg);
+    border: 1px solid var(--explainer-border);
+    border-radius: 10px;
+    margin-block: 1.5rem;
+    overflow: hidden;
+  }
+  .explainer-summary {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.25rem;
+    cursor: pointer;
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 0.95rem;
+    list-style: none;
+  }
+  .explainer-summary::-webkit-details-marker { display: none; }
+  .explainer-summary::after {
+    content: '▸';
+    margin-inline-start: auto;
+    transition: transform 0.2s;
+    color: var(--explainer-border);
+  }
+  details[open] .explainer-summary::after {
+    transform: rotate(90deg);
+  }
+  .explainer-icon { font-size: 1.1rem; }
+  .explainer-content {
+    padding: 0 1.25rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .concept-q {
+    color: var(--accent);
+    font-size: 0.9rem;
+    margin-block-end: 0.25rem;
+  }
+  .concept-a {
+    color: var(--text-body);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+</style>
