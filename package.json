@@ -10,7 +10,9 @@
     "build": "astro build",
     "postbuild": "npx pagefind --site dist",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "npx playwright test",
+    "test:update": "npx playwright test --update-snapshots"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.2",
@@ -20,6 +22,7 @@
     "react-dom": "^19.2.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "pagefind": "^1.4.0"
