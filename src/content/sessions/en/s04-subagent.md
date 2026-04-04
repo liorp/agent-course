@@ -55,9 +55,16 @@ walkthroughs:
         annotation: "The inner tool loop is also identical to the parent. The subagent can call any child tool — read files, write files, run bash — and accumulate results just like the main agent."
       - lines: [22, 24]
         annotation: "Only the final text blocks from the last response are returned. The entire `sub_messages` history (potentially 30+ turns) is discarded. The parent receives a one-paragraph summary."
-challenge:
-  text: "Modify `spawn_subagent` to pass a custom system prompt. Try making a \"code reviewer\" subagent."
-  hint: "Add a `system` parameter and pass it to `client.messages.create`"
+challenges:
+  - tier: "warmup"
+    text: "The subagent's `sub_messages` history is discarded after it returns. But its side effects (files written, commands run) persist. Why is this asymmetry important?"
+    hint: "The parent cares about what was done (results on disk), not how it was done (the 30-turn conversation). Keeping the history would bloat the parent's context."
+  - tier: "build"
+    text: "Modify `spawn_subagent` to pass a custom system prompt. Try making a 'code reviewer' subagent that reads files and returns a structured review."
+    hint: "Add a `system` parameter and pass it to `client.messages.create`"
+  - tier: "stretch"
+    text: "Add resource tracking to subagents: count turns, tokens used, and tools called. Return this metadata alongside the summary. Use it to detect runaway subagents that take too many turns."
+    hint: "Return a dict with 'summary', 'turns', 'tokens', 'tools_called' keys. Set an alert threshold."
 ---
 
 ## The Problem

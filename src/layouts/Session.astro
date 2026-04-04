@@ -7,7 +7,9 @@ import BeginnerExplainer from '@/components/BeginnerExplainer.astro';
 import AdSlot from '@/components/AdSlot.astro';
 import ProgressTracker from '@/components/ProgressTracker.astro';
 import CodeWalkthrough from '@/components/CodeWalkthrough';
+import AgentFlowDiagram from '@/components/AgentFlowDiagram';
 import Challenge from '@/components/Challenge.astro';
+import MultiTierChallenge from '@/components/MultiTierChallenge.astro';
 import ReadingProgress from '@/components/ReadingProgress.astro';
 import TableOfContents from '@/components/TableOfContents.astro';
 import { getLangFromUrl, getUI } from '@/i18n/ui';
@@ -25,6 +27,15 @@ interface Props {
       steps: { lines: [number, number]; annotation: string }[];
     }[];
     challenge?: { text: string; hint?: string };
+    challenges?: { tier: 'warmup' | 'build' | 'stretch'; text: string; hint?: string }[];
+    prerequisites?: string[];
+    whatYouBuild?: string;
+    diagram?: {
+      title: string;
+      nodes: { id: string; label: string; x: number; y: number; type?: string }[];
+      edges: { from: string; to: string; label?: string; animated?: boolean }[];
+      steps: { title: string; description: string; activeNodes: string[]; activeEdges: number[] }[];
+    };
   };
 }
 
@@ -63,6 +74,23 @@ const reportArrow = isRtl ? '←' : '→';
           </div>
         </header>
 
+        {frontmatter.prerequisites && frontmatter.prerequisites.length > 0 && (
+          <div class="session-prerequisites">
+            <span class="prereq-label">{ui['session.prerequisites']}:</span>
+            {frontmatter.prerequisites.map((slug: string) => {
+              const name = slug.replace(/^s\d+-/, '').replace(/-/g, ' ');
+              return <a href={`/${locale}/${slug}`} class="prereq-link">{name}</a>;
+            })}
+          </div>
+        )}
+
+        {frontmatter.whatYouBuild && (
+          <div class="session-what-you-build">
+            <span class="wyb-label">{ui['session.whatYouBuild']}:</span>
+            <span class="wyb-text">{frontmatter.whatYouBuild}</span>
+          </div>
+        )}
+
         {frontmatter.beginnerConcepts && (
           <BeginnerExplainer concepts={frontmatter.beginnerConcepts} />
         )}
@@ -91,9 +119,28 @@ const reportArrow = isRtl ? '←' : '→';
           </section>
         )}
 
-        {frontmatter.challenge && (
-          <Challenge text={frontmatter.challenge.text} hint={frontmatter.challenge.hint} />
+        {frontmatter.diagram && (
+          <section class="diagram-section">
+            <AgentFlowDiagram
+              client:visible
+              nodes={frontmatter.diagram.nodes}
+              edges={frontmatter.diagram.edges}
+              steps={frontmatter.diagram.steps}
+              title={frontmatter.diagram.title}
+              isRtl={isRtl}
+              labelPrev={ui['walkthrough.prev']}
+              labelNext={ui['walkthrough.next']}
+              labelStep={ui['walkthrough.step']}
+              labelOf={ui['walkthrough.of']}
+            />
+          </section>
         )}
+
+        {frontmatter.challenges && frontmatter.challenges.length > 0 ? (
+          <MultiTierChallenge challenges={frontmatter.challenges} />
+        ) : frontmatter.challenge ? (
+          <Challenge text={frontmatter.challenge.text} hint={frontmatter.challenge.hint} />
+        ) : null}
 
         <ProgressTracker sessionId={session.id} />
 
@@ -157,8 +204,100 @@ const reportArrow = isRtl ? '←' : '→';
     color: var(--accent);
   }
 
+  .session-prerequisites {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-block-end: 0.75rem;
+    font-size: 0.8rem;
+  }
+  .prereq-label {
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+  .prereq-link {
+    color: var(--accent);
+    background: rgba(255, 204, 0, 0.08);
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    text-transform: capitalize;
+  }
+  .prereq-link:hover {
+    background: rgba(255, 204, 0, 0.15);
+  }
+
+  .session-what-you-build {
+    background: linear-gradient(135deg, rgba(96, 165, 250, 0.06), rgba(96, 165, 250, 0.02));
+    border: 1px solid rgba(96, 165, 250, 0.15);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-block-end: 1.5rem;
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+  .wyb-label {
+    color: #60a5fa;
+    font-weight: 600;
+    margin-inline-end: 0.35rem;
+  }
+  .wyb-text { color: var(--text-body); }
+
   @media (max-width: 1024px) {
     .session-sidebar { display: none; }
     .session-layout { max-width: var(--max-width); }
+  }
+</style>
+
+<script>
+  // Copy-to-clipboard for code blocks
+  document.querySelectorAll('.prose pre').forEach(pre => {
+    const btn = document.createElement('button');
+    btn.className = 'copy-code-btn';
+    btn.textContent = 'Copy';
+    btn.addEventListener('click', async () => {
+      const code = pre.querySelector('code')?.textContent || pre.textContent || '';
+      await navigator.clipboard.writeText(code);
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+    pre.style.position = 'relative';
+    pre.appendChild(btn);
+  });
+</script>
+
+<style is:global>
+  .copy-code-btn {
+    position: absolute;
+    top: 0.5rem;
+    inset-inline-end: 0.5rem;
+    background: var(--bg-card, #161b35);
+    color: var(--text-muted, #a0a0cc);
+    border: 1px solid var(--border, #333366);
+    border-radius: 4px;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.7rem;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s, background 0.2s;
+    font-family: inherit;
+    z-index: 5;
+  }
+  pre:hover .copy-code-btn { opacity: 1; }
+  .copy-code-btn:hover {
+    background: var(--accent, #ffcc00);
+    color: var(--bg-primary, #0f0f23);
+    border-color: var(--accent, #ffcc00);
+  }
+  .copy-code-btn.copied {
+    background: #4ade80;
+    color: #000;
+    border-color: #4ade80;
+    opacity: 1;
   }
 </style>

@@ -1,7 +1,7 @@
 export interface SessionMeta {
   id: string;
   order: number;
-  phase: 1 | 2 | 3 | 4;
+  phase: 1 | 2 | 3 | 4 | 5;
   title: string;
   titleHe: string;
   motto: string;
@@ -23,6 +23,11 @@ export const SESSIONS: SessionMeta[] = [
   { id: 's10', order: 10, phase: 4, title: 'Team Protocols', titleHe: 'פרוטוקולי צוות', motto: 'Teammates need shared communication rules', mottoHe: 'חברי צוות צריכים כללי תקשורת משותפים', slug: 's10-team-protocols', readingTime: 30 },
   { id: 's11', order: 11, phase: 4, title: 'Autonomous Agents', titleHe: 'סוכנים אוטונומיים', motto: 'Teammates scan the board and claim tasks themselves', mottoHe: 'חברי צוות סורקים את הלוח ותופסים משימות בעצמם', slug: 's11-autonomous-agents', readingTime: 30 },
   { id: 's12', order: 12, phase: 4, title: 'Worktree + Task Isolation', titleHe: 'בידוד Worktree ומשימות', motto: 'Each works in its own directory, no interference', mottoHe: 'כל אחד עובד בתיקייה שלו, בלי הפרעות', slug: 's12-worktree-task-isolation', readingTime: 30 },
+  { id: 's13', order: 13, phase: 5, title: 'Agent Evals', titleHe: 'הערכת סוכנים', motto: "You can't improve what you can't measure", mottoHe: 'אי אפשר לשפר מה שלא מודדים', slug: 's13-agent-evals', readingTime: 25 },
+  { id: 's14', order: 14, phase: 5, title: 'Guardrails & Safety', titleHe: 'מעקות בטיחות', motto: 'Trust but verify — then verify again', mottoHe: 'סמכו אבל תבדקו — ואז תבדקו שוב', slug: 's14-guardrails', readingTime: 25 },
+  { id: 's15', order: 15, phase: 5, title: 'Observability & Debugging', titleHe: 'תצפית ודיבאג', motto: 'When the agent derails at 2am, logs are your only witness', mottoHe: 'כשהסוכן יורד מהפסים בשתיים בלילה, הלוגים הם העד היחיד', slug: 's15-observability', readingTime: 25 },
+  { id: 's16', order: 16, phase: 5, title: 'Shipping to Production', titleHe: 'שילוח לפרודקשן', motto: 'A demo agent is easy; a reliable agent is engineering', mottoHe: 'סוכן דמו זה קל; סוכן אמין זו הנדסה', slug: 's16-shipping-to-production', readingTime: 30 },
+  { id: 's17', order: 17, phase: 5, title: 'Capstone: Code Review Agent', titleHe: 'פרויקט גמר: סוכן סקירת קוד', motto: 'Everything you learned, one system', mottoHe: 'כל מה שלמדתם, במערכת אחת', slug: 's17-capstone', readingTime: 35 },
 ];
 
 export function getSession(slug: string): SessionMeta | undefined {

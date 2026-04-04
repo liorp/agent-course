@@ -52,9 +52,51 @@ walkthroughs:
         annotation: "Execute each tool call the model requested. Collect the results into `tool_result` messages."
       - lines: [23, 23]
         annotation: "Feed the tool results back as a `\"user\"` message. The model will see these results on the next iteration and decide what to do next."
-challenge:
-  text: "Clone the repo, run `python agents/s01_agent_loop.py`, and ask it to create a file. Watch the tool calls in the terminal."
-  hint: "Set `MODEL_ID=claude-sonnet-4-20250514` in your `.env` file"
+diagram:
+  title: "The Agent Loop Flow"
+  nodes:
+    - { id: "user", label: "User Prompt", x: 100, y: 60, type: "data" }
+    - { id: "llm", label: "LLM API", x: 300, y: 60, type: "agent" }
+    - { id: "check", label: "Tool Use?", x: 300, y: 175, type: "decision" }
+    - { id: "exec", label: "Execute Tool", x: 500, y: 175, type: "tool" }
+    - { id: "result", label: "Return to User", x: 100, y: 175, type: "data" }
+  edges:
+    - { from: "user", to: "llm", label: "messages", animated: true }
+    - { from: "llm", to: "check", label: "response" }
+    - { from: "check", to: "exec", label: "yes" }
+    - { from: "exec", to: "llm", label: "tool_result", animated: true }
+    - { from: "check", to: "result", label: "no" }
+  steps:
+    - title: "1. Send to LLM"
+      description: "The user prompt is sent to the LLM along with the full conversation history and tool definitions."
+      activeNodes: ["user", "llm"]
+      activeEdges: [0]
+    - title: "2. Check Stop Reason"
+      description: "The harness checks if the model wants to use a tool. If stop_reason is 'tool_use', continue. Otherwise, we're done."
+      activeNodes: ["llm", "check"]
+      activeEdges: [1]
+    - title: "3. Execute Tool"
+      description: "The harness executes the requested tool (e.g., bash command) and collects the output."
+      activeNodes: ["check", "exec"]
+      activeEdges: [2]
+    - title: "4. Feed Results Back"
+      description: "Tool results are appended as a user message and sent back to the LLM. The loop continues."
+      activeNodes: ["exec", "llm"]
+      activeEdges: [3]
+    - title: "5. Return to User"
+      description: "When the model has no more tool calls, the final text response is returned to the user."
+      activeNodes: ["check", "result"]
+      activeEdges: [4]
+challenges:
+  - tier: "warmup"
+    text: "Before running the code, predict: what happens if you remove the `if response.stop_reason != 'tool_use': return` check? Will the agent run forever?"
+    hint: "Think about what stop_reason the API returns when the model has no tool calls to make."
+  - tier: "build"
+    text: "Clone the repo, run `python agents/s01_agent_loop.py`, and ask it to create a file. Watch the tool calls in the terminal."
+    hint: "Set `MODEL_ID=claude-sonnet-4-20250514` in your `.env` file"
+  - tier: "stretch"
+    text: "Add a turn counter to the agent loop that limits execution to 20 turns maximum. Print a warning when the agent hits the limit. Then test it by giving the agent an impossible task."
+    hint: "Add a `turns` variable before the while loop and increment it each iteration."
 ---
 
 ## The Problem

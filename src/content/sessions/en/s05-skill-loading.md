@@ -52,9 +52,16 @@ walkthroughs:
         annotation: "`get_content()` is Layer 2 — the expensive on-demand load. It wraps the full skill body in a `<skill>` XML tag so the model can identify where the skill content starts and ends in its context."
       - lines: [23, 25]
         annotation: "`load_skill` is just another tool handler. When the model calls `load_skill('git')`, this lambda runs `get_content('git')` and returns the full skill body as a `tool_result`. No special loop changes needed."
-challenge:
-  text: "Write your own `SKILL.md` file for a domain you know — cooking, music, or your work domain. Load it into the agent."
-  hint: "Place it in the `skills/` directory and the agent will find it"
+challenges:
+  - tier: "warmup"
+    text: "Why does the skill system use two layers (cheap description + expensive full content) instead of loading everything upfront? Calculate the token cost difference for 20 skills at 500 tokens each."
+    hint: "20 skills × 500 tokens = 10,000 tokens added to every API call, even when you only need 1 skill."
+  - tier: "build"
+    text: "Write your own SKILL.md file for a skill like 'git-workflow' or 'docker-deploy'. Include a description header and full content. Test loading it with the SkillLoader."
+    hint: "Follow the format: first line is the description, rest is the full content loaded on demand."
+  - tier: "stretch"
+    text: "Add skill versioning: each SKILL.md can have a `version: 1.2` header. The loader caches loaded skills and only reloads when the version changes. Track cache hit/miss rates."
+    hint: "Use a dict as cache with skill name as key and (version, content) as value."
 ---
 
 ## The Problem

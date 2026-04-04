@@ -60,9 +60,16 @@ walkthroughs:
         annotation: "`run_edit` does a targeted string replacement — safer than rewriting the whole file. If `old_text` is not found, it returns an error instead of silently corrupting the file."
       - lines: [28, 33]
         annotation: "`TOOL_HANDLERS` maps tool names to lambda wrappers. Each lambda unpacks keyword arguments from `block.input` and calls the appropriate handler. Adding a fifth tool means adding one entry here."
-challenge:
-  text: "Add a fifth tool — `list_files` — that lists directory contents. You only need a schema and a handler."
-  hint: "Use `os.listdir()` in the handler and return the joined filenames"
+challenges:
+  - tier: "warmup"
+    text: "The dispatch map pattern maps tool names to functions. What would happen if the model requested a tool name that doesn't exist in `TOOL_HANDLERS`? How would you handle that gracefully?"
+    hint: "Try `TOOL_HANDLERS.get(block.name)` with a default fallback that returns an error message."
+  - tier: "build"
+    text: "Add a fifth tool — `list_files` — that lists files in a directory. Write the schema, handler, and add it to the dispatch map."
+    hint: "Use `os.listdir()` in the handler. The schema needs a `path` parameter."
+  - tier: "stretch"
+    text: "Implement rate limiting for the bash tool: max 3 bash calls per minute. If exceeded, return a 'rate limit exceeded, wait N seconds' message instead of executing."
+    hint: "Use a list of timestamps and filter to those within the last 60 seconds."
 ---
 
 ## The Problem

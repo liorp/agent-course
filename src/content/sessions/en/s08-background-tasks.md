@@ -61,9 +61,16 @@ walkthroughs:
         annotation: "`daemon=True` means this thread automatically dies when the main program exits. No cleanup code needed. `t.start()` launches it immediately — the main thread is already free to do other work."
       - lines: [23, 34]
         annotation: "`drain_bg_queue()` is called before each LLM call. It empties the queue and injects completed results as a user message. The model sees them on its next turn and can react — all without any polling or waiting."
-challenge:
-  text: "Start a long-running background task (like `sleep 30 && echo done`) and keep chatting with the agent while it runs."
-  hint: "The notification will inject into the next `tool_result` automatically"
+challenges:
+  - tier: "warmup"
+    text: "What's the difference between running a tool in the main thread vs. a background thread? When would background execution be worse than blocking?"
+    hint: "Background is worse when the agent needs the result immediately to make its next decision."
+  - tier: "build"
+    text: "Run a long build command in the background while the agent continues working. Verify that results appear in the next LLM call via the queue."
+    hint: "Use `subprocess.run` in a thread and `queue.put()` when it finishes."
+  - tier: "stretch"
+    text: "Add timeout handling for background tasks: if a task runs longer than 60 seconds, kill the subprocess and inject a timeout error into the queue."
+    hint: "Use `subprocess.run(timeout=60)` with a try/except TimeoutExpired block."
 ---
 
 ## The Problem

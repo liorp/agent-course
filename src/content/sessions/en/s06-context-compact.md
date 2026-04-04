@@ -53,9 +53,16 @@ walkthroughs:
         annotation: "`hard_compact()` uses the LLM itself to write its own summary. It appends a summary request to the existing messages, calls the API, and replaces the entire history with the resulting summary — reducing potentially 80k+ tokens down to ~2000."
       - lines: [25, 28]
         annotation: "The compacted history is just two messages: a user message with the summary wrapped in `<context_summary>` tags, and a brief assistant acknowledgement. The next LLM call starts fresh from this minimal context."
-challenge:
-  text: "Fill the context window by giving the agent many tasks in sequence. Watch the compression kick in."
-  hint: "Check the token count in the `response` metadata"
+challenges:
+  - tier: "warmup"
+    text: "If the rough token estimate is `len(json.dumps(messages)) // 4`, how accurate is it? Try counting the exact tokens for a few messages using the API's `usage` field and compare."
+    hint: "The estimate is usually within 20% — good enough for triggering compression thresholds."
+  - tier: "build"
+    text: "Fill the context window by giving the agent many tasks in sequence. Watch the compression kick in. Add a log message that prints which layer triggered and how many tokens were saved."
+    hint: "Check the token count before and after compaction and print the difference."
+  - tier: "stretch"
+    text: "Implement a fourth compression layer: semantic deduplication. Before hard compaction, detect if the agent read the same file multiple times and keep only the most recent version."
+    hint: "Track file paths in tool results and remove older read_file results for the same path."
 ---
 
 ## The Problem

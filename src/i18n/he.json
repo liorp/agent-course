@@ -1,6 +1,6 @@
 {
   "site.title": "קורס הנדסת רתמה לסוכנים",
-  "site.description": "12 שיעורים מלולאה פשוטה ועד צוותי סוכנים אוטונומיים",
+  "site.description": "17 שיעורים מלולאה פשוטה ועד צוותי סוכנים בפרודקשן",
   "nav.sessions": "שיעורים",
   "nav.about": "אודות",
   "session.markComplete": "סמן כהושלם",
@@ -10,7 +10,7 @@
   "session.beginnerExplainer": "חדש בנושא?",
   "session.readingTime": "דקות קריאה",
   "landing.hero.title": "הנדסת רתמה לסוכנים",
-  "landing.hero.subtitle": "12 שיעורים מלולאה פשוטה ועד צוותי סוכנים אוטונומיים",
+  "landing.hero.subtitle": "17 שיעורים מלולאה פשוטה ועד צוותי סוכנים בפרודקשן",
   "landing.hero.thesis.1": "סוכן הוא מודל.",
   "landing.hero.thesis.2": "לא פריימוורק. לא שרשרת פרומפטים.",
   "landing.hero.thesis.3": "המודל מחליט. הרתמה מבצעת.",
@@ -39,5 +39,14 @@
   "theme.light": "בהיר",
   "search.placeholder": "חיפוש...",
   "session.challenge": "נסו בעצמכם",
-  "session.hint": "רמז"
+  "session.hint": "רמז",
+  "phase.5": "שלב 5: פרודקשן",
+  "session.prerequisites": "דרישות קדם",
+  "session.whatYouBuild": "מה תבנו",
+  "session.challenge.warmup": "חימום",
+  "session.challenge.build": "בנייה",
+  "session.challenge.stretch": "אתגר",
+  "session.glossary": "מילון מונחים",
+  "session.copyCode": "העתק",
+  "session.codeCopied": "הועתק!"
 }

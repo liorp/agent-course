@@ -52,6 +52,41 @@ walkthroughs:
         annotation: "ביצוע כל קריאת כלי שהמודל ביקש. איסוף התוצאות להודעות `tool_result`."
       - lines: [23, 23]
         annotation: "הזנת תוצאות הכלי בחזרה כהודעת `'user'`. המודל יראה את התוצאות באיטרציה הבאה ויחליט מה לעשות."
+diagram:
+  title: "זרימת לולאת הסוכן"
+  nodes:
+    - { id: "user", label: "User Prompt", x: 100, y: 60, type: "data" }
+    - { id: "llm", label: "LLM API", x: 300, y: 60, type: "agent" }
+    - { id: "check", label: "Tool Use?", x: 300, y: 175, type: "decision" }
+    - { id: "exec", label: "Execute Tool", x: 500, y: 175, type: "tool" }
+    - { id: "result", label: "Return to User", x: 100, y: 175, type: "data" }
+  edges:
+    - { from: "user", to: "llm", label: "messages", animated: true }
+    - { from: "llm", to: "check", label: "response" }
+    - { from: "check", to: "exec", label: "yes" }
+    - { from: "exec", to: "llm", label: "tool_result", animated: true }
+    - { from: "check", to: "result", label: "no" }
+  steps:
+    - title: "1. שליחה ל-LLM"
+      description: "הפרומפט של המשתמש נשלח ל-LLM יחד עם כל היסטוריית השיחה והגדרות הכלים."
+      activeNodes: ["user", "llm"]
+      activeEdges: [0]
+    - title: "2. בדיקת סיבת עצירה"
+      description: "הרתמה בודקת אם המודל רוצה להשתמש בכלי. אם stop_reason הוא 'tool_use', ממשיכים. אחרת, סיימנו."
+      activeNodes: ["llm", "check"]
+      activeEdges: [1]
+    - title: "3. הרצת כלי"
+      description: "הרתמה מריצה את הכלי המבוקש (למשל, פקודת bash) ואוספת את הפלט."
+      activeNodes: ["check", "exec"]
+      activeEdges: [2]
+    - title: "4. הזנת תוצאות בחזרה"
+      description: "תוצאות הכלי מצורפות כהודעת user ונשלחות בחזרה ל-LLM. הלולאה ממשיכה."
+      activeNodes: ["exec", "llm"]
+      activeEdges: [3]
+    - title: "5. החזרה למשתמש"
+      description: "כשלמודל אין יותר קריאות כלים, תשובת הטקסט הסופית מוחזרת למשתמש."
+      activeNodes: ["check", "result"]
+      activeEdges: [4]
 challenge:
   text: "שכפלו את הריפו, הריצו `python agents/s01_agent_loop.py`, ובקשו ממנו ליצור קובץ. עקבו אחר קריאות הכלים בטרמינל."
   hint: "הגדירו `MODEL_ID=claude-sonnet-4-20250514` בקובץ `.env` שלכם"
