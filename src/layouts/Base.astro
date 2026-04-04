@@ -16,6 +16,9 @@ const desc = description || ui['site.description'];
 
 const GA_ID = import.meta.env.PUBLIC_GA_ID || 'G-3BWQKR3GM4';
 const ADSENSE_ID = import.meta.env.PUBLIC_ADSENSE_ID || 'ca-pub-4529248472834919';
+
+const pathWithoutLocale = Astro.url.pathname.replace(`/${locale}/`, '').replace(/\/$/, '');
+const ogImagePath = pathWithoutLocale ? `/og/${locale}/${pathWithoutLocale}.svg` : `/og/${locale}.svg`;
 ---
 
 <!doctype html>
@@ -31,9 +34,13 @@ const ADSENSE_ID = import.meta.env.PUBLIC_ADSENSE_ID || 'ca-pub-4529248472834919
   <meta property="og:title" content={fullTitle} />
   <meta property="og:description" content={desc} />
   <meta property="og:type" content="website" />
-  <meta name="twitter:card" content="summary" />
+  <meta property="og:image" content={ogImagePath} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={fullTitle} />
   <meta name="twitter:description" content={desc} />
+  <meta name="twitter:image" content={ogImagePath} />
 
   <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
