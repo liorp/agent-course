@@ -50,11 +50,16 @@ const nextArrow = isRtl ? '←' : '→';
     border-radius: 8px;
     text-decoration: none;
     transition: border-color 0.2s;
+    min-width: 160px;
     max-width: 45%;
   }
   .nav-link:hover { border-color: var(--accent); }
   .nav-next { text-align: end; margin-inline-start: auto; }
   .nav-arrow { color: var(--accent); font-size: 1.2rem; }
   .nav-label { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
-  .nav-title { color: var(--text-primary); font-size: 0.9rem; font-weight: 600; }
+  .nav-title { color: var(--text-primary); font-size: 0.9rem; font-weight: 600; word-break: break-word; }
+
+  @media (max-width: 640px) {
+    .nav-link { min-width: 120px; }
+  }
 </style>

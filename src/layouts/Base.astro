@@ -26,12 +26,17 @@ const ogImagePath = pathWithoutLocale ? `/og/${locale}/${pathWithoutLocale}.svg`
 <html lang={locale} dir={dir}>
 <head>
   <script is:inline>
-    (function(){var t=localStorage.getItem('agent-course-theme');if(t)document.documentElement.setAttribute('data-theme',t)})();
+    (function(){
+      var t=localStorage.getItem('agent-course-theme')||'dark';
+      document.documentElement.setAttribute('data-theme',t);
+      var m=document.querySelector('meta[name="theme-color"]');
+      if(m)m.content=t==='light'?'#f8f9fc':'#0f0f23';
+    })();
   </script>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#0f0f23" media="(prefers-color-scheme: dark)" />
-  <meta name="theme-color" content="#f8f9fc" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0f0f23" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="description" content={desc} />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🤖</text></svg>" />

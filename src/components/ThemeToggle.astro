@@ -27,6 +27,8 @@
   function setTheme(theme: string) {
     localStorage.setItem(STORAGE_KEY, theme);
     document.documentElement.setAttribute('data-theme', theme);
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', theme === 'light' ? '#f8f9fc' : '#0f0f23');
   }
 
   // Initialize
