@@ -1,0 +1,35 @@
+---
+import AdSlot from './AdSlot.astro';
+---
+
+<footer class="site-footer">
+  <AdSlot format="banner" />
+  <div class="footer-inner container">
+    <p class="footer-text">
+      Based on <a href="https://github.com/shareAI-lab/learn-claude-code" target="_blank" rel="noopener">learn-claude-code</a> by shareAI-lab. MIT License.
+    </p>
+    <p class="footer-motto">The model is the agent. The code is the harness.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-block-start: 1px solid var(--border);
+    padding-block: 2rem;
+    margin-block-start: 4rem;
+  }
+  .footer-inner {
+    text-align: center;
+  }
+  .footer-text {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+  .footer-motto {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-style: italic;
+    opacity: 0.7;
+    margin-block-start: 0.5rem;
+  }
+</style>

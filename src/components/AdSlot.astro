@@ -1,0 +1,78 @@
+---
+interface Props {
+  format: 'banner' | 'sidebar';
+  slot?: string;
+}
+
+const { format, slot: adSlot } = Astro.props;
+const ADSENSE_ID = import.meta.env.PUBLIC_ADSENSE_ID || '';
+const adFormat = format === 'banner' ? 'horizontal' : 'rectangle';
+---
+
+<div class:list={['ad-container', `ad-${format}`]} data-ad-lazy>
+  {ADSENSE_ID && adSlot ? (
+    <ins
+      class="adsbygoogle"
+      style="display:block"
+      data-ad-client={ADSENSE_ID}
+      data-ad-slot={adSlot}
+      data-ad-format={adFormat}
+      data-full-width-responsive={format === 'banner' ? 'true' : 'false'}
+    ></ins>
+  ) : (
+    <div class="ad-placeholder">
+      <span>Ad</span>
+    </div>
+  )}
+</div>
+
+<style>
+  .ad-container {
+    margin-block: 1.5rem;
+  }
+  .ad-banner {
+    max-width: 728px;
+    margin-inline: auto;
+    min-height: 90px;
+  }
+  .ad-sidebar {
+    width: 300px;
+    min-height: 250px;
+    position: sticky;
+    top: calc(var(--header-height) + 1rem);
+  }
+  .ad-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-card);
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    min-height: inherit;
+    opacity: 0.5;
+  }
+  @media (max-width: 640px) {
+    .ad-sidebar { display: none; }
+    .ad-banner { min-height: 50px; }
+  }
+</style>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const container = entry.target as HTMLElement;
+        const ins = container.querySelector('.adsbygoogle');
+        if (ins && typeof (window as any).adsbygoogle !== 'undefined') {
+          try {
+            ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
+          } catch {}
+        }
+        observer.unobserve(container);
+      }
+    });
+  }, { rootMargin: '200px' });
+  document.querySelectorAll('[data-ad-lazy]').forEach(el => observer.observe(el));
+</script>

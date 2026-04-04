@@ -1,0 +1,64 @@
+---
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import { getLangFromUrl, getUI } from '@/i18n/ui';
+
+const locale = getLangFromUrl(Astro.url);
+const ui = getUI(locale);
+---
+
+<header class="site-header">
+  <div class="header-inner container">
+    <a href={`/${locale}/`} class="logo">
+      <span class="logo-icon">&gt;_</span>
+      <span class="logo-text">AgentCourse</span>
+    </a>
+    <nav class="header-nav">
+      <a href={`/${locale}/`}>{ui['nav.sessions']}</a>
+      <LanguageSwitcher />
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(15, 15, 35, 0.95);
+    backdrop-filter: blur(8px);
+    border-block-end: 1px solid var(--border);
+    height: var(--header-height);
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+  }
+  .logo:hover { color: var(--text-primary); }
+  .logo-icon {
+    color: var(--accent);
+    font-family: var(--font-code);
+  }
+  .header-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .header-nav a {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    transition: color 0.2s;
+  }
+  .header-nav a:hover {
+    color: var(--accent);
+  }
+</style>

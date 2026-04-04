@@ -1,0 +1,51 @@
+---
+import { getLangFromUrl, getLocalizedPath } from '@/i18n/ui';
+
+const locale = getLangFromUrl(Astro.url);
+const otherLocale = locale === 'en' ? 'he' : 'en';
+const otherPath = getLocalizedPath(Astro.url.pathname, otherLocale);
+const otherLabel = otherLocale === 'he' ? 'עב' : 'EN';
+const currentLabel = locale === 'he' ? 'עב' : 'EN';
+---
+
+<nav class="lang-switcher" aria-label="Language">
+  <span class="lang-current">{currentLabel}</span>
+  <span class="lang-divider">|</span>
+  <a href={otherPath} class="lang-link" data-lang-switch>{otherLabel}</a>
+</nav>
+
+<style>
+  .lang-switcher {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+  }
+  .lang-current {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .lang-divider {
+    color: var(--border);
+  }
+  .lang-link {
+    color: var(--text-muted);
+    transition: color 0.2s;
+  }
+  .lang-link:hover {
+    color: var(--accent-hover);
+  }
+</style>
+
+<script>
+  document.querySelectorAll('[data-lang-switch]').forEach(link => {
+    link.addEventListener('click', () => {
+      if (typeof gtag === 'function') {
+        gtag('event', 'language_switch', {
+          from: document.documentElement.lang,
+          to: link.textContent === 'EN' ? 'en' : 'he',
+        });
+      }
+    });
+  });
+</script>
