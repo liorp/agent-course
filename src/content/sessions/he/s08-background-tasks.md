@@ -55,11 +55,11 @@ walkthroughs:
         annotation: "`bg_queue` הוא Queue בטוח לthreads המשותף בין ה-thread הראשי וכל threads הפועלים. `bg_counter` משתמש ב-dict (לא int) כדי ש-closures של workers יוכלו להגדיל אותו בהפניה."
       - lines: [4, 7]
         annotation: "`run_in_background()` הוא הכלי שהמודל קורא לו. הוא מגדיל את הספירה, מקצה ID ותווית, ואז מחזיר מיד הודעת 'התחיל' — המודל לא ממתין לתוצאה."
-      - lines: [9, 16]
+      - lines: [9, 17]
         annotation: "ה-`worker()` closure לוכד `task_id` ו-`label` מהסקופ החיצוני. הוא מריץ את ה-subprocess, לוכד stdout+stderr, קובע הצלחה/כישלון מה-`returncode`, ודוחף את התוצאה לתוך `bg_queue`."
-      - lines: [18, 20]
+      - lines: [19, 21]
         annotation: "`daemon=True` פירושו שה-thread הזה מת אוטומטית כשהתוכנית הראשית יוצאת. אין צורך בקוד ניקוי. `t.start()` מפעיל אותו מיד — ה-thread הראשי כבר חופשי לעשות עבודה אחרת."
-      - lines: [22, 32]
+      - lines: [23, 34]
         annotation: "`drain_bg_queue()` נקראת לפני כל קריאת LLM. היא מרוקנת את התור ומזריקה תוצאות שהושלמו כהודעת משתמש. המודל רואה אותן בסיבוב הבא שלו ויכול להגיב — כל זה ללא polling או המתנה."
 challenge:
   text: "התחילו משימת רקע ארוכה (כמו `sleep 30 && echo done`) והמשיכו לשוחח עם הסוכן בזמן שהיא רצה."

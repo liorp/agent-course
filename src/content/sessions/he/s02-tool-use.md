@@ -56,9 +56,9 @@ walkthroughs:
         annotation: "`run_read` עוברת דרך `safe_path` תחילה, ואז קוראת את הקובץ. פרמטר ה-`limit` האופציונלי קוטע קבצים ארוכים כדי למנוע הצפת ה-context באלפי שורות."
       - lines: [14, 18]
         annotation: "`run_write` יוצרת תיקיות הורה אוטומטית. קריאה אחת ל-`write_file` יכולה ליצור קבצים בתיקיות מקוננות עמוקות ללא שלב `mkdir()` נפרד."
-      - lines: [20, 25]
+      - lines: [20, 26]
         annotation: "`run_edit` עושה החלפת מחרוזת ממוקדת — בטוחה יותר מכתיבה מחדש של כל הקובץ. אם `old_text` לא נמצא, היא מחזירה שגיאה במקום לפגום בשקט בקובץ."
-      - lines: [27, 32]
+      - lines: [28, 33]
         annotation: "`TOOL_HANDLERS` ממפה שמות כלים ל-lambda wrappers. כל lambda מפרקת את ארגומנטי keyword מ-`block.input` וקוראת ל-handler המתאים. הוספת כלי חמישי פירושה הוספת רשומה אחת כאן."
 challenge:
   text: "הוסיפו כלי חמישי — `list_files` — שמציג תוכן תיקייה. צריך רק סכמה ו-handler."

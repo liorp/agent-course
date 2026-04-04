@@ -49,9 +49,9 @@ walkthroughs:
         annotation: "Token counting is intentionally rough — dividing JSON length by 4 gives a fast approximation. The exact count doesn't matter; what matters is triggering compression before hitting the hard API limit."
       - lines: [5, 11]
         annotation: "`maybe_compact()` is the single decision point. It's called before every LLM call in the agent loop. The three thresholds create a progressive escalation: micro at all times, mid at 50k, hard at 80k."
-      - lines: [13, 27]
+      - lines: [13, 28]
         annotation: "`hard_compact()` uses the LLM itself to write its own summary. It appends a summary request to the existing messages, calls the API, and replaces the entire history with the resulting summary — reducing potentially 80k+ tokens down to ~2000."
-      - lines: [24, 27]
+      - lines: [25, 28]
         annotation: "The compacted history is just two messages: a user message with the summary wrapped in `<context_summary>` tags, and a brief assistant acknowledgement. The next LLM call starts fresh from this minimal context."
 challenge:
   text: "Fill the context window by giving the agent many tasks in sequence. Watch the compression kick in."

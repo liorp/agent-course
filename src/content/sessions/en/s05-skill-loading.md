@@ -50,7 +50,7 @@ walkthroughs:
         annotation: "`get_descriptions()` builds the Layer 1 text — the cheap menu injected into the system prompt. Each skill appears as a one-liner with its name and short description. This costs ~100 tokens regardless of how large the skill bodies are."
       - lines: [17, 21]
         annotation: "`get_content()` is Layer 2 — the expensive on-demand load. It wraps the full skill body in a `<skill>` XML tag so the model can identify where the skill content starts and ends in its context."
-      - lines: [23, 24]
+      - lines: [23, 25]
         annotation: "`load_skill` is just another tool handler. When the model calls `load_skill('git')`, this lambda runs `get_content('git')` and returns the full skill body as a `tool_result`. No special loop changes needed."
 challenge:
   text: "Write your own SKILL.md file for a domain you know — cooking, music, or your work domain. Load it into the agent."
