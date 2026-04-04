@@ -174,3 +174,125 @@ th { background: var(--bg-card); color: var(--text-primary); font-weight: 600; }
   h3 { font-size: 1.15rem; }
   pre { font-size: 0.8rem; padding: 0.75rem; }
 }
+
+/* CodeWalkthrough component */
+.cw-container {
+  background: var(--bg-code);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-block: 2rem;
+}
+
+.cw-title {
+  padding: 0.75rem 1rem;
+  background: var(--bg-card);
+  border-block-end: 1px solid var(--border);
+  color: var(--accent);
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: var(--font-code);
+}
+
+.cw-body {
+  display: flex;
+  gap: 0;
+  position: relative;
+}
+
+.cw-code {
+  flex: 1;
+  margin: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.cw-line {
+  display: flex;
+  padding: 0 1rem;
+  transition: background 0.2s;
+}
+
+.cw-line-active {
+  background: rgba(255, 204, 0, 0.08);
+  border-inline-start: 3px solid var(--accent);
+}
+
+.cw-line-num {
+  display: inline-block;
+  width: 3ch;
+  text-align: end;
+  margin-inline-end: 1rem;
+  color: var(--text-muted);
+  opacity: 0.4;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.cw-line-text {
+  white-space: pre;
+}
+
+.cw-annotation {
+  width: 260px;
+  flex-shrink: 0;
+  background: var(--bg-card);
+  border-inline-start: 1px solid var(--border);
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.cw-annotation-text {
+  color: var(--text-body);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  font-family: var(--font-body);
+}
+
+.cw-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 1rem;
+  background: var(--bg-card);
+  border-block-start: 1px solid var(--border);
+}
+
+.cw-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-body);
+  padding: 0.35rem 0.85rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--font-body);
+}
+
+.cw-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.cw-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.cw-step-indicator {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+@media (max-width: 640px) {
+  .cw-body { flex-direction: column; }
+  .cw-annotation {
+    width: 100%;
+    border-inline-start: none;
+    border-block-start: 1px solid var(--border);
+  }
+}
