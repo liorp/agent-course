@@ -1,7 +1,7 @@
 ---
 ---
 
-<button class="theme-toggle" data-theme-toggle aria-label="Toggle theme" title="Toggle theme">
+<button class="header-btn theme-toggle" data-theme-toggle aria-label="Toggle theme" title="Toggle theme">
   <svg class="theme-icon theme-icon-dark" data-theme-icon-dark width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
   </svg>
@@ -11,23 +11,6 @@
 </button>
 
 <style>
-  .theme-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.35rem 0.75rem;
-    height: calc(0.8rem * 1.75 + 0.7rem + 2px); /* match search trigger: font-size * line-height + padding + border */
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    cursor: pointer;
-    transition: border-color 0.2s;
-    color: var(--text-muted);
-  }
-  .theme-toggle:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-  }
   /* Show moon in dark mode, sun in light mode */
   .theme-icon-light { display: none; }
   html[data-theme="light"] .theme-icon-dark { display: none; }

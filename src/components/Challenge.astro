@@ -9,6 +9,11 @@ interface Props {
 const { text, hint } = Astro.props;
 const locale = getLangFromUrl(Astro.url);
 const ui = getUI(locale);
+
+/** Convert backtick-wrapped text to <code> HTML */
+function inlineCode(s: string): string {
+  return s.replace(/`([^`]+)`/g, '<code>$1</code>');
+}
 ---
 
 <div class="challenge-box">
@@ -16,11 +21,11 @@ const ui = getUI(locale);
     <span class="challenge-icon">🧪</span>
     <span class="challenge-label">{ui['session.challenge']}</span>
   </div>
-  <p class="challenge-text">{text}</p>
+  <p class="challenge-text" set:html={inlineCode(text)} />
   {hint && (
     <details class="challenge-hint">
       <summary>{ui['session.hint']}</summary>
-      <p>{hint}</p>
+      <p set:html={inlineCode(hint)} />
     </details>
   )}
 </div>

@@ -64,4 +64,36 @@ const ui = getUI(locale);
   .header-nav a:hover {
     color: var(--accent);
   }
+
+  /* Shared style for header icon buttons (search, theme toggle) */
+  .header-nav :global(.header-btn) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.4rem 0.65rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .header-nav :global(.header-btn:hover) {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  @media (max-width: 640px) {
+    .header-nav { gap: 0.5rem; }
+    .header-nav :global(.search-label),
+    .header-nav :global(.search-kbd) {
+      display: none;
+    }
+    /* Icon-only: same square size for both */
+    .header-nav :global(.header-btn) {
+      width: 34px;
+      height: 34px;
+      padding: 0;
+    }
+  }
 </style>
