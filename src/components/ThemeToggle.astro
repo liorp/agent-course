@@ -1,0 +1,50 @@
+---
+import { getLangFromUrl, getUI } from '@/i18n/ui';
+const locale = getLangFromUrl(Astro.url);
+const ui = getUI(locale);
+---
+
+<button class="theme-toggle" data-theme-toggle aria-label="Toggle theme" title="Toggle theme">
+  <span class="theme-icon" data-theme-icon>🌙</span>
+</button>
+
+<style>
+  .theme-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.3rem 0.5rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    line-height: 1;
+    transition: border-color 0.2s;
+  }
+  .theme-toggle:hover {
+    border-color: var(--accent);
+  }
+</style>
+
+<script>
+  const STORAGE_KEY = 'agent-course-theme';
+
+  function getTheme(): string {
+    return localStorage.getItem(STORAGE_KEY) || 'dark';
+  }
+
+  function setTheme(theme: string) {
+    localStorage.setItem(STORAGE_KEY, theme);
+    document.documentElement.setAttribute('data-theme', theme);
+    document.querySelectorAll('[data-theme-icon]').forEach(el => {
+      el.textContent = theme === 'dark' ? '🌙' : '☀️';
+    });
+  }
+
+  // Initialize
+  setTheme(getTheme());
+
+  document.querySelectorAll('[data-theme-toggle]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      setTheme(getTheme() === 'dark' ? 'light' : 'dark');
+    });
+  });
+</script>

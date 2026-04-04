@@ -34,5 +34,7 @@
   "email.subtitle": "קבלו התראה כשנוסיף תוכן חדש",
   "email.placeholder": "your@email.com",
   "email.button": "הרשמה",
-  "session.toc": "בעמוד זה"
+  "session.toc": "בעמוד זה",
+  "theme.dark": "כהה",
+  "theme.light": "בהיר"
 }

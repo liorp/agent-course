@@ -34,5 +34,7 @@
   "email.subtitle": "Get notified when we add new content",
   "email.placeholder": "your@email.com",
   "email.button": "Subscribe",
-  "session.toc": "On this page"
+  "session.toc": "On this page",
+  "theme.dark": "Dark",
+  "theme.light": "Light"
 }

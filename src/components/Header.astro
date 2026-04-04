@@ -1,5 +1,6 @@
 ---
 import LanguageSwitcher from './LanguageSwitcher.astro';
+import ThemeToggle from './ThemeToggle.astro';
 import { getLangFromUrl, getUI } from '@/i18n/ui';
 
 const locale = getLangFromUrl(Astro.url);
@@ -14,6 +15,7 @@ const ui = getUI(locale);
     </a>
     <nav class="header-nav">
       <a href={`/${locale}/`}>{ui['nav.sessions']}</a>
+      <ThemeToggle />
       <LanguageSwitcher />
     </nav>
   </div>
