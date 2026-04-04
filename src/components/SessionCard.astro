@@ -16,7 +16,7 @@ const href = `/${locale}/${session.slug}`;
 
 <a href={href} class="session-card" data-session={session.id}>
   <div class="card-header">
-    <span class="card-number">{session.id}</span>
+    <span class="card-number">{session.order}</span>
     <span class="card-time">{session.readingTime} {ui['session.readingTime']}</span>
   </div>
   <h3 class="card-title">{title}</h3>

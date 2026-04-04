@@ -35,7 +35,7 @@ const phaseLabel = ui[phaseKey];
 const issueUrl = `https://github.com/liorp/agent-course/issues/new?title=${encodeURIComponent(`[${session.id}] `)}&body=${encodeURIComponent(`**Session:** ${session.id} — ${session.title}\n**URL:** /${locale}/${session.slug}\n\n**Describe the issue:**\n\n`)}&labels=fix`;
 ---
 
-<Base title={`${session.id}: ${title}`}>
+<Base title={title}>
   <Header />
   <main class="session-page">
     <div class="session-layout container">
@@ -45,7 +45,7 @@ const issueUrl = `https://github.com/liorp/agent-course/issues/new?title=${encod
           <span class="breadcrumb-sep">&rsaquo;</span>
           <span>{phaseLabel}</span>
           <span class="breadcrumb-sep">&rsaquo;</span>
-          <span>{session.id}</span>
+          <span>{title}</span>
         </nav>
 
         <header class="session-header">
