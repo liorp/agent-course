@@ -54,8 +54,8 @@ walkthroughs:
       - lines: [21, 28]
         annotation: "`ready()` is the dependency resolver. It first collects all completed task IDs into a set (`done_ids`), then filters for tasks that are `pending` AND have all their `blockedBy` IDs in that set. This is the core of the DAG traversal."
 challenge:
-  text: "Create a task graph with 5+ tasks and at least 2 dependency chains. Run get_ready_tasks to see what can execute."
-  hint: "Use add_dependency to link tasks, then check which have all deps satisfied"
+  text: "Create a task graph with 5+ tasks and at least 2 dependency chains. Run `get_ready_tasks` to see what can execute."
+  hint: "Use `add_dependency` to link tasks, then check which have all deps satisfied"
 ---
 
 ## The Problem

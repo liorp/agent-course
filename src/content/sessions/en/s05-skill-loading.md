@@ -53,8 +53,8 @@ walkthroughs:
       - lines: [23, 25]
         annotation: "`load_skill` is just another tool handler. When the model calls `load_skill('git')`, this lambda runs `get_content('git')` and returns the full skill body as a `tool_result`. No special loop changes needed."
 challenge:
-  text: "Write your own SKILL.md file for a domain you know — cooking, music, or your work domain. Load it into the agent."
-  hint: "Place it in the skills/ directory and the agent will find it"
+  text: "Write your own `SKILL.md` file for a domain you know — cooking, music, or your work domain. Load it into the agent."
+  hint: "Place it in the `skills/` directory and the agent will find it"
 ---
 
 ## The Problem

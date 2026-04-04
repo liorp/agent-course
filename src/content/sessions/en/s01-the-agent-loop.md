@@ -54,7 +54,7 @@ walkthroughs:
         annotation: "Feed the tool results back as a `\"user\"` message. The model will see these results on the next iteration and decide what to do next."
 challenge:
   text: "Clone the repo, run `python agents/s01_agent_loop.py`, and ask it to create a file. Watch the tool calls in the terminal."
-  hint: "Set MODEL_ID=claude-sonnet-4-20250514 in your .env file"
+  hint: "Set `MODEL_ID=claude-sonnet-4-20250514` in your `.env` file"
 ---
 
 ## The Problem

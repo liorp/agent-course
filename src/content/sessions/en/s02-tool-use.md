@@ -62,7 +62,7 @@ walkthroughs:
         annotation: "`TOOL_HANDLERS` maps tool names to lambda wrappers. Each lambda unpacks keyword arguments from `block.input` and calls the appropriate handler. Adding a fifth tool means adding one entry here."
 challenge:
   text: "Add a fifth tool — `list_files` — that lists directory contents. You only need a schema and a handler."
-  hint: "Use os.listdir() in the handler and return the joined filenames"
+  hint: "Use `os.listdir()` in the handler and return the joined filenames"
 ---
 
 ## The Problem

@@ -55,7 +55,7 @@ walkthroughs:
         annotation: "The compacted history is just two messages: a user message with the summary wrapped in `<context_summary>` tags, and a brief assistant acknowledgement. The next LLM call starts fresh from this minimal context."
 challenge:
   text: "Fill the context window by giving the agent many tasks in sequence. Watch the compression kick in."
-  hint: "Check the token count in the response metadata"
+  hint: "Check the token count in the `response` metadata"
 ---
 
 ## The Problem

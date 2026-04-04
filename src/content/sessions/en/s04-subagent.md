@@ -56,8 +56,8 @@ walkthroughs:
       - lines: [22, 24]
         annotation: "Only the final text blocks from the last response are returned. The entire `sub_messages` history (potentially 30+ turns) is discarded. The parent receives a one-paragraph summary."
 challenge:
-  text: "Modify spawn_subagent to pass a custom system prompt. Try making a \"code reviewer\" subagent."
-  hint: "Add a `system` parameter and pass it to client.messages.create"
+  text: "Modify `spawn_subagent` to pass a custom system prompt. Try making a \"code reviewer\" subagent."
+  hint: "Add a `system` parameter and pass it to `client.messages.create`"
 ---
 
 ## The Problem

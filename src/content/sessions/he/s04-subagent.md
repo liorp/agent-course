@@ -56,8 +56,8 @@ walkthroughs:
       - lines: [22, 24]
         annotation: "רק בלוקי הטקסט האחרונים מהתשובה האחרונה מוחזרים. כל היסטוריית `sub_messages` (אפשר 30+ סיבובים) נזרקת. ההורה מקבל פסקה אחת של סיכום."
 challenge:
-  text: "שנו את spawn_subagent כך שיעביר system prompt מותאם. נסו ליצור תת-סוכן \"בודק קוד\"."
-  hint: "הוסיפו פרמטר `system` והעבירו אותו ל-client.messages.create"
+  text: "שנו את `spawn_subagent` כך שיעביר system prompt מותאם. נסו ליצור תת-סוכן \"בודק קוד\"."
+  hint: "הוסיפו פרמטר `system` והעבירו אותו ל-`client.messages.create`"
 ---
 
 ## הבעיה

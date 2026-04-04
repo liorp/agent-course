@@ -62,7 +62,7 @@ walkthroughs:
         annotation: "`process_inbox()` is the message dispatcher. It tries to parse each message as typed JSON. If it has a `'type'` field, it routes to the appropriate handler. Unknown or plain messages fall through to `start_task()`."
 challenge:
   text: "Implement a plan-approval flow: lead proposes a plan, teammate reviews and approves or rejects."
-  hint: "Use REQUEST/RESPONSE message types with a \"plan\" field"
+  hint: "Use `REQUEST`/`RESPONSE` message types with a `\"plan\"` field"
 ---
 
 ## The Problem

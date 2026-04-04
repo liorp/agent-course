@@ -54,7 +54,7 @@ walkthroughs:
         annotation: "הזנת תוצאות הכלי בחזרה כהודעת `'user'`. המודל יראה את התוצאות באיטרציה הבאה ויחליט מה לעשות."
 challenge:
   text: "שכפלו את הריפו, הריצו `python agents/s01_agent_loop.py`, ובקשו ממנו ליצור קובץ. עקבו אחר קריאות הכלים בטרמינל."
-  hint: "הגדירו MODEL_ID=claude-sonnet-4-20250514 בקובץ .env שלכם"
+  hint: "הגדירו `MODEL_ID=claude-sonnet-4-20250514` בקובץ `.env` שלכם"
 ---
 
 ## הבעיה
