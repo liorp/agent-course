@@ -37,5 +37,7 @@
   "session.toc": "On this page",
   "theme.dark": "Dark",
   "theme.light": "Light",
-  "search.placeholder": "Search..."
+  "search.placeholder": "Search...",
+  "session.challenge": "Try it yourself",
+  "session.hint": "Hint"
 }

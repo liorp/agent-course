@@ -37,5 +37,7 @@
   "session.toc": "בעמוד זה",
   "theme.dark": "כהה",
   "theme.light": "בהיר",
-  "search.placeholder": "חיפוש..."
+  "search.placeholder": "חיפוש...",
+  "session.challenge": "נסו בעצמכם",
+  "session.hint": "רמז"
 }

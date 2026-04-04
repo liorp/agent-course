@@ -61,6 +61,9 @@ walkthroughs:
         annotation: "daemon=True means this thread automatically dies when the main program exits. No cleanup code needed. t.start() launches it immediately — the main thread is already free to do other work."
       - lines: [22, 32]
         annotation: "drain_bg_queue() is called before each LLM call. It empties the queue and injects completed results as a user message. The model sees them on its next turn and can react — all without any polling or waiting."
+challenge:
+  text: "Start a long-running background task (like `sleep 30 && echo done`) and keep chatting with the agent while it runs."
+  hint: "The notification will inject into the next tool_result automatically"
 ---
 
 ## The Problem

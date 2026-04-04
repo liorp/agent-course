@@ -53,6 +53,9 @@ walkthroughs:
         annotation: "hard_compact() uses the LLM itself to write its own summary. It appends a summary request to the existing messages, calls the API, and replaces the entire history with the resulting summary — reducing potentially 80k+ tokens down to ~2000."
       - lines: [24, 27]
         annotation: "The compacted history is just two messages: a user message with the summary wrapped in <context_summary> tags, and a brief assistant acknowledgement. The next LLM call starts fresh from this minimal context."
+challenge:
+  text: "Fill the context window by giving the agent many tasks in sequence. Watch the compression kick in."
+  hint: "Check the token count in the response metadata"
 ---
 
 ## The Problem

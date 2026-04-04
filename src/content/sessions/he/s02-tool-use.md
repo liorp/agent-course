@@ -60,6 +60,9 @@ walkthroughs:
         annotation: "run_edit עושה החלפת מחרוזת ממוקדת — בטוחה יותר מכתיבה מחדש של כל הקובץ. אם old_text לא נמצא, היא מחזירה שגיאה במקום לפגום בשקט בקובץ."
       - lines: [27, 32]
         annotation: "TOOL_HANDLERS ממפה שמות כלים ל-lambda wrappers. כל lambda מפרקת את ארגומנטי keyword מ-block.input וקוראת ל-handler המתאים. הוספת כלי חמישי פירושה הוספת רשומה אחת כאן."
+challenge:
+  text: "הוסיפו כלי חמישי — `list_files` — שמציג תוכן תיקייה. צריך רק סכמה ו-handler."
+  hint: "השתמשו ב-os.listdir() ב-handler והחזירו את שמות הקבצים"
 ---
 
 ## הבעיה

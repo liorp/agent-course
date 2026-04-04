@@ -57,6 +57,9 @@ walkthroughs:
         annotation: "The outer loop checks inbox first on every iteration. This ensures shutdown requests are processed promptly even if the agent is in the middle of a long idle cycle."
       - lines: [21, 29]
         annotation: "The idle cycle: if no ready task is available, update status to IDLE and sleep 2 seconds. Otherwise, claim the task, run the full agent loop on it, then complete it and loop back to check for more."
+challenge:
+  text: "Set up 3 autonomous agents with an empty task board, then add 5 tasks. Watch them claim and complete."
+  hint: "Each agent's idle_cycle will automatically scan and claim"
 ---
 
 ## The Problem

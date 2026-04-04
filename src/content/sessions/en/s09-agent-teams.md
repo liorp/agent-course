@@ -53,6 +53,9 @@ walkthroughs:
         annotation: "drain_inbox() reads all pending messages and then truncates the file to empty. This read-and-truncate pattern is the key: messages are consumed once and not replayed on the next polling cycle."
       - lines: [19, 27]
         annotation: "teammate_loop() is the teammate's runtime. It polls its inbox every 2 seconds. When work arrives, it updates its status to WORKING, runs an agent loop to handle the messages, then sends the result back to lead and returns to IDLE."
+challenge:
+  text: "Spawn two teammates with different specialties and have them collaborate on a task through the mailbox."
+  hint: "Give them complementary system prompts like \"frontend expert\" and \"backend expert\""
 ---
 
 ## The Problem

@@ -7,6 +7,7 @@ import BeginnerExplainer from '@/components/BeginnerExplainer.astro';
 import AdSlot from '@/components/AdSlot.astro';
 import ProgressTracker from '@/components/ProgressTracker.astro';
 import CodeWalkthrough from '@/components/CodeWalkthrough';
+import Challenge from '@/components/Challenge.astro';
 import ReadingProgress from '@/components/ReadingProgress.astro';
 import TableOfContents from '@/components/TableOfContents.astro';
 import { getLangFromUrl, getUI } from '@/i18n/ui';
@@ -23,6 +24,7 @@ interface Props {
       language: string;
       steps: { lines: [number, number]; annotation: string }[];
     }[];
+    challenge?: { text: string; hint?: string };
   };
 }
 
@@ -87,6 +89,10 @@ const reportArrow = isRtl ? '←' : '→';
               />
             ))}
           </section>
+        )}
+
+        {frontmatter.challenge && (
+          <Challenge text={frontmatter.challenge.text} hint={frontmatter.challenge.hint} />
         )}
 
         <ProgressTracker sessionId={session.id} />

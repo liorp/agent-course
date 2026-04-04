@@ -46,6 +46,9 @@ walkthroughs:
         annotation: "assign_worktree() binds the worktree to the task record. After this call, the task JSON file contains both what to do (title, description) and where to do it (worktree path and branch name)."
       - lines: [18, 23]
         annotation: "cleanup_worktree() removes the worktree directory and deregisters it from git's worktree list. This should be called after merging the branch — the task is done, the isolation lane is released."
+challenge:
+  text: "Create 3 tasks, assign each a worktree, and verify they can edit the same file independently."
+  hint: "After each completes, merge the branches and resolve any conflicts"
 ---
 
 ## The Problem

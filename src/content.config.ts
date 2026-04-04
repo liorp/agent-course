@@ -23,6 +23,10 @@ const sessions = defineCollection({
         annotation: z.string(),
       })),
     })).optional(),
+    challenge: z.object({
+      text: z.string(),
+      hint: z.string().optional(),
+    }).optional(),
   }),
 });
 

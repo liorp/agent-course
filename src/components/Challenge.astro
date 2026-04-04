@@ -1,0 +1,71 @@
+---
+import { getLangFromUrl, getUI } from '@/i18n/ui';
+
+interface Props {
+  text: string;
+  hint?: string;
+}
+
+const { text, hint } = Astro.props;
+const locale = getLangFromUrl(Astro.url);
+const ui = getUI(locale);
+---
+
+<div class="challenge-box">
+  <div class="challenge-header">
+    <span class="challenge-icon">🧪</span>
+    <span class="challenge-label">{ui['session.challenge']}</span>
+  </div>
+  <p class="challenge-text">{text}</p>
+  {hint && (
+    <details class="challenge-hint">
+      <summary>{ui['session.hint']}</summary>
+      <p>{hint}</p>
+    </details>
+  )}
+</div>
+
+<style>
+  .challenge-box {
+    background: linear-gradient(135deg, rgba(255, 204, 0, 0.05), rgba(255, 204, 0, 0.02));
+    border: 1px solid rgba(255, 204, 0, 0.2);
+    border-radius: 10px;
+    padding: 1.25rem;
+    margin-block: 2rem;
+  }
+  .challenge-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-block-end: 0.5rem;
+  }
+  .challenge-icon { font-size: 1.2rem; }
+  .challenge-label {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  .challenge-text {
+    color: var(--text-body);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+  .challenge-hint {
+    margin-block-start: 0.75rem;
+  }
+  .challenge-hint summary {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    cursor: pointer;
+    list-style: none;
+  }
+  .challenge-hint summary::before {
+    content: '💡 ';
+  }
+  .challenge-hint p {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-block-start: 0.35rem;
+  }
+</style>
