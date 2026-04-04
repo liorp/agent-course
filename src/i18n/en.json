@@ -1,0 +1,19 @@
+{
+  "site.title": "Agent Harness Course",
+  "site.description": "12 sessions from a simple loop to autonomous agent teams",
+  "nav.sessions": "Sessions",
+  "nav.about": "About",
+  "session.markComplete": "Mark as complete",
+  "session.completed": "Completed",
+  "session.prev": "Previous",
+  "session.next": "Next",
+  "session.beginnerExplainer": "New to this?",
+  "session.readingTime": "min read",
+  "landing.hero.title": "Agent Harness Engineering",
+  "landing.hero.subtitle": "12 sessions from a simple loop to autonomous agent teams",
+  "landing.hero.thesis": "An agent is a model. Not a framework. Not a prompt chain. The model decides. The harness executes. Learn to build the harness.",
+  "phase.1": "Phase 1: The Loop",
+  "phase.2": "Phase 2: Planning & Knowledge",
+  "phase.3": "Phase 3: Persistence",
+  "phase.4": "Phase 4: Teams"
+}

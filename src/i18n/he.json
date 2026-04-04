@@ -1,0 +1,19 @@
+{
+  "site.title": "קורס הנדסת רתמה לסוכנים",
+  "site.description": "12 שיעורים מלולאה פשוטה ועד צוותי סוכנים אוטונומיים",
+  "nav.sessions": "שיעורים",
+  "nav.about": "אודות",
+  "session.markComplete": "סמן כהושלם",
+  "session.completed": "הושלם",
+  "session.prev": "הקודם",
+  "session.next": "הבא",
+  "session.beginnerExplainer": "חדש בנושא?",
+  "session.readingTime": "דקות קריאה",
+  "landing.hero.title": "הנדסת רתמה לסוכנים",
+  "landing.hero.subtitle": "12 שיעורים מלולאה פשוטה ועד צוותי סוכנים אוטונומיים",
+  "landing.hero.thesis": "סוכן הוא מודל. לא פריימוורק. לא שרשרת פרומפטים. המודל מחליט. הרתמה מבצעת. למדו לבנות את הרתמה.",
+  "phase.1": "שלב 1: הלולאה",
+  "phase.2": "שלב 2: תכנון וידע",
+  "phase.3": "שלב 3: התמדה",
+  "phase.4": "שלב 4: צוותים"
+}
