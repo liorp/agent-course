@@ -16,7 +16,7 @@ beginnerConcepts:
 
 ## The Problem
 
-In the Agent Teams through Autonomous Agents sessions, teammates coordinate through tasks and mailboxes — but they all share the same working directory. If two agents edit the same file simultaneously, they'll corrupt each other's work. The team can plan together, but they can't *execute* together.
+In the [Agent Teams](/en/s09-agent-teams) through [Autonomous Agents](/en/s11-autonomous-agents) sessions, teammates coordinate through tasks and mailboxes — but they all share the same working directory. If two agents edit the same file simultaneously, they'll corrupt each other's work. The team can plan together, but they can't *execute* together.
 
 ## The Solution
 
@@ -75,9 +75,9 @@ Lead Agent:
   8. Lead removes worktree
 ```
 
-This is the culmination of the entire course: the Tasks session manages goals, the Team Protocols session manages communication, the Autonomous Agents session manages assignment, and worktrees manage isolation. Each mechanism handles one concern. Together, they enable true parallel execution.
+This is the culmination of the entire course: the [Tasks](/en/s07-task-system) session manages goals, the [Team Protocols](/en/s10-team-protocols) session manages communication, the [Autonomous Agents](/en/s11-autonomous-agents) session manages assignment, and worktrees manage isolation. Each mechanism handles one concern. Together, they enable true parallel execution.
 
-## What Changed from Autonomous Agents
+## What Changed from [Autonomous Agents](/en/s11-autonomous-agents)
 
 | Component | Autonomous Agents | Worktree + Task Isolation |
 |-----------|-----|-----|

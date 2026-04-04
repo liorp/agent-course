@@ -120,7 +120,7 @@ def hard_compact(messages: list) -> list:
     ]
 ```
 
-## What Changed From Skills
+## What Changed From [Skills](/en/s05-skill-loading)
 
 | Component      | Before (Skills)  | After (Context Compact)        |
 |----------------|------------------|--------------------------------|

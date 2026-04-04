@@ -16,11 +16,11 @@ beginnerConcepts:
 
 ## The Problem
 
-In the Agent Teams through Team Protocols sessions, teammates only work when explicitly told to. The lead must spawn each one with a specific prompt. 10 unclaimed tasks on the board? The lead assigns each one manually. Doesn't scale.
+In the [Agent Teams](/en/s09-agent-teams) through [Team Protocols](/en/s10-team-protocols) sessions, teammates only work when explicitly told to. The lead must spawn each one with a specific prompt. 10 unclaimed tasks on the board? The lead assigns each one manually. Doesn't scale.
 
 True autonomy: teammates scan the task board themselves, claim unclaimed tasks, work on them, then look for more.
 
-One subtlety: after context compression (Context Compact session), the agent might forget who it is. Identity re-injection fixes this.
+One subtlety: after context compression ([Context Compact](/en/s06-context-compact) session), the agent might forget who it is. Identity re-injection fixes this.
 
 ## The Solution
 
@@ -103,7 +103,7 @@ def autonomous_teammate(name: str, role: str) -> None:
         complete_task(task["id"])
 ```
 
-3. Identity re-injection wraps the hard_compact function from the Context Compact session.
+3. Identity re-injection wraps the hard_compact function from the [Context Compact](/en/s06-context-compact) session.
 
 ```python
 def build_identity_block(name: str, role: str, task_id: int) -> str:
@@ -125,7 +125,7 @@ def hard_compact_with_identity(messages: list, name: str, role: str, task_id: in
     return compacted
 ```
 
-## What Changed From Team Protocols
+## What Changed From [Team Protocols](/en/s10-team-protocols)
 
 | Component      | Before (Team Protocols) | After (Autonomous Agents)           |
 |----------------|------------------------|-------------------------------------|

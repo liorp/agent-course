@@ -16,9 +16,9 @@ beginnerConcepts:
 
 ## The Problem
 
-The TodoWrite session's TodoManager is a flat checklist in memory: no ordering, no dependencies, no status beyond done-or-not. Real goals have structure — task B depends on task A, tasks C and D can run in parallel, task E waits for both C and D.
+The [TodoWrite](/en/s03-todo-write) session's TodoManager is a flat checklist in memory: no ordering, no dependencies, no status beyond done-or-not. Real goals have structure — task B depends on task A, tasks C and D can run in parallel, task E waits for both C and D.
 
-Without explicit relationships, the agent can't tell what's ready, what's blocked, or what can run concurrently. And because the list lives only in memory, context compression (Context Compact session) wipes it clean.
+Without explicit relationships, the agent can't tell what's ready, what's blocked, or what can run concurrently. And because the list lives only in memory, context compression ([Context Compact](/en/s06-context-compact) session) wipes it clean.
 
 ## The Solution
 
@@ -121,7 +121,7 @@ list_ready_tasks() -> [task 2]
 ...
 ```
 
-## What Changed From Context Compact
+## What Changed From [Context Compact](/en/s06-context-compact)
 
 | Component      | Before (Context Compact) | After (Tasks)                    |
 |----------------|----------------------|----------------------------------|
@@ -132,4 +132,4 @@ list_ready_tasks() -> [task 2]
 
 ## Key Takeaway
 
-Persisting tasks to disk is what makes the agent's plans durable. The task graph encodes not just *what* to do but *in what order* and *what can run in parallel*. Combined with the Context Compact session's compression, the agent can work on truly large goals across many turns without losing track.
+Persisting tasks to disk is what makes the agent's plans durable. The task graph encodes not just *what* to do but *in what order* and *what can run in parallel*. Combined with the [Context Compact](/en/s06-context-compact) session's compression, the agent can work on truly large goals across many turns without losing track.

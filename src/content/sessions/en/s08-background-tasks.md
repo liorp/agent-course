@@ -127,7 +127,7 @@ def agent_loop(messages: list):
         messages.append({"role": "user", "content": results})
 ```
 
-## What Changed From Tasks
+## What Changed From [Tasks](/en/s07-task-system)
 
 | Component      | Before (Tasks)     | After (Background Tasks)             |
 |----------------|--------------------|--------------------------------------|

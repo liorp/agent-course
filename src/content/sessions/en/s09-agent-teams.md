@@ -111,7 +111,7 @@ def teammate_loop(name: str, role: str) -> None:
         update_status(name, "IDLE")
 ```
 
-## What Changed From Background Tasks
+## What Changed From [Background Tasks](/en/s08-background-tasks)
 
 | Component      | Before (Background Tasks) | After (Agent Teams)            |
 |----------------|-----------------------|--------------------------------|

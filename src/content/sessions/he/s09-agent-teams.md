@@ -111,7 +111,7 @@ def teammate_loop(name: str, role: str) -> None:
         update_status(name, "IDLE")
 ```
 
-## מה השתנה מ-משימות רקע
+## מה השתנה מ-[משימות רקע](/he/s08-background-tasks)
 
 | רכיב | לפני (משימות רקע) | אחרי (צוותי סוכנים) |
 |------|-----------|-----------|

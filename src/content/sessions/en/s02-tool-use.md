@@ -16,7 +16,7 @@ beginnerConcepts:
 
 ## The Problem
 
-The Agent Loop session gave the agent one tool: bash. That works, but it's a blunt instrument. Every file read requires `cat`, every write requires `echo >`, every edit requires `sed`. The model wastes tokens on shell syntax when it could use purpose-built tools.
+[The Agent Loop](/en/s01-the-agent-loop) session gave the agent one tool: bash. That works, but it's a blunt instrument. Every file read requires `cat`, every write requires `echo >`, every edit requires `sed`. The model wastes tokens on shell syntax when it could use purpose-built tools.
 
 ## The Solution
 
@@ -71,7 +71,7 @@ TOOL_HANDLERS = {
 }
 ```
 
-## What Changed from The Agent Loop
+## What Changed from [The Agent Loop](/en/s01-the-agent-loop)
 
 | Component | The Agent Loop | Tool Use |
 |-----------|-----|-----|

@@ -127,7 +127,7 @@ def agent_loop(messages: list):
         messages.append({"role": "user", "content": results})
 ```
 
-## מה השתנה מ-מערכת משימות
+## מה השתנה מ-[מערכת משימות](/he/s07-task-system)
 
 | רכיב | לפני (מערכת משימות) | אחרי (משימות רקע) |
 |------|-----------|-----------|
