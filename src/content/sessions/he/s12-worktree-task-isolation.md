@@ -41,11 +41,11 @@ walkthroughs:
           )
     steps:
       - lines: [1, 8]
-        annotation: "create_worktree() מריצה 'git worktree add' עם -b ליצירת ענף חדש בו-זמנית. ה-worktree נמצא ב-.worktrees/<task_id>/ — תיקיית עבודה git פונקציונלית מלאה על ענף משלה."
+        annotation: "`create_worktree()` מריצה `git worktree add` עם `-b` ליצירת ענף חדש בו-זמנית. ה-worktree נמצא ב-`.worktrees/<task_id>/` — תיקיית עבודה git פונקציונלית מלאה על ענף משלה."
       - lines: [10, 16]
-        annotation: "assign_worktree() קושרת את ה-worktree לרשומת המשימה. לאחר קריאה זו, קובץ ה-JSON של המשימה מכיל גם מה לעשות (כותרת, תיאור) וגם היכן לעשות זאת (נתיב worktree ושם ענף)."
+        annotation: "`assign_worktree()` קושרת את ה-worktree לרשומת המשימה. לאחר קריאה זו, קובץ ה-JSON של המשימה מכיל גם מה לעשות (כותרת, תיאור) וגם היכן לעשות זאת (נתיב worktree ושם ענף)."
       - lines: [18, 23]
-        annotation: "cleanup_worktree() מסירה את תיקיית ה-worktree ומבטלת את רישומה מרשימת ה-worktrees של git. יש לקרוא לה לאחר מיזוג הענף — המשימה הושלמה, נתיב הבידוד משוחרר."
+        annotation: "`cleanup_worktree()` מסירה את תיקיית ה-worktree ומבטלת את רישומה מרשימת ה-worktrees של git. יש לקרוא לה לאחר מיזוג הענף — המשימה הושלמה, נתיב הבידוד משוחרר."
 challenge:
   text: "צרו 3 משימות, הקצו לכל אחת worktree, וודאו שהן יכולות לערוך את אותו קובץ באופן עצמאי."
   hint: "לאחר השלמת כל אחת, מזגו את הענפים ופתרו קונפליקטים"

@@ -46,13 +46,13 @@ walkthroughs:
               ]
     steps:
       - lines: [1, 4]
-        annotation: "Each TaskManager instance points to a .tasks/ directory. mkdir(exist_ok=True) means the first call creates the directory automatically — no setup step required."
+        annotation: "Each `TaskManager` instance points to a `.tasks/` directory. `mkdir(exist_ok=True)` means the first call creates the directory automatically — no setup step required."
       - lines: [6, 10]
-        annotation: "_load_all() reads every task_*.json file on disk. Because tasks are files, they survive context compression, agent crashes, and even handoffs between different agents."
+        annotation: "`_load_all()` reads every `task_*.json` file on disk. Because tasks are files, they survive context compression, agent crashes, and even handoffs between different agents."
       - lines: [12, 19]
-        annotation: "create() auto-increments the ID by finding the current maximum. Each task is written as a standalone JSON file — task_1.json, task_2.json, etc. The blockedBy list is stored directly in the file."
+        annotation: "`create()` auto-increments the ID by finding the current maximum. Each task is written as a standalone JSON file — `task_1.json`, `task_2.json`, etc. The `blockedBy` list is stored directly in the file."
       - lines: [21, 27]
-        annotation: "ready() is the dependency resolver. It first collects all completed task IDs into a set (done_ids), then filters for tasks that are pending AND have all their blockedBy IDs in that set. This is the core of the DAG traversal."
+        annotation: "`ready()` is the dependency resolver. It first collects all completed task IDs into a set (`done_ids`), then filters for tasks that are `pending` AND have all their `blockedBy` IDs in that set. This is the core of the DAG traversal."
 challenge:
   text: "Create a task graph with 5+ tasks and at least 2 dependency chains. Run get_ready_tasks to see what can execute."
   hint: "Use add_dependency to link tasks, then check which have all deps satisfied"

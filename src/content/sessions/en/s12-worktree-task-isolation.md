@@ -41,11 +41,11 @@ walkthroughs:
           )
     steps:
       - lines: [1, 8]
-        annotation: "create_worktree() runs 'git worktree add' with -b to create a new branch simultaneously. The worktree lives in .worktrees/<task_id>/ — a fully functional git working directory on its own branch."
+        annotation: "`create_worktree()` runs `git worktree add` with `-b` to create a new branch simultaneously. The worktree lives in `.worktrees/<task_id>/` — a fully functional git working directory on its own branch."
       - lines: [10, 16]
-        annotation: "assign_worktree() binds the worktree to the task record. After this call, the task JSON file contains both what to do (title, description) and where to do it (worktree path and branch name)."
+        annotation: "`assign_worktree()` binds the worktree to the task record. After this call, the task JSON file contains both what to do (title, description) and where to do it (worktree path and branch name)."
       - lines: [18, 23]
-        annotation: "cleanup_worktree() removes the worktree directory and deregisters it from git's worktree list. This should be called after merging the branch — the task is done, the isolation lane is released."
+        annotation: "`cleanup_worktree()` removes the worktree directory and deregisters it from git's worktree list. This should be called after merging the branch — the task is done, the isolation lane is released."
 challenge:
   text: "Create 3 tasks, assign each a worktree, and verify they can edit the same file independently."
   hint: "After each completes, merge the branches and resolve any conflicts"

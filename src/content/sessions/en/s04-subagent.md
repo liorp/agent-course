@@ -48,13 +48,13 @@ walkthroughs:
       - lines: [3, 3]
         annotation: "The safety limit caps the subagent at 30 iterations. Without this, a confused subagent could loop forever and consume unbounded API calls."
       - lines: [4, 8]
-        annotation: "The subagent calls the same API but uses CHILD_TOOLS — the base tools without the 'task' tool. This prevents a child from recursively spawning more children."
+        annotation: "The subagent calls the same API but uses `CHILD_TOOLS` — the base tools without the `'task'` tool. This prevents a child from recursively spawning more children."
       - lines: [11, 11]
         annotation: "The exit condition is identical to the parent loop. When the model stops requesting tool calls, the subagent is done and falls through to return its summary."
       - lines: [13, 21]
         annotation: "The inner tool loop is also identical to the parent. The subagent can call any child tool — read files, write files, run bash — and accumulate results just like the main agent."
       - lines: [22, 24]
-        annotation: "Only the final text blocks from the last response are returned. The entire sub_messages history (potentially 30+ turns) is discarded. The parent receives a one-paragraph summary."
+        annotation: "Only the final text blocks from the last response are returned. The entire `sub_messages` history (potentially 30+ turns) is discarded. The parent receives a one-paragraph summary."
 challenge:
   text: "Modify spawn_subagent to pass a custom system prompt. Try making a \"code reviewer\" subagent."
   hint: "Add a `system` parameter and pass it to client.messages.create"

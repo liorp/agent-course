@@ -52,15 +52,15 @@ walkthroughs:
           return messages
     steps:
       - lines: [1, 2]
-        annotation: "bg_queue is a thread-safe Queue shared between the main thread and all worker threads. bg_counter uses a dict (not an int) so worker closures can increment it by reference."
+        annotation: "`bg_queue` is a thread-safe Queue shared between the main thread and all worker threads. `bg_counter` uses a dict (not an int) so worker closures can increment it by reference."
       - lines: [4, 7]
-        annotation: "run_in_background() is the tool the model calls. It increments the counter, assigns an ID and label, then immediately returns a 'started' message — the model doesn't wait for the result."
+        annotation: "`run_in_background()` is the tool the model calls. It increments the counter, assigns an ID and label, then immediately returns a 'started' message — the model doesn't wait for the result."
       - lines: [9, 16]
-        annotation: "The worker() closure captures task_id and label from the outer scope. It runs the subprocess, captures stdout+stderr, determines success/failure from returncode, and pushes the result into bg_queue."
+        annotation: "The `worker()` closure captures `task_id` and `label` from the outer scope. It runs the subprocess, captures stdout+stderr, determines success/failure from `returncode`, and pushes the result into `bg_queue`."
       - lines: [18, 20]
-        annotation: "daemon=True means this thread automatically dies when the main program exits. No cleanup code needed. t.start() launches it immediately — the main thread is already free to do other work."
+        annotation: "`daemon=True` means this thread automatically dies when the main program exits. No cleanup code needed. `t.start()` launches it immediately — the main thread is already free to do other work."
       - lines: [22, 32]
-        annotation: "drain_bg_queue() is called before each LLM call. It empties the queue and injects completed results as a user message. The model sees them on its next turn and can react — all without any polling or waiting."
+        annotation: "`drain_bg_queue()` is called before each LLM call. It empties the queue and injects completed results as a user message. The model sees them on its next turn and can react — all without any polling or waiting."
 challenge:
   text: "Start a long-running background task (like `sleep 30 && echo done`) and keep chatting with the agent while it runs."
   hint: "The notification will inject into the next tool_result automatically"

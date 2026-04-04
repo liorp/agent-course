@@ -41,15 +41,15 @@ walkthroughs:
               })
     steps:
       - lines: [1, 2]
-        annotation: "TodoManager is a simple class. The update() method is the only write operation — the model calls it with the full list of items every time it wants to change anything."
+        annotation: "`TodoManager` is a simple class. The `update()` method is the only write operation — the model calls it with the full list of items every time it wants to change anything."
       - lines: [3, 9]
         annotation: "Each item is validated and re-packed with only the fields we care about. Extra fields the model might hallucinate are silently stripped."
       - lines: [10, 12]
-        annotation: "The one-in-progress constraint is enforced here. If the model tries to set two tasks in_progress simultaneously, it gets an error and must retry with a corrected list."
+        annotation: "The one-in-progress constraint is enforced here. If the model tries to set two tasks `in_progress` simultaneously, it gets an error and must retry with a corrected list."
       - lines: [13, 13]
-        annotation: "self.render() formats the todo list as readable text (e.g., '[ ] task A, [>] task B') that gets returned as the tool_result — the model sees its own updated list immediately."
+        annotation: "`self.render()` formats the todo list as readable text (e.g., '[ ] task A, [>] task B') that gets returned as the `tool_result` — the model sees its own updated list immediately."
       - lines: [15, 21]
-        annotation: "The nag reminder injects a <reminder> text block at the front of the last user message if 3+ rounds have passed without a todo update. It nudges the model without requiring user intervention."
+        annotation: "The nag reminder injects a `<reminder>` text block at the front of the last user message if 3+ rounds have passed without a todo update. It nudges the model without requiring user intervention."
 challenge:
   text: "Run the s03 agent and give it a multi-step task. Watch how it creates a todo list before acting."
   hint: "Try: \"Create a Python project with tests, README, and a CLI\""

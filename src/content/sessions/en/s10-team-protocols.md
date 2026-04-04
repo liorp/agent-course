@@ -53,13 +53,13 @@ walkthroughs:
                   start_task(msg_raw["content"], name)
     steps:
       - lines: [1, 2]
-        annotation: "new_req_id() generates an 8-character hex string from a UUID. Short enough to include in messages without bloating them, unique enough to avoid collisions across concurrent agents."
+        annotation: "`new_req_id()` generates an 8-character hex string from a UUID. Short enough to include in messages without bloating them, unique enough to avoid collisions across concurrent agents."
       - lines: [4, 10]
-        annotation: "send_shutdown_request() sends a typed JSON message with a req_id and immediately returns that ID to the caller. The caller stores it to match against the incoming response."
+        annotation: "`send_shutdown_request()` sends a typed JSON message with a `req_id` and immediately returns that ID to the caller. The caller stores it to match against the incoming response."
       - lines: [12, 22]
-        annotation: "handle_shutdown_request() is the teammate's response handler. It echoes back the same req_id so the lead can match request to response. If the teammate is idle, it approves and updates its own status to SHUTDOWN."
+        annotation: "`handle_shutdown_request()` is the teammate's response handler. It echoes back the same `req_id` so the lead can match request to response. If the teammate is idle, it approves and updates its own status to `SHUTDOWN`."
       - lines: [24, 34]
-        annotation: "process_inbox() is the message dispatcher. It tries to parse each message as typed JSON. If it has a 'type' field, it routes to the appropriate handler. Unknown or plain messages fall through to start_task()."
+        annotation: "`process_inbox()` is the message dispatcher. It tries to parse each message as typed JSON. If it has a `'type'` field, it routes to the appropriate handler. Unknown or plain messages fall through to `start_task()`."
 challenge:
   text: "Implement a plan-approval flow: lead proposes a plan, teammate reviews and approves or rejects."
   hint: "Use REQUEST/RESPONSE message types with a \"plan\" field"

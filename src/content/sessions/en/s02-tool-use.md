@@ -51,15 +51,15 @@ walkthroughs:
       }
     steps:
       - lines: [1, 5]
-        annotation: "safe_path() is the security boundary. It resolves the path and checks it stays inside WORKDIR. Any '../' escape attempt raises an error before touching the filesystem."
+        annotation: "`safe_path()` is the security boundary. It resolves the path and checks it stays inside `WORKDIR`. Any '../' escape attempt raises an error before touching the filesystem."
       - lines: [7, 12]
-        annotation: "run_read passes through safe_path first, then reads the file. The optional limit parameter truncates long files to avoid flooding the context with thousands of lines."
+        annotation: "`run_read` passes through `safe_path` first, then reads the file. The optional `limit` parameter truncates long files to avoid flooding the context with thousands of lines."
       - lines: [14, 18]
-        annotation: "run_write creates parent directories automatically. A single write_file call can create deeply nested files without requiring a separate mkdir step."
+        annotation: "`run_write` creates parent directories automatically. A single `write_file` call can create deeply nested files without requiring a separate `mkdir()` step."
       - lines: [20, 25]
-        annotation: "run_edit does a targeted string replacement — safer than rewriting the whole file. If old_text is not found, it returns an error instead of silently corrupting the file."
+        annotation: "`run_edit` does a targeted string replacement — safer than rewriting the whole file. If `old_text` is not found, it returns an error instead of silently corrupting the file."
       - lines: [27, 32]
-        annotation: "TOOL_HANDLERS maps tool names to lambda wrappers. Each lambda unpacks keyword arguments from block.input and calls the appropriate handler. Adding a fifth tool means adding one entry here."
+        annotation: "`TOOL_HANDLERS` maps tool names to lambda wrappers. Each lambda unpacks keyword arguments from `block.input` and calls the appropriate handler. Adding a fifth tool means adding one entry here."
 challenge:
   text: "Add a fifth tool — `list_files` — that lists directory contents. You only need a schema and a handler."
   hint: "Use os.listdir() in the handler and return the joined filenames"

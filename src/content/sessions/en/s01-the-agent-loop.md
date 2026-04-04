@@ -49,9 +49,9 @@ walkthroughs:
       - lines: [11, 12]
         annotation: "The exit condition. If the model didn't ask to use a tool, it's done thinking — return to the user."
       - lines: [14, 22]
-        annotation: "Execute each tool call the model requested. Collect the results into tool_result messages."
+        annotation: "Execute each tool call the model requested. Collect the results into `tool_result` messages."
       - lines: [23, 23]
-        annotation: "Feed the tool results back as a 'user' message. The model will see these results on the next iteration and decide what to do next."
+        annotation: "Feed the tool results back as a `\"user\"` message. The model will see these results on the next iteration and decide what to do next."
 challenge:
   text: "Clone the repo, run `python agents/s01_agent_loop.py`, and ask it to create a file. Watch the tool calls in the terminal."
   hint: "Set MODEL_ID=claude-sonnet-4-20250514 in your .env file"

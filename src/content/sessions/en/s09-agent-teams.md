@@ -46,13 +46,13 @@ walkthroughs:
               update_status(name, "IDLE")
     steps:
       - lines: [1, 2]
-        annotation: "All team state lives in a .team/ directory. Each teammate gets a JSONL file as their inbox — a simple, crash-safe, concurrent-friendly communication channel."
+        annotation: "All team state lives in a `.team/` directory. Each teammate gets a JSONL file as their inbox — a simple, crash-safe, concurrent-friendly communication channel."
       - lines: [4, 9]
-        annotation: "send_message() appends a JSON line to the recipient's inbox file. Opening with 'a' (append) means concurrent writers can't corrupt each other — each json.dumps call is one atomic line."
+        annotation: "`send_message()` appends a JSON line to the recipient's inbox file. Opening with `'a'` (append) means concurrent writers can't corrupt each other — each `json.dumps` call is one atomic line."
       - lines: [11, 17]
-        annotation: "drain_inbox() reads all pending messages and then truncates the file to empty. This read-and-truncate pattern is the key: messages are consumed once and not replayed on the next polling cycle."
+        annotation: "`drain_inbox()` reads all pending messages and then truncates the file to empty. This read-and-truncate pattern is the key: messages are consumed once and not replayed on the next polling cycle."
       - lines: [19, 27]
-        annotation: "teammate_loop() is the teammate's runtime. It polls its inbox every 2 seconds. When work arrives, it updates its status to WORKING, runs an agent loop to handle the messages, then sends the result back to lead and returns to IDLE."
+        annotation: "`teammate_loop()` is the teammate's runtime. It polls its inbox every 2 seconds. When work arrives, it updates its status to `WORKING`, runs an agent loop to handle the messages, then sends the result back to lead and returns to `IDLE`."
 challenge:
   text: "Spawn two teammates with different specialties and have them collaborate on a task through the mailbox."
   hint: "Give them complementary system prompts like \"frontend expert\" and \"backend expert\""
