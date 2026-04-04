@@ -29,5 +29,9 @@
   "footer.motto": "The model is the agent. The code is the harness.",
   "footer.reportIssue": "Report an issue",
   "session.reportIssue": "Found a mistake? Report it",
-  "landing.progress": "completed"
+  "landing.progress": "completed",
+  "email.title": "Stay updated",
+  "email.subtitle": "Get notified when we add new content",
+  "email.placeholder": "your@email.com",
+  "email.button": "Subscribe"
 }

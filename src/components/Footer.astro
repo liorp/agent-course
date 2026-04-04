@@ -1,5 +1,6 @@
 ---
 import AdSlot from './AdSlot.astro';
+import EmailCapture from './EmailCapture.astro';
 import { getLangFromUrl, getUI } from '@/i18n/ui';
 
 const locale = getLangFromUrl(Astro.url);
@@ -7,6 +8,7 @@ const ui = getUI(locale);
 ---
 
 <footer class="site-footer">
+  <EmailCapture />
   <AdSlot format="banner" slot="4632823302" />
   <div class="footer-inner container">
     <p class="footer-text">

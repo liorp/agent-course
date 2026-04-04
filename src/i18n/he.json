@@ -29,5 +29,9 @@
   "footer.motto": "המודל הוא הסוכן. הקוד הוא הרתמה.",
   "footer.reportIssue": "דווחו על בעיה",
   "session.reportIssue": "מצאתם טעות? דווחו",
-  "landing.progress": "הושלמו"
+  "landing.progress": "הושלמו",
+  "email.title": "הישארו מעודכנים",
+  "email.subtitle": "קבלו התראה כשנוסיף תוכן חדש",
+  "email.placeholder": "your@email.com",
+  "email.button": "הרשמה"
 }
