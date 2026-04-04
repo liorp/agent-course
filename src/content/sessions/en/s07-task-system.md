@@ -12,6 +12,47 @@ beginnerConcepts:
     answer: "Context compression (Context Compact session) can wipe the in-memory todo list. Tasks saved as JSON files on disk survive compression, crashes, and even multi-agent handoffs — any agent can pick up where another left off."
   - question: "What does 'ready' mean for a task?"
     answer: "A task is ready when its status is 'pending' AND all tasks in its blockedBy list are 'completed'. The TaskManager computes ready tasks automatically so the agent just asks 'what can I do now?'"
+walkthroughs:
+  - title: "Task CRUD and Dependency Resolution"
+    language: "python"
+    code: |
+      class TaskManager:
+          def __init__(self, tasks_dir: str = ".tasks"):
+              self.dir = Path(tasks_dir)
+              self.dir.mkdir(exist_ok=True)
+
+          def _load_all(self) -> list:
+              tasks = []
+              for f in sorted(self.dir.glob("task_*.json")):
+                  tasks.append(json.loads(f.read_text()))
+              return tasks
+
+          def create(self, title: str, blocked_by: list = None) -> dict:
+              tasks = self._load_all()
+              new_id = max((t["id"] for t in tasks), default=0) + 1
+              task = {"id": new_id, "title": title,
+                      "status": "pending", "blockedBy": blocked_by or []}
+              path = self.dir / f"task_{new_id}.json"
+              path.write_text(json.dumps(task, indent=2))
+              return task
+
+          def ready(self) -> list:
+              tasks = self._load_all()
+              done_ids = {t["id"] for t in tasks if t["status"] == "completed"}
+              return [
+                  t for t in tasks
+                  if t["status"] == "pending"
+                  and all(dep in done_ids for dep in t.get("blockedBy", []))
+              ]
+    steps:
+      - lines: [1, 4]
+        annotation: "Each TaskManager instance points to a .tasks/ directory. mkdir(exist_ok=True) means the first call creates the directory automatically — no setup step required."
+      - lines: [6, 10]
+        annotation: "_load_all() reads every task_*.json file on disk. Because tasks are files, they survive context compression, agent crashes, and even handoffs between different agents."
+      - lines: [12, 19]
+        annotation: "create() auto-increments the ID by finding the current maximum. Each task is written as a standalone JSON file — task_1.json, task_2.json, etc. The blockedBy list is stored directly in the file."
+      - lines: [21, 27]
+        annotation: "ready() is the dependency resolver. It first collects all completed task IDs into a set (done_ids), then filters for tasks that are pending AND have all their blockedBy IDs in that set. This is the core of the DAG traversal."
 ---
 
 ## The Problem

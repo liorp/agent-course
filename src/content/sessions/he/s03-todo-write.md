@@ -14,6 +14,42 @@ beginnerConcepts:
     answer: "הזרקת טקסט קטנה (<reminder>) שמתווספת לשיחה אם המודל לא עדכן את רשימת המשימות ב-3+ סיבובים. היא דוחפת את המודל לשמור על מסלול מבלי שהמשתמש צריך להתערב."
   - question: "במה זה שונה מרשימת תיוגים רגילה?"
     answer: "רשימת תיוגים רגילה היא טקסט סטטי שהמודל עשוי להתעלם ממנו. TodoWrite הוא כלי שהמודל קורא לו באופן אקטיבי כדי לעדכן סטטוסים. ה-harness עוקב אחר סיבובים ומזריק תזכורות, מה שהופך אותו ללולאת משוב, לא רק הערה."
+walkthroughs:
+  - title: "מחלקת TodoManager"
+    language: "python"
+    code: |
+      class TodoManager:
+          def update(self, items: list) -> str:
+              validated, in_progress_count = [], 0
+              for item in items:
+                  status = item.get("status", "pending")
+                  if status == "in_progress":
+                      in_progress_count += 1
+                  validated.append({"id": item["id"], "text": item["text"],
+                                    "status": status})
+              if in_progress_count > 1:
+                  raise ValueError("Only one task can be in_progress")
+              self.items = validated
+              return self.render()
+
+      if rounds_since_todo >= 3 and messages:
+          last = messages[-1]
+          if last["role"] == "user" and isinstance(last.get("content"), list):
+              last["content"].insert(0, {
+                  "type": "text",
+                  "text": "<reminder>Update your todos.</reminder>",
+              })
+    steps:
+      - lines: [1, 2]
+        annotation: "TodoManager הוא מחלקה פשוטה. מתודת update() היא פעולת הכתיבה היחידה — המודל קורא לה עם הרשימה המלאה של פריטים בכל פעם שהוא רוצה לשנות משהו."
+      - lines: [3, 9]
+        annotation: "כל פריט עובר אימות ואריזה מחדש עם רק השדות שאנחנו צריכים. שדות נוספים שהמודל עשוי להמציא נמחקים בשקט."
+      - lines: [10, 12]
+        annotation: "האילוץ של in_progress אחד נאכף כאן. אם המודל מנסה להגדיר שתי משימות כ-in_progress בו-זמנית, הוא מקבל שגיאה וחייב לנסות שוב עם רשימה מתוקנת."
+      - lines: [13, 13]
+        annotation: "self.render() מעצבת את רשימת המשימות כטקסט קריא (למשל '[ ] משימה א, [>] משימה ב') שמוחזרת כ-tool_result — המודל רואה את רשימתו המעודכנת מיד."
+      - lines: [15, 21]
+        annotation: "תזכורת ה-nag מזריקה בלוק טקסט <reminder> בתחילת הודעת המשתמש האחרונה אם עברו 3+ סיבובים ללא עדכון משימות. היא דוחפת את המודל ללא צורך בהתערבות המשתמש."
 ---
 
 ## הבעיה

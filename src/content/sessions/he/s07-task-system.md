@@ -12,6 +12,47 @@ beginnerConcepts:
     answer: "דחיסת הקשר (סשן דחיסת הקשר) יכולה למחוק את רשימת ה-todo בזיכרון. משימות שנשמרות כקבצי JSON על הדיסק שורדות דחיסה, קריסות, ואפילו העברות בין סוכנים — כל סוכן יכול להמשיך מהנקודה שבה אחר עצר."
   - question: "מה פירוש 'ready' עבור משימה?"
     answer: "משימה היא ready כשהסטטוס שלה הוא 'pending' וכל המשימות ברשימת ה-blockedBy שלה הן 'completed'. ה-TaskManager מחשב משימות מוכנות אוטומטית כך שהסוכן פשוט שואל 'מה אני יכול לעשות עכשיו?'"
+walkthroughs:
+  - title: "CRUD משימות ופתרון תלויות"
+    language: "python"
+    code: |
+      class TaskManager:
+          def __init__(self, tasks_dir: str = ".tasks"):
+              self.dir = Path(tasks_dir)
+              self.dir.mkdir(exist_ok=True)
+
+          def _load_all(self) -> list:
+              tasks = []
+              for f in sorted(self.dir.glob("task_*.json")):
+                  tasks.append(json.loads(f.read_text()))
+              return tasks
+
+          def create(self, title: str, blocked_by: list = None) -> dict:
+              tasks = self._load_all()
+              new_id = max((t["id"] for t in tasks), default=0) + 1
+              task = {"id": new_id, "title": title,
+                      "status": "pending", "blockedBy": blocked_by or []}
+              path = self.dir / f"task_{new_id}.json"
+              path.write_text(json.dumps(task, indent=2))
+              return task
+
+          def ready(self) -> list:
+              tasks = self._load_all()
+              done_ids = {t["id"] for t in tasks if t["status"] == "completed"}
+              return [
+                  t for t in tasks
+                  if t["status"] == "pending"
+                  and all(dep in done_ids for dep in t.get("blockedBy", []))
+              ]
+    steps:
+      - lines: [1, 4]
+        annotation: "כל מופע TaskManager מצביע לתיקיית .tasks/. mkdir(exist_ok=True) פירושו שהקריאה הראשונה יוצרת את התיקייה אוטומטית — אין צורך בשלב הגדרה נפרד."
+      - lines: [6, 10]
+        annotation: "_load_all() קוראת כל קובץ task_*.json על הדיסק. מכיוון שמשימות הן קבצים, הן שורדות דחיסת context, קריסות סוכן, ואפילו העברות בין סוכנים שונים."
+      - lines: [12, 19]
+        annotation: "create() מגדיל את ה-ID אוטומטית על ידי מציאת המקסימום הנוכחי. כל משימה נכתבת כקובץ JSON עצמאי — task_1.json, task_2.json וכו'. רשימת blockedBy נשמרת ישירות בקובץ."
+      - lines: [21, 27]
+        annotation: "ready() היא מפענח התלויות. תחילה היא אוספת את כל מזהי המשימות שהושלמו לסט (done_ids), ואז מסננת משימות שהן pending ויש להן את כל מזהי blockedBy שלהן בסט הזה. זהו ליבת מעבר ה-DAG."
 ---
 
 ## הבעיה

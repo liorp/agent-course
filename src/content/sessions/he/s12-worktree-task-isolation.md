@@ -12,6 +12,40 @@ beginnerConcepts:
     answer: "כשמספר סוכנים עורכים את אותם קבצים בו-זמנית, הם יכולים לדרוס את עבודתם של אחד את השני. Worktrees נותנים לכל סוכן עותק משלו של ה-codebase לעבוד בו בבטחה."
   - question: "איך משימות ו-worktrees מתחברים?"
     answer: "כל משימה מקבלת worktree לפי מזהה. המשימה עוקבת אחר מה שצריך לעשות, ה-worktree מספק היכן לעשות זאת. כשהמשימה מסתיימת, ניתן למזג את ה-worktree ולנקות אותו."
+walkthroughs:
+  - title: "מחזור חיי ה-Worktree: יצירה, הקצאה, ניקוי"
+    language: "python"
+    code: |
+      def create_worktree(task_id: str) -> str:
+          branch = f"task/{task_id}"
+          path = f".worktrees/{task_id}"
+          subprocess.run(
+              ["git", "worktree", "add", "-b", branch, path],
+              check=True
+          )
+          return path
+
+      def assign_worktree(task_id: str) -> dict:
+          worktree_path = create_worktree(task_id)
+          task = task_manager.get(task_id)
+          task["worktree"] = worktree_path
+          task["branch"] = f"task/{task_id}"
+          task_manager.update(task)
+          return task
+
+      def cleanup_worktree(task_id: str) -> None:
+          path = f".worktrees/{task_id}"
+          subprocess.run(
+              ["git", "worktree", "remove", path],
+              check=True
+          )
+    steps:
+      - lines: [1, 8]
+        annotation: "create_worktree() מריצה 'git worktree add' עם -b ליצירת ענף חדש בו-זמנית. ה-worktree נמצא ב-.worktrees/<task_id>/ — תיקיית עבודה git פונקציונלית מלאה על ענף משלה."
+      - lines: [10, 16]
+        annotation: "assign_worktree() קושרת את ה-worktree לרשומת המשימה. לאחר קריאה זו, קובץ ה-JSON של המשימה מכיל גם מה לעשות (כותרת, תיאור) וגם היכן לעשות זאת (נתיב worktree ושם ענף)."
+      - lines: [18, 23]
+        annotation: "cleanup_worktree() מסירה את תיקיית ה-worktree ומבטלת את רישומה מרשימת ה-worktrees של git. יש לקרוא לה לאחר מיזוג הענף — המשימה הושלמה, נתיב הבידוד משוחרר."
 ---
 
 ## הבעיה

@@ -12,6 +12,47 @@ beginnerConcepts:
     answer: "An append-only JSONL file on disk (e.g., .team/inbox/alice.jsonl). Any agent can write a message to Alice's inbox. When Alice's turn comes, she drains the file — reads all messages, then truncates it. Like email, but for agents."
   - question: "What is a team roster?"
     answer: "A JSON file (.team/config.json) listing all teammates, their names, roles, and current statuses. The lead agent reads this to know who's available and what each teammate specializes in."
+walkthroughs:
+  - title: "Teammate Mailbox Pattern"
+    language: "python"
+    code: |
+      TEAM_DIR = Path(".team")
+      INBOX_DIR = TEAM_DIR / "inbox"
+
+      def send_message(to: str, from_: str, content: str) -> str:
+          inbox = INBOX_DIR / f"{to}.jsonl"
+          msg = {"from": from_, "content": content}
+          with open(inbox, "a") as f:
+              f.write(json.dumps(msg) + "\n")
+          return f"Message sent to {to}."
+
+      def drain_inbox(name: str) -> list:
+          inbox = INBOX_DIR / f"{name}.jsonl"
+          if not inbox.exists() or inbox.stat().st_size == 0:
+              return []
+          lines = inbox.read_text().strip().split("\n")
+          inbox.write_text("")  # truncate after reading
+          return [json.loads(l) for l in lines if l]
+
+      def teammate_loop(name: str, role: str) -> None:
+          while True:
+              inbox_messages = drain_inbox(name)
+              if not inbox_messages:
+                  threading.Event().wait(timeout=2)
+                  continue
+              update_status(name, "WORKING")
+              result = run_agent(inbox_messages, name, role)
+              send_message("lead", name, result)
+              update_status(name, "IDLE")
+    steps:
+      - lines: [1, 2]
+        annotation: "All team state lives in a .team/ directory. Each teammate gets a JSONL file as their inbox — a simple, crash-safe, concurrent-friendly communication channel."
+      - lines: [4, 9]
+        annotation: "send_message() appends a JSON line to the recipient's inbox file. Opening with 'a' (append) means concurrent writers can't corrupt each other — each json.dumps call is one atomic line."
+      - lines: [11, 17]
+        annotation: "drain_inbox() reads all pending messages and then truncates the file to empty. This read-and-truncate pattern is the key: messages are consumed once and not replayed on the next polling cycle."
+      - lines: [19, 27]
+        annotation: "teammate_loop() is the teammate's runtime. It polls its inbox every 2 seconds. When work arrives, it updates its status to WORKING, runs an agent loop to handle the messages, then sends the result back to lead and returns to IDLE."
 ---
 
 ## The Problem

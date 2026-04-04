@@ -12,6 +12,54 @@ beginnerConcepts:
     answer: "To prevent the agent from reading or writing files outside the project directory. The safe_path() function checks that any requested path stays within the workspace — a basic security boundary."
   - question: "What's path traversal?"
     answer: "A trick where someone uses '../' in a file path to escape the intended directory. For example, '../../etc/passwd' tries to read system files. Our sandbox blocks this."
+walkthroughs:
+  - title: "The Dispatch Map"
+    language: "python"
+    code: |
+      def safe_path(p: str) -> Path:
+          path = (WORKDIR / p).resolve()
+          if not path.is_relative_to(WORKDIR):
+              raise ValueError(f"Path escapes workspace: {p}")
+          return path
+
+      def run_read(path: str, limit: int = None) -> str:
+          text = safe_path(path).read_text()
+          lines = text.splitlines()
+          if limit and limit < len(lines):
+              lines = lines[:limit]
+          return "\n".join(lines)[:50000]
+
+      def run_write(path: str, content: str) -> str:
+          fp = safe_path(path)
+          fp.parent.mkdir(parents=True, exist_ok=True)
+          fp.write_text(content)
+          return f"Wrote {len(content)} bytes to {path}"
+
+      def run_edit(path: str, old_text: str, new_text: str) -> str:
+          fp = safe_path(path)
+          content = fp.read_text()
+          if old_text not in content:
+              return f"Error: Text not found in {path}"
+          fp.write_text(content.replace(old_text, new_text, 1))
+          return f"Edited {path}"
+
+      TOOL_HANDLERS = {
+          "bash":       lambda **kw: run_bash(kw["command"]),
+          "read_file":  lambda **kw: run_read(kw["path"], kw.get("limit")),
+          "write_file": lambda **kw: run_write(kw["path"], kw["content"]),
+          "edit_file":  lambda **kw: run_edit(kw["path"], kw["old_text"], kw["new_text"]),
+      }
+    steps:
+      - lines: [1, 5]
+        annotation: "safe_path() is the security boundary. It resolves the path and checks it stays inside WORKDIR. Any '../' escape attempt raises an error before touching the filesystem."
+      - lines: [7, 12]
+        annotation: "run_read passes through safe_path first, then reads the file. The optional limit parameter truncates long files to avoid flooding the context with thousands of lines."
+      - lines: [14, 18]
+        annotation: "run_write creates parent directories automatically. A single write_file call can create deeply nested files without requiring a separate mkdir step."
+      - lines: [20, 25]
+        annotation: "run_edit does a targeted string replacement — safer than rewriting the whole file. If old_text is not found, it returns an error instead of silently corrupting the file."
+      - lines: [27, 32]
+        annotation: "TOOL_HANDLERS maps tool names to lambda wrappers. Each lambda unpacks keyword arguments from block.input and calls the appropriate handler. Adding a fifth tool means adding one entry here."
 ---
 
 ## The Problem

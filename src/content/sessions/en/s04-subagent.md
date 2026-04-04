@@ -14,6 +14,47 @@ beginnerConcepts:
     answer: "In this design, no. The child gets all base tools except the 'task' tool, preventing recursive spawning. This keeps the architecture simple and avoids runaway agent chains."
   - question: "What happens to the subagent's work?"
     answer: "The subagent's side effects (files written, commands run) persist on disk. Only the conversation history is discarded. The parent gets a text summary of what was done."
+walkthroughs:
+  - title: "The spawn_subagent Function"
+    language: "python"
+    code: |
+      def run_subagent(prompt: str) -> str:
+          sub_messages = [{"role": "user", "content": prompt}]
+          for _ in range(30):  # safety limit
+              response = client.messages.create(
+                  model=MODEL, system=SUBAGENT_SYSTEM,
+                  messages=sub_messages,
+                  tools=CHILD_TOOLS, max_tokens=8000,
+              )
+              sub_messages.append({"role": "assistant",
+                                   "content": response.content})
+              if response.stop_reason != "tool_use":
+                  break
+              results = []
+              for block in response.content:
+                  if block.type == "tool_use":
+                      handler = TOOL_HANDLERS.get(block.name)
+                      output = handler(**block.input)
+                      results.append({"type": "tool_result",
+                          "tool_use_id": block.id,
+                          "content": str(output)[:50000]})
+              sub_messages.append({"role": "user", "content": results})
+          return "".join(
+              b.text for b in response.content if hasattr(b, "text")
+          ) or "(no summary)"
+    steps:
+      - lines: [1, 2]
+        annotation: "The subagent starts with a completely fresh messages list containing only the delegated prompt. Nothing from the parent's history leaks in — true context isolation."
+      - lines: [3, 3]
+        annotation: "The safety limit caps the subagent at 30 iterations. Without this, a confused subagent could loop forever and consume unbounded API calls."
+      - lines: [4, 8]
+        annotation: "The subagent calls the same API but uses CHILD_TOOLS — the base tools without the 'task' tool. This prevents a child from recursively spawning more children."
+      - lines: [11, 11]
+        annotation: "The exit condition is identical to the parent loop. When the model stops requesting tool calls, the subagent is done and falls through to return its summary."
+      - lines: [13, 21]
+        annotation: "The inner tool loop is also identical to the parent. The subagent can call any child tool — read files, write files, run bash — and accumulate results just like the main agent."
+      - lines: [22, 24]
+        annotation: "Only the final text blocks from the last response are returned. The entire sub_messages history (potentially 30+ turns) is discarded. The parent receives a one-paragraph summary."
 ---
 
 ## The Problem

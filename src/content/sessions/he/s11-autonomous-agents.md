@@ -12,6 +12,51 @@ beginnerConcepts:
     answer: "לאחר שדחיסת context (סשן דחיסת הקשר) מוחקת את היסטוריית השיחה, הסוכן עשוי לשכוח מי הוא. ה-harness מזריק בלוק <identity> בתחילת ה-context הדחוס: 'אתה Alice, מומחית backend, עובדת על משימה 3.' זה משחזר את תחושת הזהות של הסוכן."
   - question: "מה זה מחזור סרק?"
     answer: "כשחבר צוות לא מוצא משימות מוכנות, הוא ממתין בקצרה (ישן 2 שניות) ואז בודק שוב. לולאת הסקירה הזו היא המנגנון שמאפשר לחברי צוות לעבוד ללא הגבלת זמן מבלי שהמוביל יקצה כל משימה בנפרד."
+walkthroughs:
+  - title: "מחזור סרק ותפיסת משימות אוטונומית"
+    language: "python"
+    code: |
+      def claim_task(name: str) -> dict | None:
+          ready = get_ready_tasks()
+          if not ready:
+              return None
+          task = ready[0]
+          task_path = Path(".tasks") / f"task_{task['id']}.json"
+          current = json.loads(task_path.read_text())
+          if current["status"] != "pending":
+              return None  # someone else claimed it
+          current["status"] = "in_progress"
+          current["assignee"] = name
+          task_path.write_text(json.dumps(current, indent=2))
+          return current
+
+      def autonomous_teammate(name: str, role: str) -> None:
+          system = build_system_with_identity(name, role)
+          while True:
+              process_inbox(name)
+              if get_status(name) == "SHUTDOWN":
+                  break
+              task = claim_task(name)
+              if task is None:
+                  update_status(name, "IDLE")
+                  time.sleep(2)
+                  continue
+              update_status(name, "WORKING")
+              history = [{"role": "user", "content":
+                  f"Work on task {task['id']}: {task['title']}"}]
+              run_agent_with_identity(history, system, name, task["id"])
+              complete_task(task["id"])
+    steps:
+      - lines: [1, 4]
+        annotation: "claim_task() מוצאת תחילה את כל המשימות המוכנות. אם אין, היא מחזירה None מיד — הקורא יכניס את הסוכן למצב סרק."
+      - lines: [5, 9]
+        annotation: "בדיקת המקביליות האופטימיסטית: קריאה מחדש של קובץ המשימה ואימות שהוא עדיין 'pending'. שני סוכנים שמתחרים על אותה משימה — אחד ימצא אותה כבר 'in_progress' כאן ויסוג."
+      - lines: [10, 13]
+        annotation: "התפיסה אטומית ברמת הקובץ. הגדרת status + assignee בקריאת write_text() אחת פירושה שאף סוכן אחר לא יכול לצפות חלקית במעבר. התופס מחזיר את ה-dict המלא של המשימה."
+      - lines: [15, 20]
+        annotation: "הלולאה החיצונית בודקת תחילה את תיבת הדואר בכל איטרציה. זה מבטיח שבקשות כיבוי מעובדות מיידית גם אם הסוכן נמצא באמצע מחזור סרק ארוך."
+      - lines: [21, 29]
+        annotation: "מחזור הסרק: אם אין משימה מוכנה, עדכן סטטוס ל-IDLE וישן 2 שניות. אחרת, תפוס את המשימה, הרץ לולאת סוכן מלאה עליה, ואז השלם אותה ולולאה חזרה לבדוק אם יש עוד."
 ---
 
 ## הבעיה

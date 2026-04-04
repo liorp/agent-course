@@ -12,6 +12,55 @@ beginnerConcepts:
     answer: "A background thread that runs independently of the main program. When set as daemon=True in Python, it automatically stops when the main program exits, so you don't need to manage cleanup."
   - question: "How does the agent learn a background task finished?"
     answer: "The background thread pushes a result into a shared queue. Before each LLM call, the agent drains that queue and injects any completed results as messages. The model reads them on its next turn."
+walkthroughs:
+  - title: "The Background Runner and Notification Queue"
+    language: "python"
+    code: |
+      bg_queue: queue.Queue = queue.Queue()
+      bg_counter = {"n": 0}
+
+      def run_in_background(command: str, label: str = "") -> str:
+          bg_counter["n"] += 1
+          task_id = bg_counter["n"]
+          label = label or f"bg-{task_id}"
+
+          def worker():
+              result = subprocess.run(
+                  command, shell=True, capture_output=True,
+                  text=True, timeout=300,
+              )
+              output = (result.stdout + result.stderr).strip()
+              status = "done" if result.returncode == 0 else "failed"
+              bg_queue.put({"task_id": task_id, "label": label,
+                            "status": status, "output": output[:5000]})
+
+          t = threading.Thread(target=worker, daemon=True)
+          t.start()
+          return f"Background task {task_id} ({label}) started."
+
+      def drain_bg_queue(messages: list) -> list:
+          results = []
+          while not bg_queue.empty():
+              completed = bg_queue.get_nowait()
+              results.append({"type": "text", "text": (
+                  f"<background_complete>\nTask {completed['task_id']} "
+                  f"({completed['label']}): {completed['status']}\n"
+                  f"{completed['output']}\n</background_complete>"
+              )})
+          if results:
+              messages.append({"role": "user", "content": results})
+          return messages
+    steps:
+      - lines: [1, 2]
+        annotation: "bg_queue is a thread-safe Queue shared between the main thread and all worker threads. bg_counter uses a dict (not an int) so worker closures can increment it by reference."
+      - lines: [4, 7]
+        annotation: "run_in_background() is the tool the model calls. It increments the counter, assigns an ID and label, then immediately returns a 'started' message — the model doesn't wait for the result."
+      - lines: [9, 16]
+        annotation: "The worker() closure captures task_id and label from the outer scope. It runs the subprocess, captures stdout+stderr, determines success/failure from returncode, and pushes the result into bg_queue."
+      - lines: [18, 20]
+        annotation: "daemon=True means this thread automatically dies when the main program exits. No cleanup code needed. t.start() launches it immediately — the main thread is already free to do other work."
+      - lines: [22, 32]
+        annotation: "drain_bg_queue() is called before each LLM call. It empties the queue and injects completed results as a user message. The model sees them on its next turn and can react — all without any polling or waiting."
 ---
 
 ## The Problem

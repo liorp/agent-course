@@ -12,6 +12,54 @@ beginnerConcepts:
     answer: "לחיצת יד דו-שלבית שבה המוביל שולח shutdown_req (עם מזהה ייחודי), וחבר הצוות מאשר (מסיים עבודה נוכחית ויוצא) או דוחה (עדיין עסוק, נסה מאוחר יותר). זה מונע הריגת חבר צוות באמצע משימה ומותרת קבצים פגומים."
   - question: "מה זה אישור תוכנית?"
     answer: "לפני שחבר צוות מתחיל משימה בסיכון גבוה, הוא שולח את תוכניתו למוביל לביקורת. המוביל יכול לאשר (להמשיך) או לדחות (לשנות את התוכנית). זה יוצר נקודת בדיקה של אדם בלולאה לפעולות מסוכנות."
+walkthroughs:
+  - title: "פרוטוקול בקשה-תשובה"
+    language: "python"
+    code: |
+      def new_req_id() -> str:
+          return uuid.uuid4().hex[:8]
+
+      def send_shutdown_request(teammate_name: str) -> str:
+          req_id = new_req_id()
+          send_message(teammate_name, "lead", json.dumps({
+              "type": "shutdown_req",
+              "req_id": req_id,
+          }))
+          return req_id
+
+      def handle_shutdown_request(msg: dict, name: str) -> None:
+          req_id = msg["req_id"]
+          currently_working = get_status(name) == "WORKING"
+          send_message("lead", name, json.dumps({
+              "type": "shutdown_resp",
+              "req_id": req_id,
+              "approved": not currently_working,
+              "reason": "finishing current task" if currently_working else "ready to shutdown",
+          }))
+          if not currently_working:
+              update_status(name, "SHUTDOWN")
+
+      def process_inbox(name: str) -> None:
+          messages = drain_inbox(name)
+          for msg_raw in messages:
+              try:
+                  msg = json.loads(msg_raw["content"])
+                  msg_type = msg.get("type", "plain")
+              except (json.JSONDecodeError, KeyError):
+                  msg_type = "plain"
+              if msg_type == "shutdown_req":
+                  handle_shutdown_request(msg, name)
+              else:
+                  start_task(msg_raw["content"], name)
+    steps:
+      - lines: [1, 2]
+        annotation: "new_req_id() מייצרת מחרוזת hex בת 8 תווים מ-UUID. קצרה מספיק לכלול בהודעות מבלי להפריח אותן, ייחודית מספיק כדי להימנע מהתנגשויות בין סוכנים מקבילים."
+      - lines: [4, 10]
+        annotation: "send_shutdown_request() שולחת הודעת JSON מסוגת עם req_id ומיד מחזירה את ה-ID הזה לקורא. הקורא שומר אותו כדי להתאים אותו לתשובה הנכנסת."
+      - lines: [12, 22]
+        annotation: "handle_shutdown_request() הוא מטפל התשובה של חבר הצוות. הוא משדר חזרה את אותו req_id כדי שהמוביל יוכל להתאים בקשה לתשובה. אם חבר הצוות בסרק, הוא מאשר ומעדכן את הסטטוס שלו ל-SHUTDOWN."
+      - lines: [24, 34]
+        annotation: "process_inbox() הוא שולח ההודעות. הוא מנסה לנתח כל הודעה כ-JSON מסוג. אם יש לה שדה 'type', הוא מנתב ל-handler המתאים. הודעות לא ידועות או פשוטות עוברות ל-start_task()."
 ---
 
 ## הבעיה

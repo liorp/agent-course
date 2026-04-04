@@ -12,6 +12,51 @@ beginnerConcepts:
     answer: "After context compression (Context Compact session) wipes the conversation history, the agent might forget who it is. The harness injects an <identity> block at the start of the compressed context: 'You are Alice, a backend specialist, working on task 3.' This restores the agent's sense of self."
   - question: "What is an idle cycle?"
     answer: "When a teammate finds no ready tasks, it waits briefly (sleeps 2 seconds) and then checks again. This polling loop is the mechanism that lets teammates work indefinitely without the lead assigning each task individually."
+walkthroughs:
+  - title: "Idle Cycle and Autonomous Task Claiming"
+    language: "python"
+    code: |
+      def claim_task(name: str) -> dict | None:
+          ready = get_ready_tasks()
+          if not ready:
+              return None
+          task = ready[0]
+          task_path = Path(".tasks") / f"task_{task['id']}.json"
+          current = json.loads(task_path.read_text())
+          if current["status"] != "pending":
+              return None  # someone else claimed it
+          current["status"] = "in_progress"
+          current["assignee"] = name
+          task_path.write_text(json.dumps(current, indent=2))
+          return current
+
+      def autonomous_teammate(name: str, role: str) -> None:
+          system = build_system_with_identity(name, role)
+          while True:
+              process_inbox(name)
+              if get_status(name) == "SHUTDOWN":
+                  break
+              task = claim_task(name)
+              if task is None:
+                  update_status(name, "IDLE")
+                  time.sleep(2)
+                  continue
+              update_status(name, "WORKING")
+              history = [{"role": "user", "content":
+                  f"Work on task {task['id']}: {task['title']}"}]
+              run_agent_with_identity(history, system, name, task["id"])
+              complete_task(task["id"])
+    steps:
+      - lines: [1, 4]
+        annotation: "claim_task() first finds all ready tasks. If none exist, it returns None immediately — the caller will put the agent into idle mode."
+      - lines: [5, 9]
+        annotation: "The optimistic concurrency check: re-read the task file and verify it's still 'pending'. Two agents racing for the same task — one will find it already 'in_progress' here and back off."
+      - lines: [10, 13]
+        annotation: "The claim is atomic at the file level. Setting status + assignee in one write_text() call means no other agent can partially observe the transition. The claimant returns the full task dict."
+      - lines: [15, 20]
+        annotation: "The outer loop checks inbox first on every iteration. This ensures shutdown requests are processed promptly even if the agent is in the middle of a long idle cycle."
+      - lines: [21, 29]
+        annotation: "The idle cycle: if no ready task is available, update status to IDLE and sleep 2 seconds. Otherwise, claim the task, run the full agent loop on it, then complete it and loop back to check for more."
 ---
 
 ## The Problem

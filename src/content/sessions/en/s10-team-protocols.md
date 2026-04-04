@@ -12,6 +12,54 @@ beginnerConcepts:
     answer: "A two-step handshake where the lead sends a shutdown_req (with a unique ID), and the teammate either approves (finishes current work and exits) or rejects (still busy, try later). This prevents killing a teammate mid-task and leaving files corrupted."
   - question: "What is plan approval?"
     answer: "Before a teammate starts a high-risk task, it sends its plan to the lead for review. The lead can approve (proceed) or reject (revise the plan). This creates a human-in-the-loop checkpoint for dangerous operations."
+walkthroughs:
+  - title: "The Request-Response Protocol"
+    language: "python"
+    code: |
+      def new_req_id() -> str:
+          return uuid.uuid4().hex[:8]
+
+      def send_shutdown_request(teammate_name: str) -> str:
+          req_id = new_req_id()
+          send_message(teammate_name, "lead", json.dumps({
+              "type": "shutdown_req",
+              "req_id": req_id,
+          }))
+          return req_id
+
+      def handle_shutdown_request(msg: dict, name: str) -> None:
+          req_id = msg["req_id"]
+          currently_working = get_status(name) == "WORKING"
+          send_message("lead", name, json.dumps({
+              "type": "shutdown_resp",
+              "req_id": req_id,
+              "approved": not currently_working,
+              "reason": "finishing current task" if currently_working else "ready to shutdown",
+          }))
+          if not currently_working:
+              update_status(name, "SHUTDOWN")
+
+      def process_inbox(name: str) -> None:
+          messages = drain_inbox(name)
+          for msg_raw in messages:
+              try:
+                  msg = json.loads(msg_raw["content"])
+                  msg_type = msg.get("type", "plain")
+              except (json.JSONDecodeError, KeyError):
+                  msg_type = "plain"
+              if msg_type == "shutdown_req":
+                  handle_shutdown_request(msg, name)
+              else:
+                  start_task(msg_raw["content"], name)
+    steps:
+      - lines: [1, 2]
+        annotation: "new_req_id() generates an 8-character hex string from a UUID. Short enough to include in messages without bloating them, unique enough to avoid collisions across concurrent agents."
+      - lines: [4, 10]
+        annotation: "send_shutdown_request() sends a typed JSON message with a req_id and immediately returns that ID to the caller. The caller stores it to match against the incoming response."
+      - lines: [12, 22]
+        annotation: "handle_shutdown_request() is the teammate's response handler. It echoes back the same req_id so the lead can match request to response. If the teammate is idle, it approves and updates its own status to SHUTDOWN."
+      - lines: [24, 34]
+        annotation: "process_inbox() is the message dispatcher. It tries to parse each message as typed JSON. If it has a 'type' field, it routes to the appropriate handler. Unknown or plain messages fall through to start_task()."
 ---
 
 ## The Problem

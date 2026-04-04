@@ -12,6 +12,47 @@ beginnerConcepts:
     answer: "Every tool call appends its result to the messages array. Reading a 1000-line file adds ~4000 tokens. After 30 file reads and 20 bash commands, you can easily hit 100,000+ tokens and approach the limit."
   - question: "What is micro-compaction?"
     answer: "A technique where tool results older than 3 turns are replaced with a short summary like '[Previous: used read_file]'. This silently trims stale detail while keeping recent context intact."
+walkthroughs:
+  - title: "The Three-Layer Compression Strategy"
+    language: "python"
+    code: |
+      def count_tokens(messages: list) -> int:
+          text = json.dumps(messages)
+          return len(text) // 4  # rough estimate: 4 chars ≈ 1 token
+
+      def maybe_compact(messages: list) -> list:
+          tokens = count_tokens(messages)
+          if tokens > 80000:
+              return hard_compact(messages)
+          if tokens > 50000:
+              return mid_compact(messages)
+          return micro_compact(messages)
+
+      def hard_compact(messages: list) -> list:
+          summary_prompt = (
+              "Summarize the conversation so far. Include: "
+              "what the user asked, what tools you used, "
+              "what you found, what's left to do. Be dense."
+          )
+          summary_messages = messages + [{"role": "user", "content": summary_prompt}]
+          response = client.messages.create(
+              model=MODEL, system=SYSTEM,
+              messages=summary_messages, max_tokens=2000,
+          )
+          summary = response.content[0].text
+          return [
+              {"role": "user", "content": f"<context_summary>\n{summary}\n</context_summary>"},
+              {"role": "assistant", "content": "Understood. Continuing from the summary."},
+          ]
+    steps:
+      - lines: [1, 3]
+        annotation: "Token counting is intentionally rough — dividing JSON length by 4 gives a fast approximation. The exact count doesn't matter; what matters is triggering compression before hitting the hard API limit."
+      - lines: [5, 11]
+        annotation: "maybe_compact() is the single decision point. It's called before every LLM call in the agent loop. The three thresholds create a progressive escalation: micro at all times, mid at 50k, hard at 80k."
+      - lines: [13, 27]
+        annotation: "hard_compact() uses the LLM itself to write its own summary. It appends a summary request to the existing messages, calls the API, and replaces the entire history with the resulting summary — reducing potentially 80k+ tokens down to ~2000."
+      - lines: [24, 27]
+        annotation: "The compacted history is just two messages: a user message with the summary wrapped in <context_summary> tags, and a brief assistant acknowledgement. The next LLM call starts fresh from this minimal context."
 ---
 
 ## The Problem

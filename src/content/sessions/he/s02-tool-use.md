@@ -12,6 +12,54 @@ beginnerConcepts:
     answer: "כדי למנוע מהסוכן לקרוא או לכתוב קבצים מחוץ לתיקיית הפרויקט. הפונקציה safe_path() בודקת שכל נתיב מבוקש נשאר בתוך סביבת העבודה — גבול אבטחה בסיסי."
   - question: "מה זה path traversal?"
     answer: "טריק שבו מישהו משתמש ב-'../' בנתיב קובץ כדי להימלט מהתיקייה המיועדת. לדוגמה, '../../etc/passwd' מנסה לקרוא קבצי מערכת. ה-sandbox שלנו חוסם זאת."
+walkthroughs:
+  - title: "מפת ה-Dispatch"
+    language: "python"
+    code: |
+      def safe_path(p: str) -> Path:
+          path = (WORKDIR / p).resolve()
+          if not path.is_relative_to(WORKDIR):
+              raise ValueError(f"Path escapes workspace: {p}")
+          return path
+
+      def run_read(path: str, limit: int = None) -> str:
+          text = safe_path(path).read_text()
+          lines = text.splitlines()
+          if limit and limit < len(lines):
+              lines = lines[:limit]
+          return "\n".join(lines)[:50000]
+
+      def run_write(path: str, content: str) -> str:
+          fp = safe_path(path)
+          fp.parent.mkdir(parents=True, exist_ok=True)
+          fp.write_text(content)
+          return f"Wrote {len(content)} bytes to {path}"
+
+      def run_edit(path: str, old_text: str, new_text: str) -> str:
+          fp = safe_path(path)
+          content = fp.read_text()
+          if old_text not in content:
+              return f"Error: Text not found in {path}"
+          fp.write_text(content.replace(old_text, new_text, 1))
+          return f"Edited {path}"
+
+      TOOL_HANDLERS = {
+          "bash":       lambda **kw: run_bash(kw["command"]),
+          "read_file":  lambda **kw: run_read(kw["path"], kw.get("limit")),
+          "write_file": lambda **kw: run_write(kw["path"], kw["content"]),
+          "edit_file":  lambda **kw: run_edit(kw["path"], kw["old_text"], kw["new_text"]),
+      }
+    steps:
+      - lines: [1, 5]
+        annotation: "safe_path() היא גבול האבטחה. היא פותרת את הנתיב ובודקת שהוא נשאר בתוך WORKDIR. כל ניסיון בריחה עם '../' מעלה שגיאה לפני שנוגעים במערכת הקבצים."
+      - lines: [7, 12]
+        annotation: "run_read עוברת דרך safe_path תחילה, ואז קוראת את הקובץ. פרמטר ה-limit האופציונלי קוטע קבצים ארוכים כדי למנוע הצפת ה-context באלפי שורות."
+      - lines: [14, 18]
+        annotation: "run_write יוצרת תיקיות הורה אוטומטית. קריאה אחת ל-write_file יכולה ליצור קבצים בתיקיות מקוננות עמוקות ללא שלב mkdir נפרד."
+      - lines: [20, 25]
+        annotation: "run_edit עושה החלפת מחרוזת ממוקדת — בטוחה יותר מכתיבה מחדש של כל הקובץ. אם old_text לא נמצא, היא מחזירה שגיאה במקום לפגום בשקט בקובץ."
+      - lines: [27, 32]
+        annotation: "TOOL_HANDLERS ממפה שמות כלים ל-lambda wrappers. כל lambda מפרקת את ארגומנטי keyword מ-block.input וקוראת ל-handler המתאים. הוספת כלי חמישי פירושה הוספת רשומה אחת כאן."
 ---
 
 ## הבעיה

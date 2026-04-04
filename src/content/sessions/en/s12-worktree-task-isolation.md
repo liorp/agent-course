@@ -12,6 +12,40 @@ beginnerConcepts:
     answer: "When multiple agents edit the same files simultaneously, they can overwrite each other's work. Worktrees give each agent its own copy of the codebase to work in safely."
   - question: "How do tasks and worktrees connect?"
     answer: "Each task gets assigned a worktree by ID. The task tracks what needs to be done, the worktree provides where to do it. When the task completes, the worktree can be merged and cleaned up."
+walkthroughs:
+  - title: "Worktree Lifecycle: Create, Assign, Cleanup"
+    language: "python"
+    code: |
+      def create_worktree(task_id: str) -> str:
+          branch = f"task/{task_id}"
+          path = f".worktrees/{task_id}"
+          subprocess.run(
+              ["git", "worktree", "add", "-b", branch, path],
+              check=True
+          )
+          return path
+
+      def assign_worktree(task_id: str) -> dict:
+          worktree_path = create_worktree(task_id)
+          task = task_manager.get(task_id)
+          task["worktree"] = worktree_path
+          task["branch"] = f"task/{task_id}"
+          task_manager.update(task)
+          return task
+
+      def cleanup_worktree(task_id: str) -> None:
+          path = f".worktrees/{task_id}"
+          subprocess.run(
+              ["git", "worktree", "remove", path],
+              check=True
+          )
+    steps:
+      - lines: [1, 8]
+        annotation: "create_worktree() runs 'git worktree add' with -b to create a new branch simultaneously. The worktree lives in .worktrees/<task_id>/ — a fully functional git working directory on its own branch."
+      - lines: [10, 16]
+        annotation: "assign_worktree() binds the worktree to the task record. After this call, the task JSON file contains both what to do (title, description) and where to do it (worktree path and branch name)."
+      - lines: [18, 23]
+        annotation: "cleanup_worktree() removes the worktree directory and deregisters it from git's worktree list. This should be called after merging the branch — the task is done, the isolation lane is released."
 ---
 
 ## The Problem

@@ -14,6 +14,47 @@ beginnerConcepts:
     answer: "בעיצוב זה, לא. הילד מקבל את כל הכלים הבסיסיים חוץ מכלי ה-'task', מה שמונע ייצור רקורסיבי. זה שומר על הארכיטקטורה פשוטה ומונע שרשראות סוכן בלתי מבוקרות."
   - question: "מה קורה לעבודת התת-סוכן?"
     answer: "תופעות הלוואי של התת-סוכן (קבצים שנכתבו, פקודות שהורצו) נשמרות על הדיסק. רק היסטוריית השיחה נזרקת. ההורה מקבל סיכום טקסטי של מה שנעשה."
+walkthroughs:
+  - title: "פונקציית spawn_subagent"
+    language: "python"
+    code: |
+      def run_subagent(prompt: str) -> str:
+          sub_messages = [{"role": "user", "content": prompt}]
+          for _ in range(30):  # safety limit
+              response = client.messages.create(
+                  model=MODEL, system=SUBAGENT_SYSTEM,
+                  messages=sub_messages,
+                  tools=CHILD_TOOLS, max_tokens=8000,
+              )
+              sub_messages.append({"role": "assistant",
+                                   "content": response.content})
+              if response.stop_reason != "tool_use":
+                  break
+              results = []
+              for block in response.content:
+                  if block.type == "tool_use":
+                      handler = TOOL_HANDLERS.get(block.name)
+                      output = handler(**block.input)
+                      results.append({"type": "tool_result",
+                          "tool_use_id": block.id,
+                          "content": str(output)[:50000]})
+              sub_messages.append({"role": "user", "content": results})
+          return "".join(
+              b.text for b in response.content if hasattr(b, "text")
+          ) or "(no summary)"
+    steps:
+      - lines: [1, 2]
+        annotation: "התת-סוכן מתחיל עם רשימת הודעות חדשה לגמרי המכילה רק את ה-prompt שהואצל. שום דבר מהיסטוריית ההורה לא דולף — בידוד הקשר אמיתי."
+      - lines: [3, 3]
+        annotation: "מגבלת הבטיחות מגבילה את התת-סוכן ל-30 איטרציות. ללא זה, תת-סוכן בלבול יכול להישאר בלולאה לנצח ולצרוך קריאות API בלתי מוגבלות."
+      - lines: [4, 8]
+        annotation: "התת-סוכן קורא לאותו API אבל משתמש ב-CHILD_TOOLS — הכלים הבסיסיים ללא כלי ה-'task'. זה מונע מילד לייצר ילדים נוספים רקורסיבית."
+      - lines: [11, 11]
+        annotation: "תנאי היציאה זהה ללולאת ההורה. כשהמודל מפסיק לבקש קריאות כלים, התת-סוכן סיים ועובר להחזרת הסיכום שלו."
+      - lines: [13, 21]
+        annotation: "לולאת הכלים הפנימית זהה גם היא להורה. התת-סוכן יכול לקרוא קבצים, לכתוב קבצים, להריץ bash — ולצבור תוצאות בדיוק כמו הסוכן הראשי."
+      - lines: [22, 24]
+        annotation: "רק בלוקי הטקסט האחרונים מהתשובה האחרונה מוחזרים. כל היסטוריית sub_messages (אפשר 30+ סיבובים) נזרקת. ההורה מקבל פסקה אחת של סיכום."
 ---
 
 ## הבעיה

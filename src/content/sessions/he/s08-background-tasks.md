@@ -12,6 +12,55 @@ beginnerConcepts:
     answer: "Thread רקע שרץ באופן עצמאי מהתוכנית הראשית. כשמוגדר כ-daemon=True ב-Python, הוא עוצר אוטומטית כשהתוכנית הראשית יוצאת, כך שאין צורך לנהל ניקוי."
   - question: "איך הסוכן לומד שמשימת רקע הסתיימה?"
     answer: "ה-thread הרקע דוחף תוצאה לתור משותף. לפני כל קריאת LLM, הסוכן מרוקן את התור ומזריק כל תוצאות שהושלמו כהודעות. המודל קורא אותן בסיבוב הבא שלו."
+walkthroughs:
+  - title: "Background Runner ותור ההתראות"
+    language: "python"
+    code: |
+      bg_queue: queue.Queue = queue.Queue()
+      bg_counter = {"n": 0}
+
+      def run_in_background(command: str, label: str = "") -> str:
+          bg_counter["n"] += 1
+          task_id = bg_counter["n"]
+          label = label or f"bg-{task_id}"
+
+          def worker():
+              result = subprocess.run(
+                  command, shell=True, capture_output=True,
+                  text=True, timeout=300,
+              )
+              output = (result.stdout + result.stderr).strip()
+              status = "done" if result.returncode == 0 else "failed"
+              bg_queue.put({"task_id": task_id, "label": label,
+                            "status": status, "output": output[:5000]})
+
+          t = threading.Thread(target=worker, daemon=True)
+          t.start()
+          return f"Background task {task_id} ({label}) started."
+
+      def drain_bg_queue(messages: list) -> list:
+          results = []
+          while not bg_queue.empty():
+              completed = bg_queue.get_nowait()
+              results.append({"type": "text", "text": (
+                  f"<background_complete>\nTask {completed['task_id']} "
+                  f"({completed['label']}): {completed['status']}\n"
+                  f"{completed['output']}\n</background_complete>"
+              )})
+          if results:
+              messages.append({"role": "user", "content": results})
+          return messages
+    steps:
+      - lines: [1, 2]
+        annotation: "bg_queue הוא Queue בטוח לthreads המשותף בין ה-thread הראשי וכל threads הפועלים. bg_counter משתמש ב-dict (לא int) כדי ש-closures של workers יוכלו להגדיל אותו בהפניה."
+      - lines: [4, 7]
+        annotation: "run_in_background() הוא הכלי שהמודל קורא לו. הוא מגדיל את הספירה, מקצה ID ותווית, ואז מחזיר מיד הודעת 'התחיל' — המודל לא ממתין לתוצאה."
+      - lines: [9, 16]
+        annotation: "ה-worker() closure לוכד task_id ו-label מהסקופ החיצוני. הוא מריץ את ה-subprocess, לוכד stdout+stderr, קובע הצלחה/כישלון מה-returncode, ודוחף את התוצאה לתוך bg_queue."
+      - lines: [18, 20]
+        annotation: "daemon=True פירושו שה-thread הזה מת אוטומטית כשהתוכנית הראשית יוצאת. אין צורך בקוד ניקוי. t.start() מפעיל אותו מיד — ה-thread הראשי כבר חופשי לעשות עבודה אחרת."
+      - lines: [22, 32]
+        annotation: "drain_bg_queue() נקראת לפני כל קריאת LLM. היא מרוקנת את התור ומזריקה תוצאות שהושלמו כהודעת משתמש. המודל רואה אותן בסיבוב הבא שלו ויכול להגיב — כל זה ללא polling או המתנה."
 ---
 
 ## הבעיה
