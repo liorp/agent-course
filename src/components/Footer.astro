@@ -13,6 +13,9 @@ const ui = getUI(locale);
       {ui['footer.basedOn']} <a href="https://github.com/shareAI-lab/learn-claude-code" target="_blank" rel="noopener">learn-claude-code</a> {ui['footer.by']}
     </p>
     <p class="footer-motto">{ui['footer.motto']}</p>
+    <p class="footer-report">
+      <a href="https://github.com/liorp/agent-course/issues/new?labels=fix" target="_blank" rel="noopener">{ui['footer.reportIssue']}</a>
+    </p>
   </div>
 </footer>
 
@@ -35,5 +38,18 @@ const ui = getUI(locale);
     font-style: italic;
     opacity: 0.7;
     margin-block-start: 0.5rem;
+  }
+  .footer-report {
+    margin-block-start: 0.75rem;
+    font-size: 0.8rem;
+  }
+  .footer-report a {
+    color: var(--text-muted);
+    opacity: 0.6;
+    transition: opacity 0.2s;
+  }
+  .footer-report a:hover {
+    opacity: 1;
+    color: var(--accent);
   }
 </style>

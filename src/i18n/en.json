@@ -18,5 +18,7 @@
   "phase.4": "Phase 4: Teams",
   "footer.basedOn": "Based on",
   "footer.by": "by shareAI-lab. MIT License.",
-  "footer.motto": "The model is the agent. The code is the harness."
+  "footer.motto": "The model is the agent. The code is the harness.",
+  "footer.reportIssue": "Report an issue",
+  "session.reportIssue": "Found a mistake? Report it"
 }
