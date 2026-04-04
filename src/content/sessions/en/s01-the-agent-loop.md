@@ -12,6 +12,46 @@ beginnerConcepts:
     answer: "It's a loop that runs forever until something tells it to stop. In our agent, it keeps running until the model decides it's done (stop_reason is not 'tool_use')."
   - question: "What's a tool call?"
     answer: "When the AI model wants to do something in the real world (run a command, read a file), it sends back a special 'tool_use' message instead of regular text. Our code then executes that action and sends the result back."
+walkthroughs:
+  - title: "The Core Agent Loop"
+    language: "python"
+    code: |
+      def agent_loop(messages):
+          while True:
+              response = client.messages.create(
+                  model=MODEL, system=SYSTEM,
+                  messages=messages, tools=TOOLS,
+                  max_tokens=8000,
+              )
+              messages.append({"role": "assistant",
+                               "content": response.content})
+
+              if response.stop_reason != "tool_use":
+                  return
+
+              results = []
+              for block in response.content:
+                  if block.type == "tool_use":
+                      output = TOOL_HANDLERS[block.name](**block.input)
+                      results.append({
+                          "type": "tool_result",
+                          "tool_use_id": block.id,
+                          "content": output,
+                      })
+              messages.append({"role": "user", "content": results})
+    steps:
+      - lines: [2, 2]
+        annotation: "The infinite loop. It keeps running until the model decides to stop. This is the heartbeat of every agent."
+      - lines: [3, 7]
+        annotation: "Send the full conversation history + tool definitions to the LLM. The model sees everything that happened so far."
+      - lines: [8, 9]
+        annotation: "Append the model's response to the conversation history so it remembers what it said."
+      - lines: [11, 12]
+        annotation: "The exit condition. If the model didn't ask to use a tool, it's done thinking — return to the user."
+      - lines: [14, 21]
+        annotation: "Execute each tool call the model requested. Collect the results into tool_result messages."
+      - lines: [22, 22]
+        annotation: "Feed the tool results back as a 'user' message. The model will see these results on the next iteration and decide what to do next."
 ---
 
 ## The Problem

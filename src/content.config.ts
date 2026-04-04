@@ -14,6 +14,15 @@ const sessions = defineCollection({
       question: z.string(),
       answer: z.string(),
     })).optional(),
+    walkthroughs: z.array(z.object({
+      title: z.string(),
+      code: z.string(),
+      language: z.string(),
+      steps: z.array(z.object({
+        lines: z.tuple([z.number(), z.number()]),
+        annotation: z.string(),
+      })),
+    })).optional(),
   }),
 });
 
