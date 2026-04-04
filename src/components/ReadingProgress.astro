@@ -1,5 +1,5 @@
-<div class="reading-progress" data-reading-progress>
-  <div class="reading-progress-fill" data-reading-fill></div>
+<div class="reading-progress">
+  <div class="reading-progress-fill"></div>
 </div>
 
 <style>
@@ -11,25 +11,19 @@
     height: 3px;
     z-index: 200;
     background: transparent;
+    pointer-events: none;
   }
   .reading-progress-fill {
     height: 100%;
     background: var(--accent);
-    width: 0%;
-    transition: width 50ms linear;
+    width: 100%;
+    transform-origin: left;
+    transform: scaleX(0);
+    animation: reading-progress-grow auto linear;
+    animation-timeline: scroll();
+  }
+  @keyframes reading-progress-grow {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
   }
 </style>
-
-<script>
-  const fill = document.querySelector('[data-reading-fill]') as HTMLElement;
-  if (fill) {
-    function updateProgress() {
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const percent = docHeight > 0 ? Math.min((scrollTop / docHeight) * 100, 100) : 0;
-      fill.style.width = `${percent}%`;
-    }
-    window.addEventListener('scroll', updateProgress, { passive: true });
-    updateProgress();
-  }
-</script>
