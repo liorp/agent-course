@@ -36,5 +36,6 @@
   "email.button": "הרשמה",
   "session.toc": "בעמוד זה",
   "theme.dark": "כהה",
-  "theme.light": "בהיר"
+  "theme.light": "בהיר",
+  "search.placeholder": "חיפוש..."
 }

@@ -1,0 +1,146 @@
+---
+import { getLangFromUrl, getUI } from '@/i18n/ui';
+const locale = getLangFromUrl(Astro.url);
+const ui = getUI(locale);
+---
+
+<div class="search-wrapper">
+  <button class="search-trigger" data-search-open aria-label={ui['search.placeholder']}>
+    <span class="search-icon">⌕</span>
+    <span class="search-label">{ui['search.placeholder']}</span>
+    <kbd class="search-kbd">/</kbd>
+  </button>
+</div>
+
+<dialog class="search-dialog" data-search-dialog>
+  <div class="search-dialog-inner">
+    <div id="search" data-search-container></div>
+    <button class="search-close" data-search-close>&times;</button>
+  </div>
+</dialog>
+
+<style>
+  .search-wrapper {
+    display: flex;
+    align-items: center;
+  }
+  .search-trigger {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.75rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    font-family: var(--font-body);
+  }
+  .search-trigger:hover { border-color: var(--accent); }
+  .search-icon { font-size: 1rem; }
+  .search-kbd {
+    font-family: var(--font-code);
+    font-size: 0.7rem;
+    padding: 0.1rem 0.35rem;
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text-muted);
+  }
+  .search-dialog {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(0,0,0,0.6);
+    border: none;
+    padding: 2rem;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+  }
+  .search-dialog::backdrop { background: transparent; }
+  .search-dialog-inner {
+    max-width: 600px;
+    margin: 4rem auto 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    position: relative;
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+  .search-close {
+    position: absolute;
+    top: 0.75rem;
+    inset-inline-end: 0.75rem;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  .search-close:hover { color: var(--accent); }
+
+  @media (max-width: 640px) {
+    .search-label { display: none; }
+    .search-kbd { display: none; }
+  }
+</style>
+
+<script>
+  // Lazy-load Pagefind
+  let pagefindLoaded = false;
+  async function loadPagefind() {
+    if (pagefindLoaded) return;
+    pagefindLoaded = true;
+    const container = document.querySelector('[data-search-container]');
+    if (!container) return;
+    try {
+      // @ts-ignore
+      const pagefind = await import('/pagefind/pagefind-ui.js');
+      new pagefind.PagefindUI({
+        element: container,
+        showSubResults: true,
+        showImages: false,
+      });
+    } catch (e) {
+      if (container) {
+        const msg = document.createElement('p');
+        msg.style.cssText = 'color:var(--text-muted);font-size:0.9rem';
+        msg.textContent = 'Search unavailable in dev mode. Build the site first.';
+        container.appendChild(msg);
+      }
+    }
+  }
+
+  const dialog = document.querySelector('[data-search-dialog]') as HTMLDialogElement;
+  document.querySelectorAll('[data-search-open]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      dialog?.showModal();
+      loadPagefind();
+      setTimeout(() => {
+        const input = dialog?.querySelector('.pagefind-ui__search-input') as HTMLInputElement;
+        input?.focus();
+      }, 100);
+    });
+  });
+  document.querySelectorAll('[data-search-close]').forEach(btn => {
+    btn.addEventListener('click', () => dialog?.close());
+  });
+  dialog?.addEventListener('click', (e) => {
+    if (e.target === dialog) dialog.close();
+  });
+  // Keyboard shortcut: /
+  document.addEventListener('keydown', (e) => {
+    if (e.key === '/' && !['INPUT','TEXTAREA'].includes((e.target as HTMLElement).tagName)) {
+      e.preventDefault();
+      dialog?.showModal();
+      loadPagefind();
+    }
+    if (e.key === 'Escape') dialog?.close();
+  });
+</script>

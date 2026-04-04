@@ -331,3 +331,18 @@ html[data-theme="light"] .star-field::before,
 html[data-theme="light"] .star-field::after {
   display: none;
 }
+
+/* Pagefind UI overrides */
+.pagefind-ui__search-input {
+  background: var(--bg-primary) !important;
+  color: var(--text-body) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  font-family: var(--font-body) !important;
+}
+.pagefind-ui__result-link {
+  color: var(--accent) !important;
+}
+.pagefind-ui__result-excerpt {
+  color: var(--text-body) !important;
+}
