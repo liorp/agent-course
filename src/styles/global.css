@@ -332,6 +332,12 @@ html[data-theme="light"] .star-field::after {
   display: none;
 }
 
+html[data-theme="light"] .hero-title {
+  background: linear-gradient(135deg, #1a1a2e, #b8860b);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
 /* Pagefind UI overrides */
 .pagefind-ui__search-input {
   background: var(--bg-primary) !important;

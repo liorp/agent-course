@@ -8,17 +8,7 @@ const ui = getUI(locale);
   <div class="email-inner">
     <h3 class="email-title">{ui['email.title']}</h3>
     <p class="email-subtitle">{ui['email.subtitle']}</p>
-    <form class="email-form" data-email-form>
-      <input
-        type="email"
-        required
-        placeholder={ui['email.placeholder']}
-        class="email-input"
-        data-email-input
-      />
-      <button type="submit" class="email-btn">{ui['email.button']}</button>
-    </form>
-    <p class="email-success" data-email-success hidden>✓</p>
+    <a href="https://liorp.substack.com/subscribe" target="_blank" rel="noopener" class="email-btn">{ui['email.button']}</a>
   </div>
 </section>
 
@@ -40,27 +30,9 @@ const ui = getUI(locale);
     font-size: 0.9rem;
     margin-block-end: 1rem;
   }
-  .email-form {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: center;
-    max-width: 400px;
-    margin-inline: auto;
-  }
-  .email-input {
-    flex: 1;
-    padding: 0.6rem 1rem;
-    background: var(--bg-primary);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text-body);
-    font-size: 0.9rem;
-    font-family: var(--font-body);
-  }
-  .email-input::placeholder { color: var(--text-muted); opacity: 0.5; }
-  .email-input:focus { outline: none; border-color: var(--accent); }
   .email-btn {
-    padding: 0.6rem 1.25rem;
+    display: inline-block;
+    padding: 0.6rem 1.5rem;
     background: var(--accent);
     color: var(--bg-primary);
     border: none;
@@ -70,36 +42,8 @@ const ui = getUI(locale);
     cursor: pointer;
     transition: background 0.2s;
     font-family: var(--font-body);
-    white-space: nowrap;
+    text-decoration: none;
   }
-  .email-btn:hover { background: var(--accent-hover); }
-  .email-success {
-    color: #4ade80;
-    font-size: 0.9rem;
-    margin-block-start: 0.75rem;
-  }
-
-  @media (max-width: 640px) {
-    .email-form { flex-direction: column; }
-  }
+  .email-btn:hover { background: var(--accent-hover); color: var(--bg-primary); }
 </style>
 
-<script>
-  document.querySelectorAll('[data-email-form]').forEach(form => {
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const input = form.querySelector('[data-email-input]') as HTMLInputElement;
-      const email = input.value;
-      // Store locally for now — replace with actual newsletter API later
-      const emails = JSON.parse(localStorage.getItem('agent-course-emails') || '[]');
-      emails.push({ email, date: new Date().toISOString() });
-      localStorage.setItem('agent-course-emails', JSON.stringify(emails));
-      (form as HTMLElement).hidden = true;
-      const success = form.parentElement?.querySelector('[data-email-success]') as HTMLElement;
-      if (success) success.hidden = false;
-      if (typeof (window as any).gtag === 'function') {
-        (window as any).gtag('event', 'email_capture');
-      }
-    });
-  });
-</script>
