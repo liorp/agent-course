@@ -1,6 +1,6 @@
 {
   "site.title": "Agent Harness Course",
-  "site.description": "12 sessions from a simple loop to autonomous agent teams",
+  "site.description": "17 sessions from a simple loop to production-ready agent teams",
   "nav.sessions": "Sessions",
   "nav.about": "About",
   "session.markComplete": "Mark as complete",
@@ -10,7 +10,7 @@
   "session.beginnerExplainer": "New to this?",
   "session.readingTime": "min read",
   "landing.hero.title": "Agent Harness Engineering",
-  "landing.hero.subtitle": "12 sessions from a simple loop to autonomous agent teams",
+  "landing.hero.subtitle": "17 sessions from a simple loop to production-ready agent teams",
   "landing.hero.thesis.1": "An agent is a model.",
   "landing.hero.thesis.2": "Not a framework. Not a prompt chain.",
   "landing.hero.thesis.3": "The model decides. The harness executes.",
@@ -39,5 +39,14 @@
   "theme.light": "Light",
   "search.placeholder": "Search...",
   "session.challenge": "Try it yourself",
-  "session.hint": "Hint"
+  "session.hint": "Hint",
+  "phase.5": "Phase 5: Production",
+  "session.prerequisites": "Prerequisites",
+  "session.whatYouBuild": "What you'll build",
+  "session.challenge.warmup": "Warm-up",
+  "session.challenge.build": "Build",
+  "session.challenge.stretch": "Stretch",
+  "session.glossary": "Glossary",
+  "session.copyCode": "Copy",
+  "session.codeCopied": "Copied!"
 }

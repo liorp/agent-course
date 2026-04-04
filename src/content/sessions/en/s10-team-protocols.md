@@ -60,9 +60,16 @@ walkthroughs:
         annotation: "`handle_shutdown_request()` is the teammate's response handler. It echoes back the same `req_id` so the lead can match request to response. If the teammate is idle, it approves and updates its own status to `SHUTDOWN`."
       - lines: [24, 35]
         annotation: "`process_inbox()` is the message dispatcher. It tries to parse each message as typed JSON. If it has a `'type'` field, it routes to the appropriate handler. Unknown or plain messages fall through to `start_task()`."
-challenge:
-  text: "Implement a plan-approval flow: lead proposes a plan, teammate reviews and approves or rejects."
-  hint: "Use `REQUEST`/`RESPONSE` message types with a `\"plan\"` field"
+challenges:
+  - tier: "warmup"
+    text: "Why do protocol messages need unique IDs? What would break if two requests had the same ID?"
+    hint: "The lead agent wouldn't be able to match responses to the correct requests — results would get mixed up."
+  - tier: "build"
+    text: "Implement the request-response protocol with unique IDs. Send 3 tasks to a teammate and verify each response matches its request."
+    hint: "Use uuid4() for IDs and include the request_id in the response message."
+  - tier: "stretch"
+    text: "Add a plan approval handshake: before a teammate starts a complex task, it sends a proposed plan to the lead for approval. The lead can approve, modify, or reject."
+    hint: "Define message types: 'plan_proposal', 'plan_approved', 'plan_rejected', 'plan_modified'."
 ---
 
 ## The Problem

@@ -53,9 +53,56 @@ walkthroughs:
         annotation: "`drain_inbox()` reads all pending messages and then truncates the file to empty. This read-and-truncate pattern is the key: messages are consumed once and not replayed on the next polling cycle."
       - lines: [19, 28]
         annotation: "`teammate_loop()` is the teammate's runtime. It polls its inbox every 2 seconds. When work arrives, it updates its status to `WORKING`, runs an agent loop to handle the messages, then sends the result back to lead and returns to `IDLE`."
-challenge:
-  text: "Spawn two teammates with different specialties and have them collaborate on a task through the mailbox."
-  hint: "Give them complementary system prompts like \"frontend expert\" and \"backend expert\""
+diagram:
+  title: "Agent Team Communication Flow"
+  nodes:
+    - { id: "lead", label: "Lead Agent", x: 300, y: 50, type: "agent" }
+    - { id: "roster", label: "Team Roster", x: 100, y: 50, type: "data" }
+    - { id: "alice", label: "Alice (Frontend)", x: 150, y: 200, type: "agent" }
+    - { id: "bob", label: "Bob (Backend)", x: 450, y: 200, type: "agent" }
+    - { id: "inbox_a", label: "alice.jsonl", x: 150, y: 310, type: "data" }
+    - { id: "inbox_b", label: "bob.jsonl", x: 450, y: 310, type: "data" }
+    - { id: "inbox_l", label: "lead.jsonl", x: 300, y: 310, type: "data" }
+  edges:
+    - { from: "lead", to: "roster", label: "read" }
+    - { from: "lead", to: "inbox_a", label: "send task", animated: true }
+    - { from: "lead", to: "inbox_b", label: "send task", animated: true }
+    - { from: "alice", to: "inbox_a", label: "drain" }
+    - { from: "bob", to: "inbox_b", label: "drain" }
+    - { from: "alice", to: "inbox_l", label: "send result", animated: true }
+    - { from: "bob", to: "inbox_l", label: "send result", animated: true }
+    - { from: "lead", to: "inbox_l", label: "drain" }
+  steps:
+    - title: "1. Lead Reads Roster"
+      description: "The lead agent reads the team roster to see who's available and what each teammate specializes in."
+      activeNodes: ["lead", "roster"]
+      activeEdges: [0]
+    - title: "2. Lead Delegates Tasks"
+      description: "The lead sends task messages to each teammate's mailbox. Alice gets the frontend work, Bob gets the backend work."
+      activeNodes: ["lead", "inbox_a", "inbox_b"]
+      activeEdges: [1, 2]
+    - title: "3. Teammates Drain Inboxes"
+      description: "Each teammate polls their inbox, reads all pending messages, and truncates the file. They switch to WORKING status."
+      activeNodes: ["alice", "bob", "inbox_a", "inbox_b"]
+      activeEdges: [3, 4]
+    - title: "4. Teammates Return Results"
+      description: "After completing their work, each teammate sends results to the lead's mailbox and returns to IDLE."
+      activeNodes: ["alice", "bob", "inbox_l"]
+      activeEdges: [5, 6]
+    - title: "5. Lead Collects Results"
+      description: "The lead drains its own inbox to read the results from all teammates and synthesize the final output."
+      activeNodes: ["lead", "inbox_l"]
+      activeEdges: [7]
+challenges:
+  - tier: "warmup"
+    text: "Compare subagents (s04) to teammates (s09). List 3 specific scenarios where you'd use each. What's the key factor in choosing?"
+    hint: "Subagents for one-off tasks with no memory needed. Teammates for ongoing work with identity and communication."
+  - tier: "build"
+    text: "Spawn two teammates with different specialties and have them collaborate on a task through the mailbox."
+    hint: "Give them complementary system prompts like 'frontend expert' and 'backend expert'."
+  - tier: "stretch"
+    text: "Add a health monitoring system: the lead agent pings each teammate every 10 seconds. If a teammate doesn't respond within 5 seconds, mark it as UNRESPONSIVE and reassign its tasks."
+    hint: "Use a special 'ping' message type and track last response time per teammate."
 ---
 
 ## The Problem

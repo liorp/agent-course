@@ -57,9 +57,16 @@ walkthroughs:
         annotation: "The outer loop checks inbox first on every iteration. This ensures shutdown requests are processed promptly even if the agent is in the middle of a long idle cycle."
       - lines: [21, 30]
         annotation: "The idle cycle: if no ready task is available, update status to `IDLE` and sleep 2 seconds. Otherwise, claim the task, run the full agent loop on it, then complete it and loop back to check for more."
-challenge:
-  text: "Set up 3 autonomous agents with an empty task board, then add 5 tasks. Watch them claim and complete."
-  hint: "Each agent's `idle_cycle` will automatically scan and claim"
+challenges:
+  - tier: "warmup"
+    text: "What happens if two autonomous agents try to claim the same task simultaneously? How would you prevent race conditions?"
+    hint: "File-based locking: the first agent to write its name to the task file 'owns' it. Use atomic file operations."
+  - tier: "build"
+    text: "Create 5 tasks on a board, spawn 2 autonomous agents, and watch them claim and complete tasks independently."
+    hint: "Each agent polls the board, filters for ready + unclaimed tasks, and claims one."
+  - tier: "stretch"
+    text: "Implement work stealing: when an agent finishes all its tasks and the board is empty but other agents are still working, it offers to help by splitting a large in-progress task."
+    hint: "Add a 'splittable' flag to tasks and a 'split_task' function that creates subtasks."
 ---
 
 ## The Problem

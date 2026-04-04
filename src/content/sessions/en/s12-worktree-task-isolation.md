@@ -46,9 +46,50 @@ walkthroughs:
         annotation: "`assign_worktree()` binds the worktree to the task record. After this call, the task JSON file contains both what to do (title, description) and where to do it (worktree path and branch name)."
       - lines: [18, 23]
         annotation: "`cleanup_worktree()` removes the worktree directory and deregisters it from git's worktree list. This should be called after merging the branch — the task is done, the isolation lane is released."
-challenge:
-  text: "Create 3 tasks, assign each a worktree, and verify they can edit the same file independently."
-  hint: "After each completes, merge the branches and resolve any conflicts"
+diagram:
+  title: "Worktree Isolation: Parallel Agent Execution"
+  nodes:
+    - { id: "lead", label: "Lead Agent", x: 300, y: 40, type: "agent" }
+    - { id: "board", label: "Task Board", x: 300, y: 130, type: "data" }
+    - { id: "wt1", label: ".worktrees/auth", x: 100, y: 240, type: "tool" }
+    - { id: "wt2", label: ".worktrees/typo", x: 300, y: 240, type: "tool" }
+    - { id: "wt3", label: ".worktrees/tests", x: 500, y: 240, type: "tool" }
+    - { id: "merge", label: "git merge", x: 300, y: 330, type: "decision" }
+  edges:
+    - { from: "lead", to: "board", label: "create tasks" }
+    - { from: "board", to: "wt1", label: "assign", animated: true }
+    - { from: "board", to: "wt2", label: "assign", animated: true }
+    - { from: "board", to: "wt3", label: "assign", animated: true }
+    - { from: "wt1", to: "merge", label: "complete" }
+    - { from: "wt2", to: "merge", label: "complete" }
+    - { from: "wt3", to: "merge", label: "complete" }
+  steps:
+    - title: "1. Create Tasks"
+      description: "The lead agent breaks the goal into independent tasks and adds them to the task board."
+      activeNodes: ["lead", "board"]
+      activeEdges: [0]
+    - title: "2. Assign Worktrees"
+      description: "Each task gets its own worktree — a separate directory on its own git branch. Agents can now work in parallel without file conflicts."
+      activeNodes: ["board", "wt1", "wt2", "wt3"]
+      activeEdges: [1, 2, 3]
+    - title: "3. Parallel Execution"
+      description: "Three agents work simultaneously, each in their own isolated directory. They can edit the same files without interference."
+      activeNodes: ["wt1", "wt2", "wt3"]
+      activeEdges: []
+    - title: "4. Merge Results"
+      description: "As tasks complete, branches are merged back. Conflicts (if any) are resolved by the lead agent."
+      activeNodes: ["wt1", "wt2", "wt3", "merge"]
+      activeEdges: [4, 5, 6]
+challenges:
+  - tier: "warmup"
+    text: "What happens if two worktrees modify the same file on different branches? When do conflicts appear, and who resolves them?"
+    hint: "Conflicts only appear at merge time. The lead agent (or a human) resolves them."
+  - tier: "build"
+    text: "Create 3 tasks, assign each a worktree, and verify they can edit the same file independently."
+    hint: "After each completes, merge the branches and resolve any conflicts."
+  - tier: "stretch"
+    text: "Build an automatic merge system: after a task completes, auto-merge its branch. If there's a conflict, spawn a subagent to resolve it. Track merge success rate."
+    hint: "Use `git merge --no-commit` to detect conflicts before committing. Parse conflict markers to understand what changed."
 ---
 
 ## The Problem

@@ -6,7 +6,7 @@ const ui = getUI(locale);
 
 <div class="progress-bar-container" data-progress-bar>
   <div class="progress-info">
-    <span class="progress-count" data-progress-count>0</span>/12 {ui['landing.progress']}
+    <span class="progress-count" data-progress-count>0</span>/17 {ui['landing.progress']}
   </div>
   <div class="progress-track">
     <div class="progress-fill" data-progress-fill></div>
@@ -56,5 +56,5 @@ const ui = getUI(locale);
   const countEl = document.querySelector('[data-progress-count]');
   const fillEl = document.querySelector('[data-progress-fill]') as HTMLElement;
   if (countEl) countEl.textContent = String(completed);
-  if (fillEl) fillEl.style.width = `${(completed / 12) * 100}%`;
+  if (fillEl) fillEl.style.width = `${(completed / 17) * 100}%`;
 </script>

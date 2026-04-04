@@ -50,9 +50,16 @@ walkthroughs:
         annotation: "`self.render()` formats the todo list as readable text (e.g., '[ ] task A, [>] task B') that gets returned as the `tool_result` — the model sees its own updated list immediately."
       - lines: [15, 21]
         annotation: "The nag reminder injects a `<reminder>` text block at the front of the last user message if 3+ rounds have passed without a todo update. It nudges the model without requiring user intervention."
-challenge:
-  text: "Run `python agents/s03_todo_write.py` and give it a multi-step task. Watch how it creates a todo list before acting."
-  hint: "Try: \"Create a Python project with tests, README, and a CLI\""
+challenges:
+  - tier: "warmup"
+    text: "Why does the TodoManager enforce only one task as `in_progress` at a time? What would go wrong if the agent could start multiple tasks simultaneously?"
+    hint: "Think about context switching, partial completions, and how the nag reminder works."
+  - tier: "build"
+    text: "Create a multi-step task and watch the agent make a todo list. Then add a `priority` field to tasks (high/medium/low) and modify the nag reminder to show the highest-priority pending task."
+    hint: "Sort pending tasks by priority before picking which one to nag about."
+  - tier: "stretch"
+    text: "Add task time tracking: record when each task moves to `in_progress` and `completed`. Generate a summary at the end showing time spent per task and total session time."
+    hint: "Store timestamps in the task dict and compute durations in a `summary()` method."
 ---
 
 ## The Problem
