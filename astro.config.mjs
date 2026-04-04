@@ -1,8 +1,10 @@
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  integrations: [react()],
+  site: 'https://agent-course.vercel.app',
+  integrations: [react(), sitemap()],
   i18n: {
     defaultLocale: 'en',
     locales: ['en', 'he'],

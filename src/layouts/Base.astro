@@ -60,6 +60,20 @@ const ADSENSE_ID = import.meta.env.PUBLIC_ADSENSE_ID || 'ca-pub-4529248472834919
   )}
 
   <title>{fullTitle}</title>
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Course",
+    "name": ui['site.title'],
+    "description": desc,
+    "provider": {
+      "@type": "Organization",
+      "name": "shareAI-lab"
+    },
+    "numberOfCredits": 12,
+    "educationalLevel": "Intermediate",
+    "inLanguage": [locale],
+    "isAccessibleForFree": true
+  })} />
 </head>
 <body>
   <slot />
