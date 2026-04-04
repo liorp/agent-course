@@ -10,12 +10,78 @@ beginnerConcepts:
     answer: "מילון שממפה שמות כלים לפונקציות שמטפלות בהם. כשהמודל קורא ל-'read_file', מפת ה-dispatch מחפשת איזו פונקציית Python מטפלת בזה — כמו ספר טלפונים לכלים."
   - question: "למה אנחנו עושים sandbox לנתיבי קבצים?"
     answer: "כדי למנוע מהסוכן לקרוא או לכתוב קבצים מחוץ לתיקיית הפרויקט. הפונקציה safe_path() בודקת שכל נתיב מבוקש נשאר בתוך סביבת העבודה — גבול אבטחה בסיסי."
+  - question: "מה זה path traversal?"
+    answer: "טריק שבו מישהו משתמש ב-'../' בנתיב קובץ כדי להימלט מהתיקייה המיועדת. לדוגמה, '../../etc/passwd' מנסה לקרוא קבצי מערכת. ה-sandbox שלנו חוסם זאת."
 ---
 
 ## הבעיה
 
-s01 נתן לסוכן כלי אחד: bash. זה עובד, אבל זה כלי גס. כל קריאת קובץ דורשת `cat`, כל כתיבה דורשת `echo >`. המודל מבזבז טוקנים על תחביר shell כשהוא יכול להשתמש בכלים ייעודיים.
+s01 נתן לסוכן כלי אחד: bash. זה עובד, אבל זה כלי גס. כל קריאת קובץ דורשת `cat`, כל כתיבה דורשת `echo >`, כל עריכה דורשת `sed`. המודל מבזבז טוקנים על תחביר shell כשהוא יכול להשתמש בכלים ייעודיים.
 
 ## הפתרון
 
 הוסיפו כלים למערך. הוסיפו handlers למפת ה-dispatch. הלולאה לא משתנה.
+
+```python
+TOOL_HANDLERS = {
+    "bash":       run_bash,
+    "read_file":  run_read,
+    "write_file": run_write,
+    "edit_file":  run_edit,
+}
+```
+
+זה התובנה המרכזית: **הלולאה נשארת זהה לחלוטין מ-s01. רק מערך הכלים ומפת ה-dispatch גדלים.**
+
+## מפת ה-Dispatch
+
+```python
+def safe_path(p: str) -> Path:
+    path = (WORKDIR / p).resolve()
+    if not path.is_relative_to(WORKDIR):
+        raise ValueError(f"Path escapes workspace: {p}")
+    return path
+
+def run_read(path: str, limit: int = None) -> str:
+    text = safe_path(path).read_text()
+    lines = text.splitlines()
+    if limit and limit < len(lines):
+        lines = lines[:limit]
+    return "\n".join(lines)[:50000]
+
+def run_write(path: str, content: str) -> str:
+    fp = safe_path(path)
+    fp.parent.mkdir(parents=True, exist_ok=True)
+    fp.write_text(content)
+    return f"Wrote {len(content)} bytes to {path}"
+
+def run_edit(path: str, old_text: str, new_text: str) -> str:
+    fp = safe_path(path)
+    content = fp.read_text()
+    if old_text not in content:
+        return f"Error: Text not found in {path}"
+    fp.write_text(content.replace(old_text, new_text, 1))
+    return f"Edited {path}"
+
+TOOL_HANDLERS = {
+    "bash":       lambda **kw: run_bash(kw["command"]),
+    "read_file":  lambda **kw: run_read(kw["path"], kw.get("limit")),
+    "write_file": lambda **kw: run_write(kw["path"], kw["content"]),
+    "edit_file":  lambda **kw: run_edit(kw["path"], kw["old_text"], kw["new_text"]),
+}
+```
+
+## מה השתנה מ-s01
+
+| רכיב | s01 | s02 |
+|------|-----|-----|
+| לולאה | `while True` + `stop_reason` | **זהה** |
+| כלים | 1 (bash) | 4 (bash, read, write, edit) |
+| Dispatch | קריאה ישירה | מפה: `{name: handler}` |
+| אבטחה | רשימת פקודות חסומות | + Sandbox לנתיבים |
+
+הלולאה זהה. הצמיחה היחידה היא במערך הכלים ובמפת ה-dispatch. התבנית הזו מתרחבת ללא הגבלה — s03 עד s12 ממשיכים להוסיף כלים מבלי לגעת בלולאה.
+
+## מסקנה מרכזית
+
+הוספת כלי לסוכן פירושה שני דברים: (1) סכמת JSON שהמודל רואה, (2) פונקציית handler שה-harness קורא לה. הלולאה לעולם לא משתנה. זו היסוד של הנדסת ה-harness — המודל הופך לכשיר יותר מבלי שארכיטקטורת הליבה הופכת למורכבת יותר.
