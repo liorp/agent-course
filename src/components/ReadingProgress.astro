@@ -1,0 +1,35 @@
+<div class="reading-progress" data-reading-progress>
+  <div class="reading-progress-fill" data-reading-fill></div>
+</div>
+
+<style>
+  .reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    z-index: 200;
+    background: transparent;
+  }
+  .reading-progress-fill {
+    height: 100%;
+    background: var(--accent);
+    width: 0%;
+    transition: width 50ms linear;
+  }
+</style>
+
+<script>
+  const fill = document.querySelector('[data-reading-fill]') as HTMLElement;
+  if (fill) {
+    function updateProgress() {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const percent = docHeight > 0 ? Math.min((scrollTop / docHeight) * 100, 100) : 0;
+      fill.style.width = `${percent}%`;
+    }
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+  }
+</script>
