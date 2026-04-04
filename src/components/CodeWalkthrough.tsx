@@ -1,4 +1,15 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, type ReactNode } from 'react';
+
+/** Parse backtick-wrapped text into <code> elements */
+function renderInlineCode(text: string): ReactNode[] {
+  const parts = text.split(/(`[^`]+`)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith('`') && part.endsWith('`')) {
+      return <code key={i} className="cw-inline-code">{part.slice(1, -1)}</code>;
+    }
+    return part;
+  });
+}
 
 interface WalkthroughStep {
   lines: [number, number];
@@ -89,7 +100,7 @@ export default function CodeWalkthrough({
         </pre>
         {step && (
           <div className="cw-annotation" dir={isRtl ? 'rtl' : 'ltr'}>
-            <div className="cw-annotation-text">{step.annotation}</div>
+            <div className="cw-annotation-text">{renderInlineCode(step.annotation)}</div>
           </div>
         )}
       </div>

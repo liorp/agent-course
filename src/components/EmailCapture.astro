@@ -8,7 +8,17 @@ const ui = getUI(locale);
   <div class="email-inner">
     <h3 class="email-title">{ui['email.title']}</h3>
     <p class="email-subtitle">{ui['email.subtitle']}</p>
-    <a href="https://liorp.substack.com/subscribe" target="_blank" rel="noopener" class="email-btn">{ui['email.button']}</a>
+    <div class="substack-embed">
+      <iframe
+        src="https://liorp.substack.com/embed"
+        width="480"
+        height="150"
+        style="border: none; background: transparent;"
+        frameborder="0"
+        scrolling="no"
+        loading="lazy"
+      ></iframe>
+    </div>
   </div>
 </section>
 
@@ -30,20 +40,12 @@ const ui = getUI(locale);
     font-size: 0.9rem;
     margin-block-end: 1rem;
   }
-  .email-btn {
-    display: inline-block;
-    padding: 0.6rem 1.5rem;
-    background: var(--accent);
-    color: var(--bg-primary);
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: background 0.2s;
-    font-family: var(--font-body);
-    text-decoration: none;
+  .substack-embed {
+    display: flex;
+    justify-content: center;
   }
-  .email-btn:hover { background: var(--accent-hover); color: var(--bg-primary); }
+  .substack-embed iframe {
+    max-width: 100%;
+    border-radius: 8px;
+  }
 </style>
-

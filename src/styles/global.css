@@ -293,6 +293,17 @@ th { background: var(--bg-card); color: var(--text-primary); font-weight: 600; }
   font-size: 0.8rem;
 }
 
+.cw-inline-code {
+  font-family: var(--font-code);
+  font-size: 0.8em;
+  background: rgba(255, 204, 0, 0.1);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+  color: var(--accent);
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
 @media (max-width: 640px) {
   .cw-body { flex-direction: column; }
   .cw-annotation {
