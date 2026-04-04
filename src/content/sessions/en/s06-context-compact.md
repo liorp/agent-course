@@ -120,9 +120,9 @@ def hard_compact(messages: list) -> list:
     ]
 ```
 
-## What Changed From s05
+## What Changed From Skills
 
-| Component      | Before (s05)     | After (s06)                    |
+| Component      | Before (Skills)  | After (Context Compact)        |
 |----------------|------------------|--------------------------------|
 | Context        | Grows forever    | Three-layer compression        |
 | Old results    | Full content     | One-line placeholders          |

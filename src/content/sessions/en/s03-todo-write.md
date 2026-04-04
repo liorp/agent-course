@@ -85,9 +85,9 @@ if rounds_since_todo >= 3 and messages:
 
 The "one in_progress at a time" constraint forces sequential focus. The nag reminder creates accountability.
 
-## What Changed From s02
+## What Changed From Tool Use
 
-| Component      | Before (s02)     | After (s03)                |
+| Component      | Before (Tool Use) | After (TodoWrite)          |
 |----------------|------------------|----------------------------|
 | Tools          | 4                | 5 (+todo)                  |
 | Planning       | None             | TodoManager with statuses  |

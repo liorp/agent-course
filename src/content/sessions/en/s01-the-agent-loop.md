@@ -204,4 +204,4 @@ if __name__ == "__main__":
 
 ## Key Takeaway
 
-The entire secret of an AI coding agent is this loop. The model is the intelligence — it decides what to do. The code is just the harness — it gives the model a tool and feeds back results. In the next session, we'll add more tools without changing the loop at all.
+The entire secret of an AI coding agent is this loop. The model is the intelligence — it decides what to do. The code is just the harness — it gives the model a tool and feeds back results. In the next session (Tool Use), we'll add more tools without changing the loop at all.

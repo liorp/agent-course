@@ -9,16 +9,16 @@ beginnerConcepts:
   - question: "What is a task graph (DAG)?"
     answer: "A Directed Acyclic Graph where each task can list other tasks it depends on (blockedBy). Task 4 can't start until tasks 2 and 3 are done. This models real-world dependencies between work items."
   - question: "Why persist tasks to disk instead of memory?"
-    answer: "Context compression (s06) can wipe the in-memory todo list. Tasks saved as JSON files on disk survive compression, crashes, and even multi-agent handoffs — any agent can pick up where another left off."
+    answer: "Context compression (Context Compact session) can wipe the in-memory todo list. Tasks saved as JSON files on disk survive compression, crashes, and even multi-agent handoffs — any agent can pick up where another left off."
   - question: "What does 'ready' mean for a task?"
     answer: "A task is ready when its status is 'pending' AND all tasks in its blockedBy list are 'completed'. The TaskManager computes ready tasks automatically so the agent just asks 'what can I do now?'"
 ---
 
 ## The Problem
 
-s03's TodoManager is a flat checklist in memory: no ordering, no dependencies, no status beyond done-or-not. Real goals have structure — task B depends on task A, tasks C and D can run in parallel, task E waits for both C and D.
+The TodoWrite session's TodoManager is a flat checklist in memory: no ordering, no dependencies, no status beyond done-or-not. Real goals have structure — task B depends on task A, tasks C and D can run in parallel, task E waits for both C and D.
 
-Without explicit relationships, the agent can't tell what's ready, what's blocked, or what can run concurrently. And because the list lives only in memory, context compression (s06) wipes it clean.
+Without explicit relationships, the agent can't tell what's ready, what's blocked, or what can run concurrently. And because the list lives only in memory, context compression (Context Compact session) wipes it clean.
 
 ## The Solution
 
@@ -121,9 +121,9 @@ list_ready_tasks() -> [task 2]
 ...
 ```
 
-## What Changed From s06
+## What Changed From Context Compact
 
-| Component      | Before (s06)         | After (s07)                      |
+| Component      | Before (Context Compact) | After (Tasks)                    |
 |----------------|----------------------|----------------------------------|
 | Planning       | In-memory checklist  | Disk-persisted task graph        |
 | Dependencies   | None                 | blockedBy list                   |
@@ -132,4 +132,4 @@ list_ready_tasks() -> [task 2]
 
 ## Key Takeaway
 
-Persisting tasks to disk is what makes the agent's plans durable. The task graph encodes not just *what* to do but *in what order* and *what can run in parallel*. Combined with s06's compression, the agent can work on truly large goals across many turns without losing track.
+Persisting tasks to disk is what makes the agent's plans durable. The task graph encodes not just *what* to do but *in what order* and *what can run in parallel*. Combined with the Context Compact session's compression, the agent can work on truly large goals across many turns without losing track.

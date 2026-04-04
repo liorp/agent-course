@@ -16,7 +16,7 @@ beginnerConcepts:
 
 ## The Problem
 
-In s09, teammates work and communicate but lack structured coordination:
+In the Agent Teams session, teammates work and communicate but lack structured coordination:
 
 **Shutdown**: Killing a thread leaves files half-written and config.json stale. You need a handshake: the lead requests, the teammate approves (finish and exit) or rejects (keep working).
 
@@ -117,9 +117,9 @@ def process_inbox(name: str) -> None:
             start_task(msg_raw["content"], name)
 ```
 
-## What Changed From s09
+## What Changed From Agent Teams
 
-| Component      | Before (s09)       | After (s10)                       |
+| Component      | Before (Agent Teams) | After (Team Protocols)            |
 |----------------|--------------------|-----------------------------------|
 | Shutdown       | Kill thread        | Graceful req/resp handshake       |
 | Plan review    | None               | Plan request + lead approval      |

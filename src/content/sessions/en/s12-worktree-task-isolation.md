@@ -16,7 +16,7 @@ beginnerConcepts:
 
 ## The Problem
 
-In s09-s11, teammates coordinate through tasks and mailboxes — but they all share the same working directory. If two agents edit the same file simultaneously, they'll corrupt each other's work. The team can plan together, but they can't *execute* together.
+In the Agent Teams through Autonomous Agents sessions, teammates coordinate through tasks and mailboxes — but they all share the same working directory. If two agents edit the same file simultaneously, they'll corrupt each other's work. The team can plan together, but they can't *execute* together.
 
 ## The Solution
 
@@ -75,11 +75,11 @@ Lead Agent:
   8. Lead removes worktree
 ```
 
-This is the culmination of the entire course: the task system (s07) manages goals, the team protocol (s10) manages communication, autonomous claiming (s11) manages assignment, and worktrees manage isolation. Each mechanism handles one concern. Together, they enable true parallel execution.
+This is the culmination of the entire course: the Tasks session manages goals, the Team Protocols session manages communication, the Autonomous Agents session manages assignment, and worktrees manage isolation. Each mechanism handles one concern. Together, they enable true parallel execution.
 
-## What Changed from s11
+## What Changed from Autonomous Agents
 
-| Component | s11 | s12 |
+| Component | Autonomous Agents | Worktree + Task Isolation |
 |-----------|-----|-----|
 | Task claiming | Auto-claim from shared board | Same |
 | Execution | Shared directory | Isolated worktree per task |

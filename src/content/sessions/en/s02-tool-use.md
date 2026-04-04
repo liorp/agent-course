@@ -16,7 +16,7 @@ beginnerConcepts:
 
 ## The Problem
 
-s01 gave the agent one tool: bash. That works, but it's a blunt instrument. Every file read requires `cat`, every write requires `echo >`, every edit requires `sed`. The model wastes tokens on shell syntax when it could use purpose-built tools.
+The Agent Loop session gave the agent one tool: bash. That works, but it's a blunt instrument. Every file read requires `cat`, every write requires `echo >`, every edit requires `sed`. The model wastes tokens on shell syntax when it could use purpose-built tools.
 
 ## The Solution
 
@@ -31,7 +31,7 @@ TOOL_HANDLERS = {
 }
 ```
 
-That's the key insight: **the loop stays identical from s01. Only the tools array and dispatch map grow.**
+That's the key insight: **the loop stays identical from the first session. Only the tools array and dispatch map grow.**
 
 ## The Dispatch Map
 
@@ -71,16 +71,16 @@ TOOL_HANDLERS = {
 }
 ```
 
-## What Changed from s01
+## What Changed from The Agent Loop
 
-| Component | s01 | s02 |
+| Component | The Agent Loop | Tool Use |
 |-----------|-----|-----|
 | Loop | `while True` + `stop_reason` | **Same** |
 | Tools | 1 (bash) | 4 (bash, read, write, edit) |
 | Dispatch | Direct call | Map: `{name: handler}` |
 | Safety | Command blocklist | + Path sandboxing |
 
-The loop is identical. The only growth is in the tools array and the dispatch map. This pattern scales indefinitely — s03 through s12 keep adding tools without touching the loop.
+The loop is identical. The only growth is in the tools array and the dispatch map. This pattern scales indefinitely — subsequent sessions keep adding tools without touching the loop.
 
 ## Key Takeaway
 

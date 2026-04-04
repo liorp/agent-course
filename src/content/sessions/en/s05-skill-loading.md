@@ -96,9 +96,9 @@ TOOL_HANDLERS = {
 
 The model learns what skills exist (cheap) and loads them when relevant (expensive).
 
-## What Changed From s04
+## What Changed From Subagents
 
-| Component      | Before (s04)     | After (s05)                |
+| Component      | Before (Subagents) | After (Skills)             |
 |----------------|------------------|----------------------------|
 | Tools          | 5 (base + task)  | 5 (base + load_skill)      |
 | System prompt  | Static string    | + skill descriptions       |

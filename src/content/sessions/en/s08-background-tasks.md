@@ -127,9 +127,9 @@ def agent_loop(messages: list):
         messages.append({"role": "user", "content": results})
 ```
 
-## What Changed From s07
+## What Changed From Tasks
 
-| Component      | Before (s07)       | After (s08)                          |
+| Component      | Before (Tasks)     | After (Background Tasks)             |
 |----------------|--------------------|--------------------------------------|
 | Execution      | Sequential only    | Parallel background tasks            |
 | Waiting        | Blocks agent loop  | Agent continues while bg runs        |

@@ -9,18 +9,18 @@ beginnerConcepts:
   - question: "What is task claiming?"
     answer: "When a teammate atomically changes a task's status from 'pending' to 'in_progress' and writes its own name as the assignee. Because each task is a separate JSON file, two agents can't claim the same task simultaneously — one will win, the other retries."
   - question: "What is identity re-injection?"
-    answer: "After context compression (s06) wipes the conversation history, the agent might forget who it is. The harness injects an <identity> block at the start of the compressed context: 'You are Alice, a backend specialist, working on task 3.' This restores the agent's sense of self."
+    answer: "After context compression (Context Compact session) wipes the conversation history, the agent might forget who it is. The harness injects an <identity> block at the start of the compressed context: 'You are Alice, a backend specialist, working on task 3.' This restores the agent's sense of self."
   - question: "What is an idle cycle?"
     answer: "When a teammate finds no ready tasks, it waits briefly (sleeps 2 seconds) and then checks again. This polling loop is the mechanism that lets teammates work indefinitely without the lead assigning each task individually."
 ---
 
 ## The Problem
 
-In s09-s10, teammates only work when explicitly told to. The lead must spawn each one with a specific prompt. 10 unclaimed tasks on the board? The lead assigns each one manually. Doesn't scale.
+In the Agent Teams through Team Protocols sessions, teammates only work when explicitly told to. The lead must spawn each one with a specific prompt. 10 unclaimed tasks on the board? The lead assigns each one manually. Doesn't scale.
 
 True autonomy: teammates scan the task board themselves, claim unclaimed tasks, work on them, then look for more.
 
-One subtlety: after context compression (s06), the agent might forget who it is. Identity re-injection fixes this.
+One subtlety: after context compression (Context Compact session), the agent might forget who it is. Identity re-injection fixes this.
 
 ## The Solution
 
@@ -103,7 +103,7 @@ def autonomous_teammate(name: str, role: str) -> None:
         complete_task(task["id"])
 ```
 
-3. Identity re-injection wraps the hard_compact function from s06.
+3. Identity re-injection wraps the hard_compact function from the Context Compact session.
 
 ```python
 def build_identity_block(name: str, role: str, task_id: int) -> str:
@@ -125,9 +125,9 @@ def hard_compact_with_identity(messages: list, name: str, role: str, task_id: in
     return compacted
 ```
 
-## What Changed From s10
+## What Changed From Team Protocols
 
-| Component      | Before (s10)           | After (s11)                         |
+| Component      | Before (Team Protocols) | After (Autonomous Agents)           |
 |----------------|------------------------|-------------------------------------|
 | Task assignment| Lead sends explicitly   | Teammates claim autonomously        |
 | Idle state     | Wait for message        | Poll ready tasks every 2s           |

@@ -83,9 +83,9 @@ def run_subagent(prompt: str) -> str:
 
 The child's entire message history (possibly 30+ tool calls) is discarded. The parent receives a one-paragraph summary as a normal `tool_result`.
 
-## What Changed From s03
+## What Changed From TodoWrite
 
-| Component      | Before (s03)     | After (s04)               |
+| Component      | Before (TodoWrite) | After (Subagents)         |
 |----------------|------------------|---------------------------|
 | Tools          | 5                | 5 (base) + task (parent)  |
 | Context        | Single shared    | Parent + child isolation  |

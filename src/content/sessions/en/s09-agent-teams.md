@@ -7,7 +7,7 @@ order: 9
 readingTime: 25
 beginnerConcepts:
   - question: "What makes a teammate different from a subagent?"
-    answer: "A subagent (s04) is disposable — spawn, work, return summary, die. A teammate has a persistent identity, a lifecycle (IDLE, WORKING, SHUTDOWN), and a mailbox it checks between tasks. Teammates remember their role across invocations."
+    answer: "A subagent is disposable — spawn, work, return summary, die. A teammate has a persistent identity, a lifecycle (IDLE, WORKING, SHUTDOWN), and a mailbox it checks between tasks. Teammates remember their role across invocations."
   - question: "What is an agent mailbox?"
     answer: "An append-only JSONL file on disk (e.g., .team/inbox/alice.jsonl). Any agent can write a message to Alice's inbox. When Alice's turn comes, she drains the file — reads all messages, then truncates it. Like email, but for agents."
   - question: "What is a team roster?"
@@ -16,7 +16,7 @@ beginnerConcepts:
 
 ## The Problem
 
-Subagents (s04) are disposable: spawn, work, return summary, die. No identity, no memory between invocations. Background tasks (s08) run shell commands but can't make LLM-guided decisions.
+Subagents are disposable: spawn, work, return summary, die. No identity, no memory between invocations. Background tasks run shell commands but can't make LLM-guided decisions.
 
 Real teamwork needs: (1) persistent agents that outlive a single prompt, (2) identity and lifecycle management, (3) a communication channel between agents.
 
@@ -111,9 +111,9 @@ def teammate_loop(name: str, role: str) -> None:
         update_status(name, "IDLE")
 ```
 
-## What Changed From s08
+## What Changed From Background Tasks
 
-| Component      | Before (s08)          | After (s09)                    |
+| Component      | Before (Background Tasks) | After (Agent Teams)            |
 |----------------|-----------------------|--------------------------------|
 | Agents         | One main + bg threads | Lead + named teammates         |
 | Communication  | Queue (one-way)       | Mailboxes (bidirectional)      |
