@@ -33,6 +33,8 @@ const { prev, next } = getAdjacentSessions(session.slug);
 const phaseKey = `phase.${session.phase}` as const;
 const phaseLabel = ui[phaseKey];
 const issueUrl = `https://github.com/liorp/agent-course/issues/new?title=${encodeURIComponent(`[${session.id}] `)}&body=${encodeURIComponent(`**Session:** ${session.id} — ${session.title}\n**URL:** /${locale}/${session.slug}\n\n**Describe the issue:**\n\n`)}&labels=fix`;
+const isRtl = locale === 'he';
+const reportArrow = isRtl ? '←' : '→';
 ---
 
 <Base title={title}>
@@ -66,7 +68,7 @@ const issueUrl = `https://github.com/liorp/agent-course/issues/new?title=${encod
 
         {frontmatter.walkthroughs && frontmatter.walkthroughs.length > 0 && (
           <section class="walkthroughs">
-            <h2>Interactive Code Walkthrough</h2>
+            <h2>{ui['session.walkthrough']}</h2>
             {frontmatter.walkthroughs.map((wt: any) => (
               <CodeWalkthrough
                 client:visible
@@ -74,6 +76,11 @@ const issueUrl = `https://github.com/liorp/agent-course/issues/new?title=${encod
                 language={wt.language}
                 steps={wt.steps}
                 title={wt.title}
+                isRtl={isRtl}
+                labelPrev={ui['walkthrough.prev']}
+                labelNext={ui['walkthrough.next']}
+                labelStep={ui['walkthrough.step']}
+                labelOf={ui['walkthrough.of']}
               />
             ))}
           </section>
@@ -82,7 +89,7 @@ const issueUrl = `https://github.com/liorp/agent-course/issues/new?title=${encod
         <ProgressTracker sessionId={session.id} />
 
         <a href={issueUrl} target="_blank" rel="noopener" class="report-link">
-          {ui['session.reportIssue']} →
+          {ui['session.reportIssue']} {reportArrow}
         </a>
 
         <SessionNav prev={prev} next={next} />

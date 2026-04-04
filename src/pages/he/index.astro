@@ -15,7 +15,7 @@ const phases = [
 
 <Landing>
   {phases.map(phase => (
-    <div class="phase-group">
+    <div class="phase-group" id={`phase-${phase.num}`}>
       <h2 class="phase-header">{phase.label}</h2>
       <div class="phase-sessions">
         {getSessionsByPhase(phase.num).map(session => (

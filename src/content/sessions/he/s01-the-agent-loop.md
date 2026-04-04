@@ -12,6 +12,46 @@ beginnerConcepts:
     answer: "זו לולאה שרצה לנצח עד שמשהו אומר לה לעצור. בסוכן שלנו, היא ממשיכה לרוץ עד שהמודל מחליט שהוא סיים (stop_reason שונה מ-'tool_use')."
   - question: "מה זה קריאת כלי (tool call)?"
     answer: "כשמודל הבינה המלאכותית רוצה לעשות משהו בעולם האמיתי (להריץ פקודה, לקרוא קובץ), הוא שולח בחזרה הודעת 'tool_use' מיוחדת במקום טקסט רגיל. הקוד שלנו מבצע את הפעולה ושולח את התוצאה בחזרה."
+walkthroughs:
+  - title: "לולאת הסוכן המרכזית"
+    language: "python"
+    code: |
+      def agent_loop(messages):
+          while True:
+              response = client.messages.create(
+                  model=MODEL, system=SYSTEM,
+                  messages=messages, tools=TOOLS,
+                  max_tokens=8000,
+              )
+              messages.append({"role": "assistant",
+                               "content": response.content})
+
+              if response.stop_reason != "tool_use":
+                  return
+
+              results = []
+              for block in response.content:
+                  if block.type == "tool_use":
+                      output = TOOL_HANDLERS[block.name](**block.input)
+                      results.append({
+                          "type": "tool_result",
+                          "tool_use_id": block.id,
+                          "content": output,
+                      })
+              messages.append({"role": "user", "content": results})
+    steps:
+      - lines: [2, 2]
+        annotation: "הלולאה האינסופית. היא ממשיכה לרוץ עד שהמודל מחליט לעצור. זהו פעימת הלב של כל סוכן."
+      - lines: [3, 7]
+        annotation: "שליחת כל היסטוריית השיחה + הגדרות הכלים ל-LLM. המודל רואה את כל מה שקרה עד כה."
+      - lines: [8, 9]
+        annotation: "הוספת תשובת המודל להיסטוריית השיחה כדי שיזכור מה אמר."
+      - lines: [11, 12]
+        annotation: "תנאי היציאה. אם המודל לא ביקש להשתמש בכלי, הוא סיים לחשוב — חזרה למשתמש."
+      - lines: [14, 21]
+        annotation: "ביצוע כל קריאת כלי שהמודל ביקש. איסוף התוצאות להודעות tool_result."
+      - lines: [22, 22]
+        annotation: "הזנת תוצאות הכלי בחזרה כהודעת 'user'. המודל יראה את התוצאות באיטרציה הבאה ויחליט מה לעשות."
 ---
 
 ## הבעיה

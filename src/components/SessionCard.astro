@@ -14,7 +14,7 @@ const motto = locale === 'he' ? session.mottoHe : session.motto;
 const href = `/${locale}/${session.slug}`;
 ---
 
-<a href={href} class="session-card" data-session={session.id}>
+<a href={href} class="session-card" id={session.slug} data-session={session.id}>
   <div class="card-header">
     <h3 class="card-title"><span class="card-number">{session.order}.</span> {title}</h3>
     <span class="card-time">{session.readingTime} {ui['session.readingTime']}</span>

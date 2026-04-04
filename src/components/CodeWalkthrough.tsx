@@ -10,9 +10,21 @@ interface CodeWalkthroughProps {
   language: string;
   steps: WalkthroughStep[];
   title?: string;
+  isRtl?: boolean;
+  labelPrev?: string;
+  labelNext?: string;
+  labelStep?: string;
+  labelOf?: string;
 }
 
-export default function CodeWalkthrough({ code, language, steps, title }: CodeWalkthroughProps) {
+export default function CodeWalkthrough({
+  code, language, steps, title,
+  isRtl = false,
+  labelPrev = 'Prev',
+  labelNext = 'Next',
+  labelStep = 'Step',
+  labelOf = 'of',
+}: CodeWalkthroughProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const codeRef = useRef<HTMLPreElement>(null);
   const step = steps[currentStep];
@@ -47,6 +59,9 @@ export default function CodeWalkthrough({ code, language, steps, title }: CodeWa
     }
   }
 
+  const prevArrow = isRtl ? '→' : '←';
+  const nextArrow = isRtl ? '←' : '→';
+
   return (
     <div className="cw-container">
       {title && <div className="cw-title">{title}</div>}
@@ -70,20 +85,20 @@ export default function CodeWalkthrough({ code, language, steps, title }: CodeWa
           </code>
         </pre>
         {step && (
-          <div className="cw-annotation">
+          <div className="cw-annotation" dir={isRtl ? 'rtl' : 'ltr'}>
             <div className="cw-annotation-text">{step.annotation}</div>
           </div>
         )}
       </div>
       <div className="cw-controls">
         <button onClick={handlePrev} disabled={currentStep === 0} className="cw-btn">
-          ← Prev
+          {prevArrow} {labelPrev}
         </button>
         <span className="cw-step-indicator">
-          Step {currentStep + 1} of {steps.length}
+          {labelStep} {currentStep + 1} {labelOf} {steps.length}
         </span>
         <button onClick={handleNext} disabled={currentStep === steps.length - 1} className="cw-btn">
-          Next →
+          {labelNext} {nextArrow}
         </button>
       </div>
     </div>
