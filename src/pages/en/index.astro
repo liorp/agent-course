@@ -1,0 +1,46 @@
+---
+import Landing from '@/layouts/Landing.astro';
+import SessionCard from '@/components/SessionCard.astro';
+import { getSessionsByPhase } from '@/lib/sessions';
+import { getUI } from '@/i18n/ui';
+
+const ui = getUI('en');
+const phases = [
+  { num: 1, label: ui['phase.1'] },
+  { num: 2, label: ui['phase.2'] },
+  { num: 3, label: ui['phase.3'] },
+  { num: 4, label: ui['phase.4'] },
+];
+---
+
+<Landing>
+  {phases.map(phase => (
+    <div class="phase-group">
+      <h2 class="phase-header">{phase.label}</h2>
+      <div class="phase-sessions">
+        {getSessionsByPhase(phase.num).map(session => (
+          <SessionCard session={session} />
+        ))}
+      </div>
+    </div>
+  ))}
+</Landing>
+
+<style>
+  .phase-group { margin-block-end: 2.5rem; }
+  .phase-header {
+    color: var(--accent);
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-block-end: 1rem;
+    padding-block-end: 0.5rem;
+    border-block-end: 1px solid var(--border);
+  }
+  .phase-sessions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+</style>

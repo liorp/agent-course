@@ -1,0 +1,75 @@
+---
+import type { SessionMeta } from '@/lib/sessions';
+import { getLangFromUrl, getUI } from '@/i18n/ui';
+
+interface Props {
+  session: SessionMeta;
+}
+
+const { session } = Astro.props;
+const locale = getLangFromUrl(Astro.url);
+const ui = getUI(locale);
+const title = locale === 'he' ? session.titleHe : session.title;
+const motto = locale === 'he' ? session.mottoHe : session.motto;
+const href = `/${locale}/${session.slug}`;
+---
+
+<a href={href} class="session-card" data-session={session.id}>
+  <div class="card-header">
+    <span class="card-number">{session.id}</span>
+    <span class="card-time">{session.readingTime} {ui['session.readingTime']}</span>
+  </div>
+  <h3 class="card-title">{title}</h3>
+  <p class="card-motto">"{motto}"</p>
+  <div class="card-footer">
+    <span class="card-check" data-progress-check={session.id} aria-hidden="true"></span>
+  </div>
+</a>
+
+<style>
+  .session-card {
+    display: block;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    transition: border-color 0.2s, transform 0.2s;
+    text-decoration: none;
+  }
+  .session-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-block-end: 0.5rem;
+  }
+  .card-number {
+    color: var(--accent);
+    font-family: var(--font-code);
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+  .card-time {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+  }
+  .card-title {
+    color: var(--text-primary);
+    font-size: 1.15rem;
+    margin-block-end: 0.25rem;
+  }
+  .card-motto {
+    color: var(--text-muted);
+    font-style: italic;
+    font-size: 0.9rem;
+    margin-block-end: 0;
+  }
+  .card-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-block-start: 0.5rem;
+  }
+</style>
