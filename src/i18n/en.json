@@ -15,5 +15,8 @@
   "phase.1": "Phase 1: The Loop",
   "phase.2": "Phase 2: Planning & Knowledge",
   "phase.3": "Phase 3: Persistence",
-  "phase.4": "Phase 4: Teams"
+  "phase.4": "Phase 4: Teams",
+  "footer.basedOn": "Based on",
+  "footer.by": "by shareAI-lab. MIT License.",
+  "footer.motto": "The model is the agent. The code is the harness."
 }

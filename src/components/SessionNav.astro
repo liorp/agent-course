@@ -10,21 +10,24 @@ interface Props {
 const { prev, next } = Astro.props;
 const locale = getLangFromUrl(Astro.url);
 const ui = getUI(locale);
+const isRtl = locale === 'he';
+const prevArrow = isRtl ? '→' : '←';
+const nextArrow = isRtl ? '←' : '→';
 ---
 
 <nav class="session-nav" aria-label="Session navigation">
   {prev ? (
     <a href={`/${locale}/${prev.slug}`} class="nav-link nav-prev">
-      <span class="nav-arrow">&larr;</span>
+      <span class="nav-arrow">{prevArrow}</span>
       <span class="nav-label">{ui['session.prev']}</span>
-      <span class="nav-title">{locale === 'he' ? prev.titleHe : prev.title}</span>
+      <span class="nav-title">{isRtl ? prev.titleHe : prev.title}</span>
     </a>
   ) : <div />}
   {next ? (
     <a href={`/${locale}/${next.slug}`} class="nav-link nav-next">
-      <span class="nav-arrow">&rarr;</span>
+      <span class="nav-arrow">{nextArrow}</span>
       <span class="nav-label">{ui['session.next']}</span>
-      <span class="nav-title">{locale === 'he' ? next.titleHe : next.title}</span>
+      <span class="nav-title">{isRtl ? next.titleHe : next.title}</span>
     </a>
   ) : <div />}
 </nav>
