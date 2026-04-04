@@ -433,6 +433,9 @@ html[data-theme="light"] .hero-title {
 }
 
 /* Glossary styles */
+.glossary-page {
+  padding-block-start: 4rem;
+}
 .glossary-page .glossary-grid {
   display: flex;
   flex-direction: column;
