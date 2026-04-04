@@ -3,24 +3,25 @@ import Base from '@/layouts/Base.astro';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import { getUI } from '@/i18n/ui';
+import { SESSIONS } from '@/lib/sessions';
 
 const ui = getUI('he');
 
 const terms = [
-  { term: 'Agent Loop — לולאת סוכן', definition: 'לולאת ה-while-true המרכזית ששולחת הודעות ל-LLM, בודקת אם הוא רוצה להשתמש בכלים, מריצה אותם, ומזינה תוצאות בחזרה.' },
-  { term: 'Harness — רתמה', definition: 'הקוד שעוטף את ה-LLM — הרצת כלים, ניהול הקשר, בדיקות בטיחות. המודל מחליט; הרתמה מבצעת.' },
-  { term: 'Tool Schema — סכמת כלי', definition: 'אובייקט JSON שמתאר שם כלי, תיאור ופרמטרי קלט. ה-LLM קורא סכמות כדי להחליט באיזה כלי להשתמש.' },
-  { term: 'Dispatch Map — מפת שיגור', definition: 'מילון שממפה שמות כלים לפונקציות handler. חיפוש אחד מחליף שרשרת if/elif.' },
-  { term: 'TodoManager — מנהל משימות', definition: 'כלי תכנון שעוקב אחר משימות עם סטטוסים. אוכף מיקוד של משימה אחת בכל פעם.' },
-  { term: 'Subagent — תת-סוכן', definition: 'סוכן ילד חד-פעמי שנוצר עם הקשר נקי למשימה בודדת. מחזיר סיכום ונעלם.' },
-  { term: 'Context Compaction — דחיסת הקשר', definition: 'דחיסה הדרגתית של היסטוריית שיחה. מיקרו: קיצוץ תוצאות ישנות. בינוני: סיכום ב-50k. קשה: סיכום LLM ב-80k.' },
-  { term: 'Task Graph — גרף משימות', definition: 'גרף מכוון ללא מעגלים של משימות עם תלויות. נשמר כקבצי JSON על הדיסק.' },
-  { term: 'Agent Mailbox — תיבת דואר סוכן', definition: 'קובץ JSONL להוספה בלבד לתקשורת בין סוכנים. כתיבה בהוספה; קריאה בריקון.' },
-  { term: 'Worktree — עץ עבודה', definition: 'תיקיית עבודה נפרדת של git המקושרת לאותו מאגר. כל worktree על ענף משלו לבידוד.' },
-  { term: 'Eval Case — מקרה הערכה', definition: 'תרחיש בדיקה מובנה לסוכן: פרומפט, מגבלות משאבים, ופונקציית בדיקה שמדרגת את התוצאה.' },
-  { term: 'Guardrail — מעקה בטיחות', definition: 'שכבת הרשאות שבודקת כל קריאת כלי לפני ביצוע. יכולה לאשר אוטומטית, לדרוש אישור אנושי, או לדחות.' },
-  { term: 'Agent Trace — מעקב סוכן', definition: 'הקלטת JSONL של כל אירוע בסשן סוכן: קריאות LLM, הרצות כלים, שגיאות. הקופסה השחורה לדיבאג.' },
-  { term: 'Model Routing — ניתוב מודלים', definition: 'שימוש במודלים שונים למשימות שונות: מודלים זולים להחלטות פשוטות, מודלים חזקים לחשיבה מורכבת.' },
+  { term: 'Agent Loop — לולאת סוכן', definition: 'לולאת ה-while-true המרכזית ששולחת הודעות ל-LLM, בודקת אם הוא רוצה להשתמש בכלים, מריצה אותם, ומזינה תוצאות בחזרה.', slug: 's01-the-agent-loop' },
+  { term: 'Harness — רתמה', definition: 'הקוד שעוטף את ה-LLM — הרצת כלים, ניהול הקשר, בדיקות בטיחות. המודל מחליט; הרתמה מבצעת.', slug: 's01-the-agent-loop' },
+  { term: 'Tool Schema — סכמת כלי', definition: 'אובייקט JSON שמתאר שם כלי, תיאור ופרמטרי קלט. ה-LLM קורא סכמות כדי להחליט באיזה כלי להשתמש.', slug: 's02-tool-use' },
+  { term: 'Dispatch Map — מפת שיגור', definition: 'מילון שממפה שמות כלים לפונקציות handler. חיפוש אחד מחליף שרשרת if/elif.', slug: 's02-tool-use' },
+  { term: 'TodoManager — מנהל משימות', definition: 'כלי תכנון שעוקב אחר משימות עם סטטוסים. אוכף מיקוד של משימה אחת בכל פעם.', slug: 's03-todo-write' },
+  { term: 'Subagent — תת-סוכן', definition: 'סוכן ילד חד-פעמי שנוצר עם הקשר נקי למשימה בודדת. מחזיר סיכום ונעלם.', slug: 's04-subagent' },
+  { term: 'Context Compaction — דחיסת הקשר', definition: 'דחיסה הדרגתית של היסטוריית שיחה. מיקרו: קיצוץ תוצאות ישנות. בינוני: סיכום ב-50k. קשה: סיכום LLM ב-80k.', slug: 's06-context-compact' },
+  { term: 'Task Graph — גרף משימות', definition: 'גרף מכוון ללא מעגלים של משימות עם תלויות. נשמר כקבצי JSON על הדיסק.', slug: 's07-task-system' },
+  { term: 'Agent Mailbox — תיבת דואר סוכן', definition: 'קובץ JSONL להוספה בלבד לתקשורת בין סוכנים. כתיבה בהוספה; קריאה בריקון.', slug: 's09-agent-teams' },
+  { term: 'Worktree — עץ עבודה', definition: 'תיקיית עבודה נפרדת של git המקושרת לאותו מאגר. כל worktree על ענף משלו לבידוד.', slug: 's12-worktree-task-isolation' },
+  { term: 'Eval Case — מקרה הערכה', definition: 'תרחיש בדיקה מובנה לסוכן: פרומפט, מגבלות משאבים, ופונקציית בדיקה שמדרגת את התוצאה.', slug: 's13-agent-evals' },
+  { term: 'Guardrail — מעקה בטיחות', definition: 'שכבת הרשאות שבודקת כל קריאת כלי לפני ביצוע. יכולה לאשר אוטומטית, לדרוש אישור אנושי, או לדחות.', slug: 's14-guardrails' },
+  { term: 'Agent Trace — מעקב סוכן', definition: 'הקלטת JSONL של כל אירוע בסשן סוכן: קריאות LLM, הרצות כלים, שגיאות. הקופסה השחורה לדיבאג.', slug: 's15-observability' },
+  { term: 'Model Routing — ניתוב מודלים', definition: 'שימוש במודלים שונים למשימות שונות: מודלים זולים להחלטות פשוטות, מודלים חזקים לחשיבה מורכבת.', slug: 's16-shipping-to-production' },
 ];
 ---
 
@@ -33,14 +34,18 @@ const terms = [
         מונחים ומושגי מפתח מקורס הנדסת רתמה לסוכנים, לפי סדר הופעה.
       </p>
       <div class="glossary-grid">
-        {terms.map(t => (
-          <div class="glossary-term">
-            <h3>
-              {t.term}
-            </h3>
-            <p>{t.definition}</p>
-          </div>
-        ))}
+        {terms.map(t => {
+          const session = SESSIONS.find(s => s.slug === t.slug);
+          return (
+            <div class="glossary-term">
+              <h3>
+                {t.term}
+                {session && <a href={`/he/${session.slug}`} class="glossary-session">{session.titleHe}</a>}
+              </h3>
+              <p>{t.definition}</p>
+            </div>
+          );
+        })}
       </div>
     </div>
   </main>

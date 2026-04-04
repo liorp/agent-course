@@ -450,6 +450,12 @@ html[data-theme="light"] .hero-title {
   margin: 0 0 0.35rem;
   font-family: var(--font-code);
 }
+.glossary-term .glossary-session {
+  font-size: 0.7rem;
+  font-family: var(--font-body);
+  color: var(--text-muted);
+  margin-inline-start: 0.5rem;
+}
 .glossary-term p {
   color: var(--text-body);
   font-size: 0.9rem;

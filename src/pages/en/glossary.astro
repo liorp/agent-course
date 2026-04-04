@@ -3,38 +3,39 @@ import Base from '@/layouts/Base.astro';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import { getUI } from '@/i18n/ui';
+import { SESSIONS } from '@/lib/sessions';
 
 const ui = getUI('en');
 
 const terms = [
-  { term: 'Agent Loop', definition: 'The core while-true loop that sends messages to the LLM, checks if it wants to use tools, executes them, and feeds results back. The heartbeat of every agent.' },
-  { term: 'Harness', definition: 'The code that wraps the LLM — tool execution, context management, safety checks. The model decides; the harness executes.' },
-  { term: 'Tool Schema', definition: 'A JSON object describing a tool\'s name, description, and input parameters. The LLM reads schemas to decide which tool to call and with what arguments.' },
-  { term: 'Dispatch Map', definition: 'A dictionary mapping tool names to handler functions: {"bash": run_bash, "read_file": run_read}. One lookup replaces a chain of if/elif.' },
-  { term: 'Path Sandboxing', definition: 'Resolving file paths against an allowed root directory to prevent the agent from reading or writing outside its workspace.' },
-  { term: 'TodoManager', definition: 'A planning tool that tracks tasks with statuses (pending, in_progress, completed). Enforces one-at-a-time focus and injects nag reminders.' },
-  { term: 'Subagent', definition: 'A disposable child agent spawned with a fresh context for a single subtask. Returns a summary and dies — no context pollution.' },
-  { term: 'Skill Loading', definition: 'Two-layer pattern: cheap descriptions in the system prompt, expensive full content loaded on-demand. Keeps the context lean.' },
-  { term: 'Context Compaction', definition: 'Progressive compression of conversation history. Micro: trim old tool results. Mid: summarize at 50k tokens. Hard: LLM-written summary at 80k tokens.' },
-  { term: 'Micro Compaction', definition: 'Replacing tool results older than 3 turns with one-line placeholders like "[Previous: used read_file]". Silent, runs every turn.' },
-  { term: 'Hard Compaction', definition: 'Asking the LLM to write a dense summary of the entire conversation, then replacing all history with that summary. Last resort.' },
-  { term: 'Task Graph', definition: 'A directed acyclic graph (DAG) of tasks with dependencies (blockedBy). Persisted as JSON files on disk, surviving crashes and context compression.' },
-  { term: 'Background Task', definition: 'A subprocess running in a thread while the agent continues thinking. Results are injected via a shared queue before each LLM call.' },
-  { term: 'Agent Mailbox', definition: 'An append-only JSONL file (e.g., .team/inbox/alice.jsonl) for inter-agent communication. Write by appending; read by draining (read + truncate).' },
-  { term: 'Drain Pattern', definition: 'Read all messages from a mailbox, then truncate the file. Messages are consumed once and not replayed on the next poll.' },
-  { term: 'Team Roster', definition: 'A JSON config listing all teammates with names, roles, and lifecycle statuses (IDLE, WORKING, SHUTDOWN).' },
-  { term: 'Request-Response Protocol', definition: 'A structured mailbox message format with unique IDs, enabling agents to match responses to requests.' },
-  { term: 'Autonomous Claiming', definition: 'Agents scan the task board independently and claim ready tasks without being told. Self-organizing teamwork.' },
-  { term: 'Worktree', definition: 'A separate git working directory linked to the same repository. Each worktree is on its own branch, providing filesystem isolation for parallel agent work.' },
-  { term: 'Eval Case', definition: 'A structured test scenario for an agent: a prompt, resource limits, and a checker function that scores the outcome.' },
-  { term: 'Scoring Rubric', definition: 'Criteria that define agent success: pass/fail checks, partial credit, efficiency metrics. Turns subjective quality into numbers.' },
-  { term: 'Guardrail', definition: 'A permission layer that checks every tool call before execution. Can auto-approve, require human approval, or deny outright.' },
-  { term: 'Human-in-the-Loop', definition: 'Pausing the agent before dangerous actions to ask the user for confirmation. The harness intercepts the tool call and waits for approval.' },
-  { term: 'Cost Cap', definition: 'A hard ceiling on total token spending. Once exceeded, all tool calls are blocked regardless of other permissions.' },
-  { term: 'Agent Trace', definition: 'A JSONL recording of every event in an agent session: LLM calls, tool executions, errors, compressions. The flight recorder for debugging.' },
-  { term: 'Replay Debugging', definition: 'Re-running an agent using recorded LLM responses instead of live API calls. Deterministic reproduction of bugs, zero token cost.' },
-  { term: 'Model Routing', definition: 'Using different models for different tasks: cheap models (Haiku) for simple decisions, powerful models (Opus/Sonnet) for complex reasoning.' },
-  { term: 'Exponential Backoff', definition: 'Retry strategy where wait time doubles between attempts (1s, 2s, 4s, 8s). Prevents hammering a failing API.' },
+  { term: 'Agent Loop', definition: 'The core while-true loop that sends messages to the LLM, checks if it wants to use tools, executes them, and feeds results back. The heartbeat of every agent.', slug: 's01-the-agent-loop' },
+  { term: 'Harness', definition: 'The code that wraps the LLM — tool execution, context management, safety checks. The model decides; the harness executes.', slug: 's01-the-agent-loop' },
+  { term: 'Tool Schema', definition: 'A JSON object describing a tool\'s name, description, and input parameters. The LLM reads schemas to decide which tool to call and with what arguments.', slug: 's02-tool-use' },
+  { term: 'Dispatch Map', definition: 'A dictionary mapping tool names to handler functions: {"bash": run_bash, "read_file": run_read}. One lookup replaces a chain of if/elif.', slug: 's02-tool-use' },
+  { term: 'Path Sandboxing', definition: 'Resolving file paths against an allowed root directory to prevent the agent from reading or writing outside its workspace.', slug: 's02-tool-use' },
+  { term: 'TodoManager', definition: 'A planning tool that tracks tasks with statuses (pending, in_progress, completed). Enforces one-at-a-time focus and injects nag reminders.', slug: 's03-todo-write' },
+  { term: 'Subagent', definition: 'A disposable child agent spawned with a fresh context for a single subtask. Returns a summary and dies — no context pollution.', slug: 's04-subagent' },
+  { term: 'Skill Loading', definition: 'Two-layer pattern: cheap descriptions in the system prompt, expensive full content loaded on-demand. Keeps the context lean.', slug: 's05-skill-loading' },
+  { term: 'Context Compaction', definition: 'Progressive compression of conversation history. Micro: trim old tool results. Mid: summarize at 50k tokens. Hard: LLM-written summary at 80k tokens.', slug: 's06-context-compact' },
+  { term: 'Micro Compaction', definition: 'Replacing tool results older than 3 turns with one-line placeholders like "[Previous: used read_file]". Silent, runs every turn.', slug: 's06-context-compact' },
+  { term: 'Hard Compaction', definition: 'Asking the LLM to write a dense summary of the entire conversation, then replacing all history with that summary. Last resort.', slug: 's06-context-compact' },
+  { term: 'Task Graph', definition: 'A directed acyclic graph (DAG) of tasks with dependencies (blockedBy). Persisted as JSON files on disk, surviving crashes and context compression.', slug: 's07-task-system' },
+  { term: 'Background Task', definition: 'A subprocess running in a thread while the agent continues thinking. Results are injected via a shared queue before each LLM call.', slug: 's08-background-tasks' },
+  { term: 'Agent Mailbox', definition: 'An append-only JSONL file (e.g., .team/inbox/alice.jsonl) for inter-agent communication. Write by appending; read by draining (read + truncate).', slug: 's09-agent-teams' },
+  { term: 'Drain Pattern', definition: 'Read all messages from a mailbox, then truncate the file. Messages are consumed once and not replayed on the next poll.', slug: 's09-agent-teams' },
+  { term: 'Team Roster', definition: 'A JSON config listing all teammates with names, roles, and lifecycle statuses (IDLE, WORKING, SHUTDOWN).', slug: 's09-agent-teams' },
+  { term: 'Request-Response Protocol', definition: 'A structured mailbox message format with unique IDs, enabling agents to match responses to requests.', slug: 's10-team-protocols' },
+  { term: 'Autonomous Claiming', definition: 'Agents scan the task board independently and claim ready tasks without being told. Self-organizing teamwork.', slug: 's11-autonomous-agents' },
+  { term: 'Worktree', definition: 'A separate git working directory linked to the same repository. Each worktree is on its own branch, providing filesystem isolation for parallel agent work.', slug: 's12-worktree-task-isolation' },
+  { term: 'Eval Case', definition: 'A structured test scenario for an agent: a prompt, resource limits, and a checker function that scores the outcome.', slug: 's13-agent-evals' },
+  { term: 'Scoring Rubric', definition: 'Criteria that define agent success: pass/fail checks, partial credit, efficiency metrics. Turns subjective quality into numbers.', slug: 's13-agent-evals' },
+  { term: 'Guardrail', definition: 'A permission layer that checks every tool call before execution. Can auto-approve, require human approval, or deny outright.', slug: 's14-guardrails' },
+  { term: 'Human-in-the-Loop', definition: 'Pausing the agent before dangerous actions to ask the user for confirmation. The harness intercepts the tool call and waits for approval.', slug: 's14-guardrails' },
+  { term: 'Cost Cap', definition: 'A hard ceiling on total token spending. Once exceeded, all tool calls are blocked regardless of other permissions.', slug: 's14-guardrails' },
+  { term: 'Agent Trace', definition: 'A JSONL recording of every event in an agent session: LLM calls, tool executions, errors, compressions. The flight recorder for debugging.', slug: 's15-observability' },
+  { term: 'Replay Debugging', definition: 'Re-running an agent using recorded LLM responses instead of live API calls. Deterministic reproduction of bugs, zero token cost.', slug: 's15-observability' },
+  { term: 'Model Routing', definition: 'Using different models for different tasks: cheap models (Haiku) for simple decisions, powerful models (Opus/Sonnet) for complex reasoning.', slug: 's16-shipping-to-production' },
+  { term: 'Exponential Backoff', definition: 'Retry strategy where wait time doubles between attempts (1s, 2s, 4s, 8s). Prevents hammering a failing API.', slug: 's16-shipping-to-production' },
 ];
 ---
 
@@ -47,14 +48,18 @@ const terms = [
         Key terms and concepts from the Agent Harness Engineering course, in order of appearance.
       </p>
       <div class="glossary-grid">
-        {terms.map(t => (
-          <div class="glossary-term">
-            <h3>
-              {t.term}
-            </h3>
-            <p>{t.definition}</p>
-          </div>
-        ))}
+        {terms.map(t => {
+          const session = SESSIONS.find(s => s.slug === t.slug);
+          return (
+            <div class="glossary-term">
+              <h3>
+                {t.term}
+                {session && <a href={`/en/${session.slug}`} class="glossary-session">{session.title}</a>}
+              </h3>
+              <p>{t.definition}</p>
+            </div>
+          );
+        })}
       </div>
     </div>
   </main>
