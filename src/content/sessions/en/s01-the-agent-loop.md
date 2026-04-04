@@ -48,9 +48,9 @@ walkthroughs:
         annotation: "Append the model's response to the conversation history so it remembers what it said."
       - lines: [11, 12]
         annotation: "The exit condition. If the model didn't ask to use a tool, it's done thinking — return to the user."
-      - lines: [14, 21]
+      - lines: [14, 22]
         annotation: "Execute each tool call the model requested. Collect the results into tool_result messages."
-      - lines: [22, 22]
+      - lines: [23, 23]
         annotation: "Feed the tool results back as a 'user' message. The model will see these results on the next iteration and decide what to do next."
 ---
 
