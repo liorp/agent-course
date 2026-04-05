@@ -57,4 +57,12 @@ const ui = getUI(locale);
   const fillEl = document.querySelector('[data-progress-fill]') as HTMLElement;
   if (countEl) countEl.textContent = String(completed);
   if (fillEl) fillEl.style.width = `${(completed / 17) * 100}%`;
+
+  document.querySelectorAll<HTMLElement>('[data-progress-check]').forEach(el => {
+    const sessionId = el.dataset.progressCheck!;
+    if (progress[sessionId]?.completed) {
+      el.textContent = '✓';
+      el.style.color = '#4ade80';
+    }
+  });
 </script>
