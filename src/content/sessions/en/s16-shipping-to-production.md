@@ -66,7 +66,7 @@ walkthroughs:
           return "claude-sonnet-4-6-20250610"
     steps:
       - lines: [1, 10]
-        annotation: "The production loop integrates everything: tracer records every call, guardrail checks every tool, retries handle failures. This is the s01 loop after it grew up."
+        annotation: "The production loop integrates everything: tracer records every call, guardrail checks every tool, retries handle failures. This is the Agent Loop after it grew up."
       - lines: [12, 24]
         annotation: "Tool execution now goes through the guardrail first. Each verdict maps to a different action: deny, cap, approve with human, or auto-execute. The tracer records every tool call for post-mortem analysis."
       - lines: [26, 35]
@@ -281,7 +281,7 @@ client = anthropic.Anthropic()
 cost_tracker = CostTracker(budget_limit_usd=10.0)
 
 def agent_loop_production(messages: list, tracer: AgentTracer):
-    """The s01 agent loop, hardened for production."""
+    """The Agent Loop, hardened for production."""
     while True:
         # 1. Call with retries and model routing
         response = call_with_retry(messages)
@@ -340,11 +340,11 @@ def tool_result(tool_use_id: str, content: str) -> dict:
     }
 ```
 
-Compare this to the [s01 agent loop](/en/s01-the-agent-loop). The core structure is identical — `while True`, call LLM, check stop reason, execute tools, loop. Everything new is **around** the loop, not inside it. That is the harness pattern: the loop stays simple, the infrastructure wraps it.
+Compare this to [The Agent Loop](/en/s01-the-agent-loop). The core structure is identical — `while True`, call LLM, check stop reason, execute tools, loop. Everything new is **around** the loop, not inside it. That is the harness pattern: the loop stays simple, the infrastructure wraps it.
 
 ## What Changed From [Observability](/en/s15-observability)
 
-| Component | Observability (s15) | Production (s16) |
+| Component | Observability | Production |
 |-----------|---------------------|-------------------|
 | Focus | Seeing what the agent does | Making the agent reliable |
 | Traces | Record events for debugging | Record events **and** act on them (cost caps) |
@@ -358,4 +358,4 @@ Observability tells you what happened. Production infrastructure makes sure the 
 
 ## Key Takeaway
 
-A production agent is not a different agent — it is the same [loop from s01](/en/s01-the-agent-loop) wrapped in the engineering it needs to survive the real world. Streaming for responsiveness. Retries for resilience. Model routing for cost. Budget tracking for safety. Health monitoring for visibility. Each is a small, independent layer. Together they are the difference between a demo and a service. The agent logic stays simple. The harness does the hard work.
+A production agent is not a different agent — it is the same [Agent Loop](/en/s01-the-agent-loop) wrapped in the engineering it needs to survive the real world. Streaming for responsiveness. Retries for resilience. Model routing for cost. Budget tracking for safety. Health monitoring for visibility. Each is a small, independent layer. Together they are the difference between a demo and a service. The agent logic stays simple. The harness does the hard work.
