@@ -8,6 +8,9 @@ import AdSlot from '@/components/AdSlot.astro';
 import ProgressTracker from '@/components/ProgressTracker.astro';
 import CodeWalkthrough from '@/components/CodeWalkthrough';
 import AgentFlowDiagram from '@/components/AgentFlowDiagram';
+import { createHighlighter, createCssVariablesTheme } from 'shiki';
+
+const cssVarsTheme = createCssVariablesTheme();
 import Challenge from '@/components/Challenge.astro';
 import MultiTierChallenge from '@/components/MultiTierChallenge.astro';
 import ReadingProgress from '@/components/ReadingProgress.astro';
@@ -50,6 +53,38 @@ const phaseLabel = ui[phaseKey];
 const issueUrl = `https://github.com/liorp/agent-course/issues/new?title=${encodeURIComponent(`[${session.id}] `)}&body=${encodeURIComponent(`**Session:** ${session.id} — ${session.title}\n**URL:** /${locale}/${session.slug}\n\n**Describe the issue:**\n\n`)}&labels=fix`;
 const isRtl = locale === 'he';
 const reportArrow = isRtl ? '←' : '→';
+
+// Pre-highlight walkthrough code with Shiki at build time
+let highlightedWalkthroughs: Array<{
+  title: string;
+  code: string;
+  language: string;
+  steps: { lines: [number, number]; annotation: string }[];
+  highlightedLines: string[];
+}> = [];
+
+if (frontmatter.walkthroughs && frontmatter.walkthroughs.length > 0) {
+  const langs = [...new Set(frontmatter.walkthroughs.map((w: any) => w.language))];
+  const highlighter = await createHighlighter({
+    themes: [cssVarsTheme],
+    langs: langs as string[],
+  });
+
+  highlightedWalkthroughs = frontmatter.walkthroughs.map((wt: any) => {
+    const html = highlighter.codeToHtml(wt.code, {
+      lang: wt.language,
+      theme: cssVarsTheme.name,
+    });
+    // Extract inner HTML of each <span class="line"> element
+    const lineRegex = /<span class="line">(.*?)<\/span>/g;
+    const lines: string[] = [];
+    let match;
+    while ((match = lineRegex.exec(html)) !== null) {
+      lines.push(match[1]);
+    }
+    return { ...wt, highlightedLines: lines };
+  });
+}
 ---
 
 <Base title={title}>
@@ -99,16 +134,17 @@ const reportArrow = isRtl ? '←' : '→';
           <slot />
         </div>
 
-        {frontmatter.walkthroughs && frontmatter.walkthroughs.length > 0 && (
+        {highlightedWalkthroughs.length > 0 && (
           <section class="walkthroughs">
             <h2>{ui['session.walkthrough']}</h2>
-            {frontmatter.walkthroughs.map((wt: any) => (
+            {highlightedWalkthroughs.map((wt) => (
               <CodeWalkthrough
                 client:visible
                 code={wt.code}
                 language={wt.language}
                 steps={wt.steps}
                 title={wt.title}
+                highlightedLines={wt.highlightedLines}
                 isRtl={isRtl}
                 labelPrev={ui['walkthrough.prev']}
                 labelNext={ui['walkthrough.next']}
