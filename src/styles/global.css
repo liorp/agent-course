@@ -352,7 +352,7 @@ html[data-theme="light"] {
   --bg-primary: #f8f9fc;
   --bg-secondary: #eef0f6;
   --bg-card: #ffffff;
-  --bg-code: #1e1e2e;
+  --bg-code: #f5f5f9;
   --border: #d0d5e0;
   --text-primary: #1a1a2e;
   --text-body: #374151;
@@ -361,6 +361,30 @@ html[data-theme="light"] {
   --accent-hover: #d4a017;
   --explainer-bg: #eef0ff;
   --explainer-border: #6366f1;
+
+  /* Code syntax highlighting — light mode */
+  --shiki-foreground: #1a1a2e;
+  --shiki-color-text: #1a1a2e;
+  --shiki-color-background: #f5f5f9;
+  --shiki-token-constant: #d63384;
+  --shiki-token-string: #2e7d32;
+  --shiki-token-comment: #6b7280;
+  --shiki-token-keyword: #7c3aed;
+  --shiki-token-parameter: #374151;
+  --shiki-token-function: #b8860b;
+  --shiki-token-string-expression: #2e7d32;
+  --shiki-token-punctuation: #374151;
+
+  --astro-code-foreground: #1a1a2e;
+  --astro-code-background: #f5f5f9;
+  --astro-code-token-constant: #d63384;
+  --astro-code-token-string: #2e7d32;
+  --astro-code-token-comment: #6b7280;
+  --astro-code-token-keyword: #7c3aed;
+  --astro-code-token-parameter: #374151;
+  --astro-code-token-function: #b8860b;
+  --astro-code-token-string-expression: #2e7d32;
+  --astro-code-token-punctuation: #374151;
 }
 
 html[data-theme="light"] body {
