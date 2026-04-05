@@ -18,7 +18,8 @@
   --accent: #ffcc00;
   --accent-hover: #ffe066;
 
-  /* Code syntax (Shiki css-variables theme tokens) */
+  /* Code syntax — Astro built-in Shiki (--astro-code-*) + custom Shiki (--shiki-*) */
+  --shiki-foreground: #c0c0e0;
   --shiki-color-text: #c0c0e0;
   --shiki-color-background: #0a0a1e;
   --shiki-token-constant: #ff6b6b;
@@ -29,6 +30,17 @@
   --shiki-token-function: #ffd43b;
   --shiki-token-string-expression: #98c379;
   --shiki-token-punctuation: #c0c0e0;
+
+  --astro-code-foreground: #c0c0e0;
+  --astro-code-background: #0a0a1e;
+  --astro-code-token-constant: #ff6b6b;
+  --astro-code-token-string: #98c379;
+  --astro-code-token-comment: #6a6a9a;
+  --astro-code-token-keyword: #ff6b6b;
+  --astro-code-token-parameter: #c0c0e0;
+  --astro-code-token-function: #ffd43b;
+  --astro-code-token-string-expression: #98c379;
+  --astro-code-token-punctuation: #c0c0e0;
 
   /* Explainer */
   --explainer-bg: #1a1a4a;

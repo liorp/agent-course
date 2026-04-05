@@ -21,6 +21,7 @@ interface CodeWalkthroughProps {
   language: string;
   steps: WalkthroughStep[];
   title?: string;
+  highlightedLines?: string[];
   isRtl?: boolean;
   labelPrev?: string;
   labelNext?: string;
@@ -29,7 +30,7 @@ interface CodeWalkthroughProps {
 }
 
 export default function CodeWalkthrough({
-  code, language, steps, title,
+  code, language, steps, title, highlightedLines,
   isRtl = false,
   labelPrev = 'Prev',
   labelNext = 'Next',
@@ -92,7 +93,10 @@ export default function CodeWalkthrough({
                   className={`cw-line ${isHighlighted ? 'cw-line-active' : ''}`}
                 >
                   <span className="cw-line-num">{lineNum}</span>
-                  <span className="cw-line-text">{line || ' '}</span>
+                  {highlightedLines && highlightedLines[i] !== undefined
+                    ? <span className="cw-line-text" dangerouslySetInnerHTML={{ __html: highlightedLines[i] || '&nbsp;' }} />
+                    : <span className="cw-line-text">{line || ' '}</span>
+                  }
                 </div>
               );
             })}
