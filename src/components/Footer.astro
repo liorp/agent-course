@@ -5,6 +5,7 @@ import { getLangFromUrl, getUI } from '@/i18n/ui';
 
 const locale = getLangFromUrl(Astro.url);
 const ui = getUI(locale);
+const currentYear = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
@@ -14,6 +15,7 @@ const ui = getUI(locale);
     <p class="footer-text">
       {ui['footer.basedOn']} <a href="https://github.com/shareAI-lab/learn-claude-code" target="_blank" rel="noopener">learn-claude-code</a> {ui['footer.by']} <a href="https://github.com/shareAI-lab/learn-claude-code/blob/main/LICENSE" target="_blank" rel="noopener">{ui['footer.license']}</a>
     </p>
+    <p class="footer-copyright">&copy; {currentYear} Lior Polak</p>
     <p class="footer-motto">{ui['footer.motto']}</p>
     <p class="footer-report">
       <a href="https://github.com/liorp/agent-course/issues/new?labels=fix" target="_blank" rel="noopener">{ui['footer.reportIssue']}</a>
@@ -33,6 +35,11 @@ const ui = getUI(locale);
   .footer-text {
     color: var(--text-muted);
     font-size: 0.85rem;
+  }
+  .footer-copyright {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-block-start: 0.25rem;
   }
   .footer-motto {
     color: var(--text-muted);
