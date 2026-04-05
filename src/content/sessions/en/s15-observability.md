@@ -61,7 +61,7 @@ walkthroughs:
         annotation: "`replay()` reads back all events from disk. This is the foundation for replay debugging — feed recorded LLM responses back into the agent loop instead of making real API calls."
 challenges:
   - tier: "warmup"
-    text: "Add `tracer.record()` calls to the agent loop from s01. Run a task and inspect the `.traces/` JSONL file. What patterns do you notice?"
+    text: "Add `tracer.record()` calls to the agent loop from [The Agent Loop](/en/s01-the-agent-loop). Run a task and inspect the `.traces/` JSONL file. What patterns do you notice?"
     hint: "Record events at: before LLM call, after LLM response, before tool exec, after tool exec."
   - tier: "build"
     text: "Build a `trace_summary()` function that reads a trace file and prints: total turns, total tokens, total duration, most-used tool, and any errors."

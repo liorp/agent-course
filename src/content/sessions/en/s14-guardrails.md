@@ -69,10 +69,10 @@ walkthroughs:
         annotation: "`_is_dangerous()` applies heuristic checks within auto-approved tools. Even if bash is auto-approved for reads, write-like commands (`rm`, `mv`, `>`) get escalated to human approval. This is defense in depth."
 challenges:
   - tier: "warmup"
-    text: "List 3 ways to bypass the blocklist from s01 (`['rm -rf /', 'sudo']`). Then explain why capability-based permissions don't have these holes."
+    text: "List 3 ways to bypass the blocklist from [The Agent Loop](/en/s01-the-agent-loop) (`['rm -rf /', 'sudo']`). Then explain why capability-based permissions don't have these holes."
     hint: "Think about: environment variables ($SHELL), encoding, command chaining (&&), and aliases."
   - tier: "build"
-    text: "Implement the full guardrail system: add a `human_approve()` function that prints the pending tool call and waits for y/n input. Integrate it into the agent loop from s01."
+    text: "Implement the full guardrail system: add a `human_approve()` function that prints the pending tool call and waits for y/n input. Integrate it into the agent loop from [The Agent Loop](/en/s01-the-agent-loop)."
     hint: "Insert the guard check between tool call parsing and tool execution in the loop."
   - tier: "stretch"
     text: "Add container sandboxing: wrap bash tool execution in `docker run --rm --network none` so the agent can't access the network or host filesystem."
@@ -299,7 +299,7 @@ The agent can still do anything it wants *inside the workspace*. That is intenti
 
 ## What Changed From [Agent Evals](/en/s13-agent-evals)
 
-| Concern | Evals (s13) | Guardrails (s14) |
+| Concern | Evals | Guardrails |
 |---------|-------------|-------------------|
 | When it runs | Before deployment (test time) | During deployment (runtime) |
 | What it catches | Wrong outputs, regressions | Dangerous actions, cost overruns |

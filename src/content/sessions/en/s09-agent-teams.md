@@ -95,7 +95,7 @@ diagram:
       activeEdges: [7]
 challenges:
   - tier: "warmup"
-    text: "Compare subagents (s04) to teammates (s09). List 3 specific scenarios where you'd use each. What's the key factor in choosing?"
+    text: "Compare [Subagents](/en/s04-subagent) to [Agent Teams](/en/s09-agent-teams) teammates. List 3 specific scenarios where you'd use each. What's the key factor in choosing?"
     hint: "Subagents for one-off tasks with no memory needed. Teammates for ongoing work with identity and communication."
   - tier: "build"
     text: "Spawn two teammates with different specialties and have them collaborate on a task through the mailbox."
