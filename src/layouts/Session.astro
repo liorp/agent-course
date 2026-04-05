@@ -75,13 +75,13 @@ if (frontmatter.walkthroughs && frontmatter.walkthroughs.length > 0) {
       lang: wt.language,
       theme: cssVarsTheme.name,
     });
-    // Extract inner HTML of each <span class="line"> element
-    const lineRegex = /<span class="line">(.*?)<\/span>/g;
-    const lines: string[] = [];
-    let match;
-    while ((match = lineRegex.exec(html)) !== null) {
-      lines.push(match[1]);
-    }
+    // Extract inner HTML of each <span class="line">...</span>
+    // Split approach handles nested spans correctly (regex .*? stops at first </span>)
+    const chunks = html.split('<span class="line">').slice(1);
+    const lines: string[] = chunks.map(chunk => {
+      const lastClose = chunk.lastIndexOf('</span>');
+      return lastClose >= 0 ? chunk.substring(0, lastClose) : chunk;
+    });
     return { ...wt, highlightedLines: lines };
   });
 }
