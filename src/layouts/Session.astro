@@ -63,11 +63,11 @@ const reportArrow = isRtl ? '←' : '→';
           <span class="breadcrumb-sep">&rsaquo;</span>
           <span>{phaseLabel}</span>
           <span class="breadcrumb-sep">&rsaquo;</span>
-          <span>{title}</span>
+          <span>{session.order}. {title}</span>
         </nav>
 
         <header class="session-header">
-          <h1>{title}</h1>
+          <h1>{session.order}. {title}</h1>
           <p class="session-motto">"{motto}"</p>
           <div class="session-meta">
             <span class="meta-time">{session.readingTime} {ui['session.readingTime']}</span>
