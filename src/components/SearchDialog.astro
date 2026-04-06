@@ -90,9 +90,11 @@ const ui = getUI(locale);
     const container = document.querySelector('[data-search-container]');
     if (!container) return;
     try {
+      // pagefind-ui.js is an IIFE that sets window.PagefindUI (not an ES module)
       // @ts-ignore
-      const pagefind = await import('/pagefind/pagefind-ui.js');
-      new pagefind.PagefindUI({
+      await import('/pagefind/pagefind-ui.js');
+      // @ts-ignore
+      new window.PagefindUI({
         element: container,
         showSubResults: true,
         showImages: false,
