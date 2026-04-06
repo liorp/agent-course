@@ -502,17 +502,25 @@ html[data-theme="light"] .hero-title {
   margin: 0;
 }
 
-/* Pagefind UI overrides */
+/* Pagefind UI overrides — theme via custom properties */
+:root {
+  --pagefind-ui-primary: var(--accent);
+  --pagefind-ui-text: var(--text-body);
+  --pagefind-ui-background: var(--bg-primary);
+  --pagefind-ui-border: var(--border);
+  --pagefind-ui-tag: var(--bg-card);
+  --pagefind-ui-font: var(--font-body);
+}
 .pagefind-ui__search-input {
-  background: var(--bg-primary) !important;
-  color: var(--text-body) !important;
-  border: 1px solid var(--border) !important;
   border-radius: 8px !important;
-  font-family: var(--font-body) !important;
 }
 .pagefind-ui__result-link {
   color: var(--accent) !important;
 }
-.pagefind-ui__result-excerpt {
-  color: var(--text-body) !important;
+.pagefind-ui__search-clear {
+  background-color: transparent !important;
+  color: var(--text-muted) !important;
+}
+.pagefind-ui__search-clear:hover {
+  color: var(--accent) !important;
 }
