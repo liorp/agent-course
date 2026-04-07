@@ -2,6 +2,7 @@
 import Landing from '@/layouts/Landing.astro';
 import SessionCard from '@/components/SessionCard.astro';
 import ProgressBar from '@/components/ProgressBar.astro';
+import AdSlot from '@/components/AdSlot.astro';
 import { getSessionsByPhase } from '@/lib/sessions';
 import { getUI } from '@/i18n/ui';
 
@@ -17,7 +18,20 @@ const phases = [
 
 <Landing>
   <ProgressBar />
-  {phases.map(phase => (
+  {phases.slice(0, 2).map(phase => (
+    <div class="phase-group" id={`phase-${phase.num}`}>
+      <h2 class="phase-header">{phase.label}</h2>
+      <div class="phase-sessions">
+        {getSessionsByPhase(phase.num).map(session => (
+          <SessionCard session={session} />
+        ))}
+      </div>
+    </div>
+  ))}
+  <div class="phase-ad">
+    <AdSlot format="banner" slot="4632823302" />
+  </div>
+  {phases.slice(2).map(phase => (
     <div class="phase-group" id={`phase-${phase.num}`}>
       <h2 class="phase-header">{phase.label}</h2>
       <div class="phase-sessions">
@@ -45,5 +59,8 @@ const phases = [
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+  }
+  .phase-ad {
+    margin-block: 1rem;
   }
 </style>

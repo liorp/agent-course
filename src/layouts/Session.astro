@@ -5,6 +5,7 @@ import Footer from '@/components/Footer.astro';
 import SessionNav from '@/components/SessionNav.astro';
 import BeginnerExplainer from '@/components/BeginnerExplainer.astro';
 import AdSlot from '@/components/AdSlot.astro';
+import StickyMobileAd from '@/components/StickyMobileAd.astro';
 import ProgressTracker from '@/components/ProgressTracker.astro';
 import CodeWalkthrough from '@/components/CodeWalkthrough';
 import AgentFlowDiagram from '@/components/AgentFlowDiagram';
@@ -134,6 +135,10 @@ if (frontmatter.walkthroughs && frontmatter.walkthroughs.length > 0) {
           <slot />
         </div>
 
+        <div id="mid-content-ad" class="mid-content-ad" style="display:none">
+          <AdSlot format="in-article" slot="4632823302" />
+        </div>
+
         {highlightedWalkthroughs.length > 0 && (
           <section class="walkthroughs">
             <h2>{ui['session.walkthrough']}</h2>
@@ -178,6 +183,10 @@ if (frontmatter.walkthroughs && frontmatter.walkthroughs.length > 0) {
           <Challenge text={frontmatter.challenge.text} hint={frontmatter.challenge.hint} />
         ) : null}
 
+        <div class="post-challenges-ad">
+          <AdSlot format="banner" slot="4632823302" />
+        </div>
+
         <ProgressTracker sessionId={session.id} />
 
         <a href={issueUrl} target="_blank" rel="noopener" class="report-link">
@@ -194,6 +203,7 @@ if (frontmatter.walkthroughs && frontmatter.walkthroughs.length > 0) {
     </div>
   </main>
   <Footer />
+  <StickyMobileAd />
 </Base>
 
 <style>
@@ -238,6 +248,15 @@ if (frontmatter.walkthroughs && frontmatter.walkthroughs.length > 0) {
   .report-link:hover {
     opacity: 1;
     color: var(--accent);
+  }
+
+  .mid-content-ad {
+    margin-block: 2rem;
+    padding-block: 0.5rem;
+    border-block: 1px solid var(--border);
+  }
+  .post-challenges-ad {
+    margin-block: 2rem;
   }
 
   .session-prerequisites {
@@ -305,6 +324,20 @@ if (frontmatter.walkthroughs && frontmatter.walkthroughs.length > 0) {
     pre.style.position = 'relative';
     pre.appendChild(btn);
   });
+</script>
+
+<script>
+  // Inject mid-content ad after 3rd h2 in prose
+  const midAd = document.getElementById('mid-content-ad');
+  const prose = document.querySelector('.prose');
+  if (midAd && prose) {
+    const h2s = prose.querySelectorAll('h2');
+    const targetIndex = h2s.length >= 4 ? 2 : h2s.length >= 2 ? 1 : -1;
+    if (targetIndex >= 0) {
+      h2s[targetIndex].before(midAd);
+      midAd.style.display = '';
+    }
+  }
 </script>
 
 <style is:global>

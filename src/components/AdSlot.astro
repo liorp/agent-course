@@ -1,23 +1,24 @@
 ---
 interface Props {
-  format: 'banner' | 'sidebar';
+  format: 'banner' | 'sidebar' | 'in-article';
   slot?: string;
 }
 
 const { format, slot: adSlot } = Astro.props;
 const ADSENSE_ID = import.meta.env.PUBLIC_ADSENSE_ID || 'ca-pub-4529248472834919';
-const adFormat = format === 'banner' ? 'horizontal' : 'rectangle';
+const adFormat = format === 'sidebar' ? 'rectangle' : format === 'in-article' ? 'fluid' : 'horizontal';
 ---
 
 <div class:list={['ad-container', `ad-${format}`]} data-ad-lazy>
   {ADSENSE_ID && adSlot ? (
     <ins
       class="adsbygoogle"
-      style="display:block"
+      style={format === 'in-article' ? 'display:block; text-align:center;' : 'display:block'}
       data-ad-client={ADSENSE_ID}
       data-ad-slot={adSlot}
       data-ad-format={adFormat}
-      data-full-width-responsive={format === 'banner' ? 'true' : 'false'}
+      data-ad-layout={format === 'in-article' ? 'in-article' : undefined}
+      data-full-width-responsive={format === 'sidebar' ? 'false' : 'true'}
     ></ins>
   ) : (
     <div class="ad-placeholder">
@@ -41,6 +42,11 @@ const adFormat = format === 'banner' ? 'horizontal' : 'rectangle';
     position: sticky;
     top: calc(var(--header-height) + 1rem);
   }
+  .ad-in-article {
+    max-width: 100%;
+    min-height: 250px;
+    margin-inline: auto;
+  }
   .ad-placeholder {
     display: flex;
     align-items: center;
@@ -56,6 +62,7 @@ const adFormat = format === 'banner' ? 'horizontal' : 'rectangle';
   @media (max-width: 640px) {
     .ad-sidebar { display: none; }
     .ad-banner { min-height: 50px; }
+    .ad-in-article { min-height: 200px; }
   }
 </style>
 
